@@ -1,0 +1,87 @@
+
+plugins {
+    id "com.jfrog.bintray" version "1.6"
+}
+
+allprojects {
+    apply plugin: "maven-publish"
+    group = 'nl.weeaboo.common'
+    version = '1.0.0'
+
+    repositories {
+        mavenCentral()
+        maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
+        maven { url "https://oss.sonatype.org/content/repositories/releases/" }
+    }    
+}
+
+subprojects {
+    apply plugin: "eclipse"
+    apply plugin: "idea"
+    apply plugin: "java"
+
+    ext {
+        junitVersion = '4.12'
+    }
+    
+    sourceCompatibility = 1.6
+    targetCompatibility = 1.6
+    compileJava.options.encoding = 'UTF-8'
+    compileTestJava.options.encoding = 'UTF-8'
+
+    dependencies {
+        testCompile "junit:junit:$junitVersion"
+    }
+}
+
+project(':core') {
+    eclipse.project {
+        name = "tcommon-core"
+    }
+    
+    task aptJar(type: Jar) {
+        classifier = 'apt'
+        from sourceSets.main.output
+        include 'nl/weeaboo/io/CustomSerializable.*'
+        include 'nl/weeaboo/io/CustomSerializableAnnotationProcessor.*'
+        include 'META-INF/services/javax.annotation.processing.Processor'
+    }    
+}
+
+project(':entity') {
+    eclipse.project {
+        name = "tcommon-entity"
+    }
+    
+    dependencies {
+        compile project(':core')
+    }
+}
+
+publishing {
+    publications {
+        core(MavenPublication) {
+            from project(":core").components.java
+            artifactId = 'tcommon-core'
+        }
+        entity(MavenPublication) {
+            from project(":entity").components.java
+            artifactId = 'tcommon-entity'
+        }
+    }
+}
+
+bintray {   
+    user = System.getenv('BINTRAY_USER')
+    key = System.getenv('BINTRAY_KEY')
+    publications = ['core', 'entity']
+    pkg {
+        repo = 'tcommon'
+        name = 'tcommon'
+        licenses = ['MIT']
+        vcsUrl = 'https://github.com/anonl/tcommon.git'
+        version {
+            name = project.version
+        }
+    }
+}
