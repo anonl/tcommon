@@ -6,7 +6,7 @@ plugins {
 allprojects {
     apply plugin: "maven-publish"
     group = 'nl.weeaboo.common'
-    version = '1.0.0'
+    version = '1.0.1'
 
     repositories {
         mavenCentral()
@@ -32,6 +32,11 @@ subprojects {
     dependencies {
         testCompile "junit:junit:$junitVersion"
     }
+    
+    task sourceJar(type: Jar) {
+        from sourceSets.main.allJava
+        classifier "sources"
+    }    
 }
 
 project(':core') {
@@ -61,12 +66,18 @@ project(':entity') {
 publishing {
     publications {
         core(MavenPublication) {
-            from project(":core").components.java
             artifactId = 'tcommon-core'
+
+            def proj = project(":core")
+            from proj.components.java            
+            artifact(proj.sourceJar)
         }
         entity(MavenPublication) {
-            from project(":entity").components.java
             artifactId = 'tcommon-entity'
+
+            def proj = project(":entity")
+            from proj.components.java            
+            artifact(proj.sourceJar)
         }
     }
 }
