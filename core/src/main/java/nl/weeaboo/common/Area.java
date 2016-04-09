@@ -6,7 +6,7 @@ public final class Area implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	public static Area EMPTY = new Area(0, 0, 0, 0);
+    public static final Area EMPTY = new Area(0, 0, 0, 0);
 
 	public final int x, y, w, h;
 

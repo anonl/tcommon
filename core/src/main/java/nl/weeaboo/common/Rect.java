@@ -6,14 +6,12 @@ public final class Rect implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	public static Rect EMPTY = new Rect(0, 0, 0, 0);
+    public static final Rect EMPTY = new Rect(0, 0, 0, 0);
 
 	public final int x, y, w, h;
 
 	private Rect(int x, int y, int w, int h) {
-		if (w < 0 || h < 0) {
-			throw new IllegalArgumentException("Dimensions must be >= 0, w=" + w + ", h=" + h);
-		}
+        checkDimensions(w, h);
 
 		this.x = x;
 		this.y = y;
@@ -28,14 +26,32 @@ public final class Rect implements Serializable {
 		return new Rect(x, y, w, h);
 	}
 
-	// Functions
+    static void checkDimensions(int w, int h) {
+        if (w < 0 || h < 0) {
+            throw new IllegalArgumentException("Dimensions must be >= 0, w=" + w + ", h=" + h);
+        }
+    }
+
+    static void checkDimensions(double w, double h) {
+        if (w < 0 || Double.isInfinite(w) || Double.isNaN(w)
+                || h < 0 || Double.isInfinite(h) || Double.isNaN(h))
+        {
+            throw new IllegalArgumentException("Dimensions must be >= 0 and finite, w=" + w + ", h=" + h);
+        }
+    }
+
     public Rect translatedCopy(int dx, int dy) {
         return Rect.of(x + dx, y + dy, w, h);
     }
 
+    /**
+     * Calculates the bounding rectangle for a collection of rectangles.
+     */
 	public static Rect combine(Rect... r) {
 		if (r.length == 0) {
 			return EMPTY;
+        } else if (r.length == 1) {
+            return r[0];
 		}
 
 		int minX = r[0].x;
@@ -49,7 +65,7 @@ public final class Rect implements Serializable {
 			maxY = Math.max(maxY, r[n].y + r[n].h);
 		}
 
-		return new Rect(minX, minY, maxX - minX, maxY - minY);
+        return Rect.of(minX, minY, maxX - minX, maxY - minY);
 	}
 
 	@Override
@@ -83,25 +99,30 @@ public final class Rect implements Serializable {
 		return Rect2D.of(x, y, w, h);
 	}
 
-	// Getters
+    /**
+     * @return {@code true} if the given point lies inside this rectangle or on its boundary.
+     */
 	public boolean contains(double px, double py) {
-		return px >= x && px < x + w && py >= y && py < y + h;
+        if (w <= 0 || h <= 0) {
+            return false; // Special case: empty rect contains nothing
+        }
+        return px >= x && px <= x + w && py >= y && py <= y + h;
 	}
 
 	public boolean contains(double rx, double ry, double rw, double rh) {
+        checkDimensions(rw, rh);
 		if (w <= 0 || h <= 0) {
-			return false;
+            return false; // Special case: empty rect contains nothing
 		}
 		return rx >= x && ry >= y && rx + rw <= x + w && ry + rh <= y + h;
 	}
 
 	public boolean intersects(double rx, double ry, double rw, double rh) {
-		if (w <= 0 || h <= 0) {
-			return false;
+        checkDimensions(rw, rh);
+        if (w <= 0 || h <= 0 || rw <= 0 || rh <= 0) {
+            return false; // Special case: empty rects intersect nothing
 		}
 		return rx + rw > x && ry + rh > y && rx < x + w && ry < y + h;
 	}
-
-	// Setters
 
 }

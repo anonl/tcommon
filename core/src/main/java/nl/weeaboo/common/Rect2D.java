@@ -7,14 +7,12 @@ public final class Rect2D implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	public static Rect2D EMPTY = new Rect2D(0, 0, 0, 0);
+    public static final Rect2D EMPTY = new Rect2D(0, 0, 0, 0);
 
 	public final double x, y, w, h;
 
 	private Rect2D(double x, double y, double w, double h) {
-		if (w < 0 || Double.isInfinite(w) || Double.isNaN(w) || h < 0 || Double.isInfinite(h) || Double.isNaN(h)) {
-			throw new IllegalArgumentException("Dimensions must be >= 0 and finite, w=" + w + ", h=" + h);
-		}
+        Rect.checkDimensions(w, h);
 
 		this.x = x;
 		this.y = y;
@@ -26,7 +24,6 @@ public final class Rect2D implements Serializable {
 		return new Rect2D(x, y, w, h);
 	}
 
-	//Functions
     public Rect2D translatedCopy(double dx, double dy) {
         return Rect2D.of(x + dx, y + dy, w, h);
     }
@@ -73,25 +70,30 @@ public final class Rect2D implements Serializable {
 		return Area2D.of(x, y, w, h);
 	}
 
-	//Getters
+    /**
+     * @return {@code true} if the given point lies inside this rectangle or on its boundary.
+     */
 	public boolean contains(double px, double py) {
-		return px >= x && px < x + w && py >= y && py < y + h;
+        if (w <= 0 || h <= 0) {
+            return false; // Special case: empty rect contains nothing
+        }
+        return px >= x && px <= x + w && py >= y && py <= y + h;
 	}
 
 	public boolean contains(double rx, double ry, double rw, double rh) {
-		if (w <= 0 || h <= 0) {
-			return false;
-		}
+        Rect.checkDimensions(w, h);
+        if (w <= 0 || h <= 0) {
+            return false; // Special case: empty rect contains nothing
+        }
 		return rx >= x && ry >= y && rx+rw <= x+w && ry+rh <= y+h;
 	}
 
 	public boolean intersects(double rx, double ry, double rw, double rh) {
-		if (w <= 0 || h <= 0) {
-			return false;
-		}
+        Rect.checkDimensions(w, h);
+        if (w <= 0 || h <= 0 || rw <= 0 || rh <= 0) {
+            return false; // Special case: empty rects intersect nothing
+        }
 		return rx + rw > x && ry + rh > y && rx < x + w && ry < y + h;
 	}
-
-	//Setters
 
 }

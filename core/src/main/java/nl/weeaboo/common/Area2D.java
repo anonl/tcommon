@@ -10,7 +10,7 @@ public final class Area2D implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	public static Area2D EMPTY = new Area2D(0, 0, 0, 0);
+    public static final Area2D EMPTY = new Area2D(0, 0, 0, 0);
 
 	public final double x, y, w, h;
 
