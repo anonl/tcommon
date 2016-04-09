@@ -118,12 +118,8 @@ public final class FastMath {
 		return SIN_LUT[(angle + (SIN_LUT_SIZE>>2)) & SIN_LUT_MASK];
 	}
 
-	private static int floor(float angle) {
-		return (angle >= 0 ? (int)(angle) : (int)(angle - 1));
-	}
-
 	public static float fastSin(float angle) {
-		int a = floor(angle);
+        int a = (angle >= 0 ? (int)(angle) : (int)(angle - 1));
 		float prev = fastSin(a);
 		float next = fastSin(a + 1);
 
