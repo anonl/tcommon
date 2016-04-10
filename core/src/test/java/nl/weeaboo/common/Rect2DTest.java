@@ -10,12 +10,6 @@ public class Rect2DTest {
         assertRect(Rect2D.of(1, 2, 3, 4), 1, 2, 3, 4);
     }
 
-    /** Attempting to create an empty rect just returns the shared {@link Rect#EMPTY} instance */
-    @Test
-    public void createEmptyRect() {
-        Assert.assertSame(Rect2D.EMPTY, Rect2D.of(0, 0, 0, 0));
-    }
-
     @Test(expected = IllegalArgumentException.class)
     public void negativeWidth() {
         Rect2D.of(0, 0, -10, 0);

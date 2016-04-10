@@ -7,25 +7,28 @@ public final class FastMath {
 
 	public static float PI = (float)Math.PI;
 	public static float TWO_PI = PI + PI;
-	public static float HALF_PI = PI / 2;
+    public static float HALF_PI = PI * .5f;
 
+    /** Lookup table based drop-in replacement for {@link Math#sin(double)} */
 	public static float sin(float s) {
-		return fastSin(s * fastAngleScale); //High precision
+        return fastSin(s * SinLut.fastAngleScale);
 	}
+
+    /** Lookup table based drop-in replacement for {@link Math#cos(double)} */
 	public static float cos(float s) {
-		return fastCos(s * fastAngleScale); //High precision
+        return fastCos(s * SinLut.fastAngleScale);
 	}
 
 	public static float acos(float s) {
-		return fastArcCos(s) / fastAngleScale;
+        return fastArcCos(s) / SinLut.fastAngleScale;
 	}
 	public static float asin(float s) {
-		return fastArcSin(s) / fastAngleScale;
+        return fastArcSin(s) / SinLut.fastAngleScale;
 	}
 
 	public static float fastArcTan2(float dy, float dx) {
-		float coeff_1 = SIN_LUT_SIZE >> 3;
-		float coeff_2 = 3 * coeff_1;
+        float c1 = SinLut.SIZE >> 3;
+        float c2 = 3 * c1;
 
 		float absDy = Math.abs(dy);
 		if (absDy == 0.0) {
@@ -35,19 +38,19 @@ public final class FastMath {
 		float angle;
 		if (dx >= 0) {
 			float r = (dx - absDy) / (dx + absDy);
-			angle = coeff_1 - r * coeff_1;
+            angle = c1 - r * c1;
 		} else {
 			float r = (dx + absDy) / (absDy - dx);
-			angle = coeff_2 - r * coeff_1;
+            angle = c2 - r * c1;
 		}
 
 		if (dy < 0) {
-			angle = -angle; //Negate if in quad 3 or 4
+            angle = -angle; // Negate if in quadrant 3 or 4
 		}
 
-		angle += (SIN_LUT_SIZE >> 2);
+        angle += (SinLut.SIZE >> 2);
 		if (angle < 0) {
-			angle += SIN_LUT_SIZE;
+            angle += SinLut.SIZE;
 		}
 		return angle;
 	}
@@ -87,35 +90,11 @@ public final class FastMath {
 	//--- LUT implementations of trig functions -------------------------------
 	//-------------------------------------------------------------------------
 
-	private static float SIN_LUT[];
-	private static int SIN_LUT_SIZE = 512;
-	private static int SIN_LUT_MASK = 511;
-	public static float fastAngleScale = SIN_LUT_SIZE / (TWO_PI);
-
-	private synchronized static void initSinLUT() {
-		if (SIN_LUT != null) {
-			return;
-		}
-
-		double s = Math.PI / (SIN_LUT_SIZE>>1);
-
-		SIN_LUT = new float[SIN_LUT_SIZE];
-		for (int n = 0; n < SIN_LUT_SIZE; n++) {
-			SIN_LUT[n] = (float)Math.sin(n * s);
-		}
-	}
-
 	public static float fastSin(int angle) {
-		if (SIN_LUT == null) {
-			initSinLUT();
-		}
-		return SIN_LUT[angle & SIN_LUT_MASK];
+        return SinLut.LUT[angle & SinLut.MASK];
 	}
 	public static float fastCos(int angle) {
-		if (SIN_LUT == null) {
-			initSinLUT();
-		}
-		return SIN_LUT[(angle + (SIN_LUT_SIZE>>2)) & SIN_LUT_MASK];
+        return SinLut.LUT[(angle + SinLut.COS_OFFSET) & SinLut.MASK];
 	}
 
 	public static float fastSin(float angle) {
@@ -127,7 +106,7 @@ public final class FastMath {
 		return result;
 	}
 	public static float fastCos(float angle) {
-		return fastSin(angle + (SIN_LUT_SIZE>>2));
+        return fastSin(angle + (SinLut.SIZE >> 2));
 	}
 
 	private static float ASIN_LUT[];
@@ -143,7 +122,7 @@ public final class FastMath {
 		ASIN_LUT = new float[ASIN_LUT_SIZE];
 		for (int n = 0; n < ASIN_LUT_SIZE; n++) {
 			double d = Math.asin((n - halfLutSize) / (float)halfLutSize);
-			ASIN_LUT[n] = (float)(fastAngleScale * d);
+            ASIN_LUT[n] = (float)(SinLut.fastAngleScale * d);
 		}
 	}
 
@@ -161,7 +140,27 @@ public final class FastMath {
 	}
 
 	public static float fastArcCos(float a) {
-		return (SIN_LUT_SIZE>>1) - fastArcSin(a);
+        return (SinLut.SIZE >> 1) - fastArcSin(a);
 	}
 
+    /** Inner class used to lazy-initialize the lookup table */
+    private static final class SinLut {
+
+        static final int SIZE = 512;
+        static final int MASK = 511;
+        static final int COS_OFFSET = SIZE >> 2;
+        static final float fastAngleScale = SIZE / (TWO_PI);
+
+        static final float LUT[];
+
+        static {
+            double s = Math.PI / (SIZE >> 1);
+
+            LUT = new float[SIZE];
+            for (int n = 0; n < SIZE; n++) {
+                LUT[n] = (float)Math.sin(n * s);
+            }
+        }
+
+    }
 }
