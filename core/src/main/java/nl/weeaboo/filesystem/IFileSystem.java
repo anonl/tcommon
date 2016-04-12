@@ -6,17 +6,17 @@ import java.util.Collection;
 
 public interface IFileSystem {
 
-    public void close();
-    
-	public InputStream openInputStream(String path) throws IOException;
-	
-	public boolean isOpen();
-	public boolean isReadOnly();
-	public boolean getFileExists(String path);
-	public long getFileSize(String path) throws IOException;
-	public long getFileModifiedTime(String path) throws IOException;
-	
-	public void getFiles(Collection<String> out, String path, boolean recursive) throws IOException;
-	public void getSubFolders(Collection<String> out, String path, boolean recursive) throws IOException;
-	
+    void close();
+
+	InputStream openInputStream(String path) throws IOException;
+
+	boolean isOpen();
+	boolean isReadOnly();
+	boolean getFileExists(String path);
+	long getFileSize(String path) throws IOException;
+	long getFileModifiedTime(String path) throws IOException;
+
+	void getFiles(Collection<String> out, String path, boolean recursive) throws IOException;
+	void getSubFolders(Collection<String> out, String path, boolean recursive) throws IOException;
+
 }

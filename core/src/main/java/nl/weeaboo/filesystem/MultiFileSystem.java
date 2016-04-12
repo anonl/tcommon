@@ -33,7 +33,7 @@ public class MultiFileSystem implements IFileSystem {
 
 	@Override
 	public final boolean isReadOnly() {
-		return false;
+        return true;
 	}
 
     @Override
