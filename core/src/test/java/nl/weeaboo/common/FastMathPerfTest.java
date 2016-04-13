@@ -9,6 +9,8 @@ public class FastMathPerfTest {
     public void sinCosPerformance() {
         long timeA = 0;
         long timeB = 0;
+
+        final int warmUpRuns = 10;
         for (int run = 1; run < 100; run++) {
             long t0 = System.nanoTime();
             fastCosPerf();
@@ -16,8 +18,10 @@ public class FastMathPerfTest {
             cosPerf();
             long t2 = System.nanoTime();
 
-            timeA += (t1 - t0);
-            timeB += (t2 - t1);
+            if (run > warmUpRuns) {
+                timeA += (t1 - t0);
+                timeB += (t2 - t1);
+            }
         }
 
         // Check that 'fast' version is at least twice as fast
