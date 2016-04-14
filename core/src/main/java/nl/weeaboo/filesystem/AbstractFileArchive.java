@@ -30,9 +30,7 @@ public abstract class AbstractFileArchive extends AbstractFileSystem implements 
 		file = f;
 
 		try {
-            @SuppressWarnings("resource")
-            IRandomAccessFile rfile = RandomAccessUtil.wrap(new RandomAccessFile(f, "r"));
-            open(rfile);
+            open(RandomAccessUtil.wrap(new RandomAccessFile(f, "r")));
 		} catch (RuntimeException re) {
 			throw re;
 		} catch (IOException ioe) {

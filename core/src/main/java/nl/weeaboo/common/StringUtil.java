@@ -4,12 +4,16 @@ import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 public final class StringUtil {
-	
+
 	public static final Charset UTF_8 = Charset.forName("UTF-8");
-	
+
+    private static final int KIB = 1 << 10;
+    private static final int MIB = 1 << 20;
+    private static final int GIB = 1 << 30;
+
 	private StringUtil() {
 	}
-	
+
 	/** Calls {@link String#format(Locale, String, Object...)} with {@link Locale#ROOT} */
 	public static String formatRoot(String format, Object... args) {
 		return String.format(Locale.ROOT, format, args);
@@ -38,27 +42,23 @@ public final class StringUtil {
         }
         return true;
     }
-	
+
 	public static String formatMemoryAmount(long bytes) {
 		if (bytes < 0) {
 			throw new IllegalArgumentException("Negative values not supported: " + bytes);
 		}
 
-		final int KiB = 1 << 10;
-		final int MiB = 1 << 20;
-		final int GiB = 1 << 30;
-		
-		if (bytes < KiB) {
+        if (bytes < KIB) {
 			return bytes + "B";
-		} else if (bytes < MiB) {
-			return StringUtil.formatRoot("%.2fKiB", bytes / (double)KiB);
-		} else if (bytes < GiB) {
-			return StringUtil.formatRoot("%.2fMiB", bytes / (double)MiB);
+        } else if (bytes < MIB) {
+            return StringUtil.formatRoot("%.2fKiB", bytes / (double)KIB);
+        } else if (bytes < GIB) {
+            return StringUtil.formatRoot("%.2fMiB", bytes / (double)MIB);
 		} else {
-			return StringUtil.formatRoot("%.2fGiB", bytes / (double)GiB);
+            return StringUtil.formatRoot("%.2fGiB", bytes / (double)GIB);
 		}
 	}
-	
+
 	public static String formatTime(long t, TimeUnit unit) {
 		long nanos = TimeUnit.NANOSECONDS.convert(t, unit);
 		if (unit.compareTo(TimeUnit.SECONDS) < 0 && nanos > Long.MIN_VALUE && nanos < Long.MAX_VALUE) {
@@ -73,14 +73,18 @@ public final class StringUtil {
 
 		long seconds = TimeUnit.SECONDS.convert(t, unit);
 		if (seconds < 60) {
-			return StringUtil.formatRoot("%.2fs", nanos * .000000001);
+            if (nanos % 1000000000 == 0) {
+                return StringUtil.formatRoot("%ds", seconds);
+            } else {
+                return StringUtil.formatRoot("%.2fs", nanos * .000000001);
+            }
 		} else if (seconds < 3600) {
 			return StringUtil.formatRoot("%dm:%02ds", seconds/60, seconds%60);
 		} else {
-			return StringUtil.formatRoot("%02dh:%02dm", seconds/3600, (seconds%3600)/60);
+            return StringUtil.formatRoot("%02dh:%02dm", seconds / 3600, Math.round((seconds % 3600) / 60.0));
 		}
 	}
-	
+
 	/**
 	 * Variant of {@link String#replace(CharSequence, CharSequence)}, but with with multiple replacement strings.
 	 */
@@ -88,9 +92,9 @@ public final class StringUtil {
 		if (from.length != to.length) {
 			throw new IllegalArgumentException("from.length(" + from.length + ") != to.length(" + to.length + ")");
 		}
-		
+
 		StringBuilder sb = new StringBuilder();
-		
+
 		int pos = 0;
 		int len = string.length();
 		while (pos < len) {
@@ -105,10 +109,10 @@ public final class StringUtil {
 			if (x >= from.length) {
 				sb.append(string.charAt(pos));
 				pos++;
-			}			
+			}
 		}
-		
+
 		return sb.toString();
-	}	
-	
+	}
+
 }
