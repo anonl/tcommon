@@ -9,9 +9,15 @@ public final class Dim implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
+    public static final Dim EMPTY = new Dim(0, 0);
+
 	public final int w, h;
 
-	public Dim(int w, int h) {
+    /**
+     * @deprecated Use {@link #of(int, int)} instead.
+     */
+    @Deprecated
+    public Dim(int w, int h) {
 		if (w < 0 || h < 0) {
 			throw new IllegalArgumentException("Dimensions must be >= 0, w=" + w + ", h=" + h);
 		}
@@ -19,6 +25,13 @@ public final class Dim implements Serializable {
 		this.w = w;
 		this.h = h;
 	}
+
+    public static Dim of(int w, int h) {
+        if (w == 0 && h == 0) {
+            return Dim.EMPTY;
+        }
+        return new Dim(w, h);
+    }
 
 	@Override
 	public int hashCode() {

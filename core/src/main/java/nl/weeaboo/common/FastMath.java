@@ -76,7 +76,7 @@ public final class FastMath {
 		return cur;
 	}
 	public static Dim toPowerOfTwo(int w, int h) {
-		return new Dim(toPowerOfTwo(w), toPowerOfTwo(h));
+        return Dim.of(toPowerOfTwo(w), toPowerOfTwo(h));
 	}
 
 	public static int align(int val, int align) {
