@@ -26,35 +26,6 @@ public final class FastMath {
         return fastArcSin(s) / SinLut.fastAngleScale;
 	}
 
-	public static float fastArcTan2(float dy, float dx) {
-        float c1 = SinLut.SIZE >> 3;
-        float c2 = 3 * c1;
-
-		float absDy = Math.abs(dy);
-		if (absDy == 0.0) {
-			absDy = 0.0001f;
-		}
-
-		float angle;
-		if (dx >= 0) {
-			float r = (dx - absDy) / (dx + absDy);
-            angle = c1 - r * c1;
-		} else {
-			float r = (dx + absDy) / (absDy - dx);
-            angle = c2 - r * c1;
-		}
-
-		if (dy < 0) {
-            angle = -angle; // Negate if in quadrant 3 or 4
-		}
-
-        angle += (SinLut.SIZE >> 2);
-		if (angle < 0) {
-            angle += SinLut.SIZE;
-		}
-		return angle;
-	}
-
 	public static boolean isPowerOfTwo(int w, int h) {
 		return isPowerOfTwo(w) && isPowerOfTwo(h);
 	}
@@ -109,39 +80,56 @@ public final class FastMath {
         return fastSin(angle + (SinLut.SIZE >> 2));
 	}
 
-	private static float ASIN_LUT[];
-	private static int ASIN_LUT_SIZE = 1024;
-
-	protected synchronized static void initASinLUT() {
-		if (ASIN_LUT != null) {
-			return;
-		}
-
-		int halfLutSize = ASIN_LUT_SIZE>>1;
-
-		ASIN_LUT = new float[ASIN_LUT_SIZE];
-		for (int n = 0; n < ASIN_LUT_SIZE; n++) {
-			double d = Math.asin((n - halfLutSize) / (float)halfLutSize);
-            ASIN_LUT[n] = (float)(SinLut.fastAngleScale * d);
-		}
-	}
-
 	public static float fastArcSin(float a) {
-		if (ASIN_LUT == null) {
-			initASinLUT();
-		}
+        if (Float.isNaN(a) || a < -1 || a > 1) {
+            return Float.NaN;
+        }
+        if (a == -0f || a == 0f) {
+            return a;
+        }
 
-		if (Float.isNaN(a) || a < -1 || a > 1) return Float.NaN;
-		if (a == -0f || a == 0f) return a;
+        int halfLutSize = ArcSinLut.MAX_INDEX >> 1;
+        float floatIndex = halfLutSize + a * halfLutSize;
+        int index = (int)floatIndex;
+        float prev = ArcSinLut.LUT[index];
+        float next = ArcSinLut.LUT[Math.min(ArcSinLut.MAX_INDEX, index + 1)];
 
-		int halfLutSize = ASIN_LUT_SIZE>>1;
-		int index = Math.abs(Math.round(halfLutSize + a * halfLutSize));
-		return ASIN_LUT[Math.max(0, Math.min(ASIN_LUT_SIZE-1, index))];
+        float result = prev + (next - prev) * Math.abs(floatIndex - index);
+        return result;
 	}
 
 	public static float fastArcCos(float a) {
-        return (SinLut.SIZE >> 1) - fastArcSin(a);
+        return (SinLut.SIZE >> 2) - fastArcSin(a);
 	}
+
+    public static float fastArcTan2(float dy, float dx) {
+        float c1 = SinLut.SIZE >> 3;
+        float c2 = 3 * c1;
+
+        float absDy = Math.abs(dy);
+        if (absDy == 0.0) {
+            absDy = 0.0001f;
+        }
+
+        float angle;
+        if (dx >= 0) {
+            float r = (dx - absDy) / (dx + absDy);
+            angle = c1 - r * c1;
+        } else {
+            float r = (dx + absDy) / (absDy - dx);
+            angle = c2 - r * c1;
+        }
+
+        if (dy < 0) {
+            angle = -angle; // Negate if in quadrant 3 or 4
+        }
+
+        angle += (SinLut.SIZE >> 2);
+        if (angle < 0) {
+            angle += SinLut.SIZE;
+        }
+        return angle;
+    }
 
     /** Inner class used to lazy-initialize the lookup table */
     private static final class SinLut {
@@ -151,7 +139,7 @@ public final class FastMath {
         static final int COS_OFFSET = SIZE >> 2;
         static final float fastAngleScale = SIZE / (TWO_PI);
 
-        static final float LUT[];
+        static final float[] LUT;
 
         static {
             double s = Math.PI / (SIZE >> 1);
@@ -163,4 +151,25 @@ public final class FastMath {
         }
 
     }
+
+    /** Inner class used to lazy-initialize the lookup table */
+    private static final class ArcSinLut {
+
+        private static int MAX_INDEX = 2048;
+
+        static final float[] LUT;
+
+        static {
+            int halfLutSize = MAX_INDEX >> 1;
+
+            LUT = new float[MAX_INDEX + 1];
+            double f = 1.0 / halfLutSize;
+            for (int n = 0; n <= MAX_INDEX; n++) {
+                double d = Math.asin((n - halfLutSize) * f);
+                LUT[n] = (float)(SinLut.fastAngleScale * d);
+            }
+        }
+
+    }
+
 }
