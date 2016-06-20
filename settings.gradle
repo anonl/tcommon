@@ -1,2 +1,2 @@
 
-include ':core', ':entity'
+include ':core', ':entity', ':logging'

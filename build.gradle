@@ -6,7 +6,7 @@ plugins {
 allprojects {
     apply plugin: "maven-publish"
     group = 'nl.weeaboo.common'
-    version = '1.0.2'
+    version = '1.0.3'
 
     repositories {
         mavenCentral()
@@ -22,6 +22,7 @@ subprojects {
 
     ext {
         junitVersion = '4.12'
+        slf4jVersion = '1.7.21'
     }
     
     sourceCompatibility = 1.6
@@ -63,12 +64,30 @@ project(':entity') {
     }
 }
 
+project(':logging') {
+    eclipse.project {
+        name = "tcommon-logging"
+    }
+    
+    dependencies {
+        compile project(':core')
+        compile "org.slf4j:slf4j-api:$slf4jVersion"
+    }
+}
+
 publishing {
     publications {
         core(MavenPublication) {
             artifactId = 'tcommon-core'
 
             def proj = project(":core")
+            from proj.components.java            
+            artifact(proj.sourceJar)
+        }
+        logging(MavenPublication) {
+            artifactId = 'tcommon-logging'
+
+            def proj = project(":logging")
             from proj.components.java            
             artifact(proj.sourceJar)
         }
@@ -85,7 +104,7 @@ publishing {
 bintray {   
     user = System.getenv('BINTRAY_USER')
     key = System.getenv('BINTRAY_KEY')
-    publications = ['core', 'entity']
+    publications = ['core', 'logging', 'entity']
     pkg {
         repo = 'tcommon'
         name = 'tcommon'
