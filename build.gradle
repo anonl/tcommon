@@ -6,7 +6,7 @@ plugins {
 allprojects {
     apply plugin: "maven-publish"
     group = 'nl.weeaboo.common'
-    version = '1.0.3'
+    version = '1.1.0'
 
     repositories {
         mavenCentral()
@@ -40,11 +40,7 @@ subprojects {
     }    
 }
 
-project(':core') {
-    eclipse.project {
-        name = "tcommon-core"
-    }
-    
+project(':tcommon-core') {
     task aptJar(type: Jar) {
         classifier = 'apt'
         from sourceSets.main.output
@@ -54,23 +50,15 @@ project(':core') {
     }    
 }
 
-project(':entity') {
-    eclipse.project {
-        name = "tcommon-entity"
-    }
-    
+project(':tcommon-entity') {
     dependencies {
-        compile project(':core')
+        compile project(':tcommon-core')
     }
 }
 
-project(':logging') {
-    eclipse.project {
-        name = "tcommon-logging"
-    }
-    
+project(':tcommon-logging') {
     dependencies {
-        compile project(':core')
+        compile project(':tcommon-core')
         compile "org.slf4j:slf4j-api:$slf4jVersion"
     }
 }
@@ -80,21 +68,21 @@ publishing {
         core(MavenPublication) {
             artifactId = 'tcommon-core'
 
-            def proj = project(":core")
+            def proj = project(":tcommon-core")
             from proj.components.java            
             artifact(proj.sourceJar)
         }
         logging(MavenPublication) {
             artifactId = 'tcommon-logging'
 
-            def proj = project(":logging")
+            def proj = project(":tcommon-logging")
             from proj.components.java            
             artifact(proj.sourceJar)
         }
         entity(MavenPublication) {
             artifactId = 'tcommon-entity'
 
-            def proj = project(":entity")
+            def proj = project(":tcommon-entity")
             from proj.components.java            
             artifact(proj.sourceJar)
         }
@@ -104,7 +92,7 @@ publishing {
 bintray {   
     user = System.getenv('BINTRAY_USER')
     key = System.getenv('BINTRAY_KEY')
-    publications = ['core', 'logging', 'entity']
+    publications = ['core', 'entity', 'logging']
     pkg {
         repo = 'tcommon'
         name = 'tcommon'
