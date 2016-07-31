@@ -11,7 +11,7 @@ public final class Rect implements Serializable {
 	public final int x, y, w, h;
 
 	private Rect(int x, int y, int w, int h) {
-        checkDimensions(w, h);
+        Dim.checkDimensions(w, h);
 
 		this.x = x;
 		this.y = y;
@@ -25,20 +25,6 @@ public final class Rect implements Serializable {
 		}
 		return new Rect(x, y, w, h);
 	}
-
-    static void checkDimensions(int w, int h) {
-        if (w < 0 || h < 0) {
-            throw new IllegalArgumentException("Dimensions must be >= 0, w=" + w + ", h=" + h);
-        }
-    }
-
-    static void checkDimensions(double w, double h) {
-        if (w < 0 || Double.isInfinite(w) || Double.isNaN(w)
-                || h < 0 || Double.isInfinite(h) || Double.isNaN(h))
-        {
-            throw new IllegalArgumentException("Dimensions must be >= 0 and finite, w=" + w + ", h=" + h);
-        }
-    }
 
     public Rect translatedCopy(int dx, int dy) {
         return Rect.of(x + dx, y + dy, w, h);
@@ -110,7 +96,7 @@ public final class Rect implements Serializable {
 	}
 
 	public boolean contains(double rx, double ry, double rw, double rh) {
-        checkDimensions(rw, rh);
+        Dim.checkDimensions(rw, rh);
 		if (w <= 0 || h <= 0) {
             return false; // Special case: empty rect contains nothing
 		}
@@ -118,7 +104,7 @@ public final class Rect implements Serializable {
 	}
 
 	public boolean intersects(double rx, double ry, double rw, double rh) {
-        checkDimensions(rw, rh);
+        Dim.checkDimensions(rw, rh);
         if (w <= 0 || h <= 0 || rw <= 0 || rh <= 0) {
             return false; // Special case: empty rects intersect nothing
 		}

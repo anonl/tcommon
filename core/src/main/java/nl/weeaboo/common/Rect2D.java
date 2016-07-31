@@ -12,7 +12,7 @@ public final class Rect2D implements Serializable {
 	public final double x, y, w, h;
 
 	private Rect2D(double x, double y, double w, double h) {
-        Rect.checkDimensions(w, h);
+        Dim.checkDimensions(w, h);
 
 		this.x = x;
 		this.y = y;
@@ -81,7 +81,7 @@ public final class Rect2D implements Serializable {
 	}
 
 	public boolean contains(double rx, double ry, double rw, double rh) {
-        Rect.checkDimensions(rw, rh);
+        Dim.checkDimensions(rw, rh);
         if (w <= 0 || h <= 0) {
             return false; // Special case: empty rect contains nothing
         }
@@ -89,7 +89,7 @@ public final class Rect2D implements Serializable {
 	}
 
 	public boolean intersects(double rx, double ry, double rw, double rh) {
-        Rect.checkDimensions(rw, rh);
+        Dim.checkDimensions(rw, rh);
         if (w <= 0 || h <= 0 || rw <= 0 || rh <= 0) {
             return false; // Special case: empty rects intersect nothing
         }
