@@ -1,20 +1,16 @@
 package nl.weeaboo.entity;
 
-import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 
-public class Part implements Serializable {
+public class Part implements IPart {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	transient int refcount;
-	transient World world;
+    private transient boolean attached;
 
-	public Part() {
-	}
-
-	public String toDetailedString() {
+    @Override
+    public String toDetailedString() {
 		StringBuilder sb = new StringBuilder();
 		sb.append(getClass().getSimpleName()).append("(");
 		int t = 0;
@@ -41,30 +37,22 @@ public class Part implements Serializable {
 		return sb.toString();
 	}
 
-	/**
-	 * This method is called whenever this part becomes attached to a world.
-	 * @param w The world this part is now attached to.
-	 */
-	public void onAttached(World w) {
-	}
+    @Override
+    public void onAttached(Scene scene) {
+        attached = true;
+    }
 
-	/**
-	 * This method is called whenever this part becomes detached to a world.
-	 * @param w The world this part is now detached from.
-	 */
-	public void onDetached(World w) {
-	}
+    @Override
+    public void onDetached(Scene scene) {
+        attached = false;
+    }
 
-	/**
-	 * @param signal The signal which is optionally handled by this part.
-	 */
-	public void handleSignal(ISignal signal) {
-	}
+    public boolean isAttached() {
+        return attached;
+    }
 
-	protected void firePropertyChanged(String propertyName, Object newValue) {
-		if (world != null) {
-			world.firePartPropertyChanged(this, propertyName, newValue);
-		}
-	}
+    @Override
+    public void handleSignal(ISignal signal) {
+    }
 
 }

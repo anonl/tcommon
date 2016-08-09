@@ -5,17 +5,17 @@ class ModelPart extends Part {
 	private static final long serialVersionUID = 2L;
 
 	private int x, y, z;
-	
+
 	public ModelPart() {
 	}
 	public ModelPart(int x, int y, int z) {
 		this();
-		
+
 		this.x = x;
 		this.y = y;
 		this.z = z;
 	}
-	
+
 	public int getX() {
 		return x;
 	}
@@ -25,24 +25,15 @@ class ModelPart extends Part {
 	public int getZ() {
 		return z;
 	}
-	
+
 	public void setX(int x) {
-		if (this.x != x) {
-			this.x = x;
-			firePropertyChanged("x", x);
-		}
+		this.x = x;
 	}
 	public void setY(int y) {
-		if (this.y != y) {
-			this.y = y;
-			firePropertyChanged("y", y);
-		}
+		this.y = y;
 	}
 	public void setZ(int z) {
-		if (this.z != z) {
-			this.z = z;
-			firePropertyChanged("z", z);
-		}
+		this.z = z;
 	}
-	
+
 }

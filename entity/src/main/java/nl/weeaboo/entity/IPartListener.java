@@ -2,10 +2,10 @@ package nl.weeaboo.entity;
 
 public interface IPartListener {
 
-	public void onPartAttached(Entity e, Part p);
-	
-	public void onPartDetached(Entity e, Part p);
-	
-	public void onPartPropertyChanged(Entity e, Part p, String propertyName, Object newValue);
-	
+	public void onPartAttached(Entity e, IPart p);
+
+	public void onPartDetached(Entity e, IPart p);
+
+	public void onPartPropertyChanged(Entity e, IPart p, String propertyName, Object newValue);
+
 }

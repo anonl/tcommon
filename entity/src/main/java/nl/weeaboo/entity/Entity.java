@@ -9,7 +9,7 @@ import nl.weeaboo.io.IReadResolveSerializable;
 import nl.weeaboo.io.IWriteReplaceSerializable;
 
 /**
- * Game object. An entity is a group of related {@link Part} objects with a shared lifetime. For example an
+ * Game object. An entity is a group of related {@link IPart} objects with a shared lifetime. For example an
  * entity may consist of a model part containing logical state and a renderer part that draws something to the
  * screen, based on the values in the model. This design allows easy mixing and matching of different parts as
  * opposed to more traditional inheritance-based OOP programming style.
@@ -23,7 +23,7 @@ public final class Entity implements IWriteReplaceSerializable {
 	 */
 	private static final int MIN_PART_ARRAY_INC = 4;
 
-	private static final Part[] EMPTY = {};
+	private static final IPart[] EMPTY = {};
 
 
 	// -------------------------------------------------------------------------
@@ -47,7 +47,7 @@ public final class Entity implements IWriteReplaceSerializable {
 	 * The parts array only needs to be large enough to hold the highest PartType id currently attached to the
 	 * entity. Ids that fall outside the array are treated as absent.
 	 */
-	private Part[] parts = EMPTY;
+	private IPart[] parts = EMPTY;
 
 	/**
 	 * The number of Part objects in the parts array.
@@ -99,10 +99,10 @@ public final class Entity implements IWriteReplaceSerializable {
 
 		partsCount = in.readInt();
 		int partsL = in.readInt();
-		parts = new Part[partsL];
+		parts = new IPart[partsL];
 		for (int n = 0; n < partsCount; n++) {
 			int index = (partsL < 256 ? in.readByte() & 0xFF : in.readInt());
-			parts[index] = (Part)in.readObject();
+			parts[index] = (IPart)in.readObject();
 		}
 
 		s.registerEntity(this, false);
@@ -136,8 +136,8 @@ public final class Entity implements IWriteReplaceSerializable {
 	}
 
 	private void reserveRoomForPart(int partId) {
-		Part[] oldParts = parts;
-		Part[] newParts = new Part[Math.max(partId+1, oldParts.length + MIN_PART_ARRAY_INC)];
+		IPart[] oldParts = parts;
+		IPart[] newParts = new IPart[Math.max(partId+1, oldParts.length + MIN_PART_ARRAY_INC)];
 		if (partsCount > 0) { // No need to copy if the array was empty
 			System.arraycopy(oldParts, 0, newParts, 0, oldParts.length);
 		}
@@ -149,7 +149,7 @@ public final class Entity implements IWriteReplaceSerializable {
 	}
 
     public void handleSignal(ISignal signal) {
-        for (Part part : parts) {
+        for (IPart part : parts) {
             if (signal.isHandled()) {
                 break;
             }
@@ -162,11 +162,11 @@ public final class Entity implements IWriteReplaceSerializable {
 	/**
 	 *  Returns an snapshot of all parts currently attached to this entity.
 	 */
-    Part[] parts() {
-		Part[] result = new Part[partsCount];
+    IPart[] parts() {
+		IPart[] result = new IPart[partsCount];
 		int r = 0;
 		for (int index = 0; index < parts.length; index++) {
-			Part p = parts[index];
+			IPart p = parts[index];
 			if (p != null) {
 				result[r++] = p;
 			}
@@ -175,9 +175,9 @@ public final class Entity implements IWriteReplaceSerializable {
 	}
 
     public <T> void addPart(PartType<T> type, T part) {
-        addPart(type.getId(), (Part)part); // Perform explicit cast for non-generic aware calling code
+        addPart(type.getId(), (IPart)part); // Perform explicit cast for non-generic aware calling code
 	}
-	protected void addPart(int partId, Part part) {
+	protected void addPart(int partId, IPart part) {
 		if (partId < parts.length && parts[partId] != null) {
 			throw new IllegalArgumentException("Part index " + partId + " is already in use");
 		}
@@ -209,7 +209,7 @@ public final class Entity implements IWriteReplaceSerializable {
     public <T> T getPart(PartType<T> type) {
 		return type.cast(getPart(type.getId()));
 	}
-	protected Part getPart(int partId) {
+	protected IPart getPart(int partId) {
 		if (partId < 0 || partId >= parts.length) {
 			return null;
 		}
@@ -217,16 +217,16 @@ public final class Entity implements IWriteReplaceSerializable {
 	}
 
     public <T> void setPart(PartType<T> type, T part) {
-        setPart(type.getId(), (Part)part); // Perform explicit cast for non-generic aware calling code
+        setPart(type.getId(), (IPart)part); // Perform explicit cast for non-generic aware calling code
 	}
-	protected void setPart(int partId, Part part) {
+	protected void setPart(int partId, IPart part) {
 		if (part != null) {
 			//Set part
 			if (partId >= parts.length) {
 				reserveRoomForPart(partId);
 			}
 
-			Part oldPart = parts[partId];
+			IPart oldPart = parts[partId];
 			parts[partId] = part;
 
 			if (oldPart == null) {
@@ -241,7 +241,7 @@ public final class Entity implements IWriteReplaceSerializable {
 			}
 		} else if (partId >= 0 && partId < parts.length) {
 			//Remove part
-			Part oldPart = parts[partId];
+			IPart oldPart = parts[partId];
 			parts[partId] = null;
 
 			if (oldPart != null) {
@@ -264,7 +264,7 @@ public final class Entity implements IWriteReplaceSerializable {
 	public String toDetailedString() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("Entity{id=").append(id);
-		for (Part p : parts()) {
+		for (IPart p : parts()) {
 			sb.append("\n  ").append(p.toDetailedString());
 		}
 		sb.append("\n}");

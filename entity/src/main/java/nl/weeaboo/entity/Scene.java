@@ -140,9 +140,9 @@ public final class Scene implements IWriteReplaceSerializable {
 	}
 
 	/**
-	 * @see World#firePartPropertyChanged(Part, String, Object)
+	 * @see World#firePartPropertyChanged(IPart, String, Object)
 	 */
-	void firePartPropertyChanged(Part part, String propertyName, Object newValue) {
+	void firePartPropertyChanged(IPart part, String propertyName, Object newValue) {
 		boolean invalidated = false;
 		for (Entity e : partManager.entitiesWithPart(part)) {
 			if (!invalidated) {
@@ -193,7 +193,7 @@ public final class Scene implements IWriteReplaceSerializable {
 			}
 		}
 
-		for (Part p : e.parts()) {
+		for (IPart p : e.parts()) {
 			registerPart(e, p, notifyListeners);
 		}
 	}
@@ -217,7 +217,7 @@ public final class Scene implements IWriteReplaceSerializable {
 			}
 		}
 
-		for (Part p : e.parts()) {
+		for (IPart p : e.parts()) {
 			unregisterPart(e, p, notifyListeners);
 		}
 		return true;
@@ -271,14 +271,12 @@ public final class Scene implements IWriteReplaceSerializable {
 		return getEntity(id) != null;
 	}
 
-	void registerPart(Entity e, Part p, boolean notifyListeners) {
-		p.refcount++;
-		assert p.refcount >= 1;
+	void registerPart(Entity e, IPart p, boolean notifyListeners) {
+	    boolean newlyAttached = !partManager.contains(p);
 
 		partManager.add(e, p);
-		if (p.refcount == 1) {
-			p.world = world;
-			p.onAttached(world);
+		if (newlyAttached) {
+		    p.onAttached(this);
 		}
 		entityManager.invalidateStreams();
 
@@ -289,10 +287,7 @@ public final class Scene implements IWriteReplaceSerializable {
 		}
 	}
 
-	void unregisterPart(Entity e, Part p, boolean notifyListeners) {
-		p.refcount--;
-		assert p.refcount >= 0;
-
+	void unregisterPart(Entity e, IPart p, boolean notifyListeners) {
 		partManager.remove(e, p);
 		entityManager.invalidateStreams();
 
@@ -302,9 +297,8 @@ public final class Scene implements IWriteReplaceSerializable {
 			}
 		}
 
-		if (p.refcount == 0) {
-			p.world = null;
-			p.onDetached(world);
+		if (!partManager.contains(p)) {
+			p.onDetached(this);
 		}
 	}
 

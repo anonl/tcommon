@@ -4,7 +4,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 public class PartAddRemoveTest {
-	
+
 	/**
 	 * Checks that parts can be added/removed from entities.
 	 */
@@ -12,13 +12,13 @@ public class PartAddRemoveTest {
 	public void singleAddRemove() {
 		TestPartRegistry pr = new TestPartRegistry();
 		World world = new World(pr);
-		
+
 		Scene scene = world.createScene();
 		CountingEntityListener el = new CountingEntityListener();
 		scene.addEntityListener(el);
 		CountingPartListener pl = new CountingPartListener();
 		scene.addPartListener(pl);
-		
+
 		// Create entity
 		Entity e = scene.createEntity();
 		e.addPart(pr.typeA, new ModelPart());
@@ -27,7 +27,7 @@ public class PartAddRemoveTest {
 		Assert.assertEquals(2, e.getPartsCount());
 		e.addPart(pr.typeC, new ModelPart());
 		Assert.assertEquals(3, e.getPartsCount());
-		
+
 		// Check that events are correctly reported to listeners
 		Assert.assertEquals(1, el.created);
 		Assert.assertEquals(1, el.attached);
@@ -35,13 +35,13 @@ public class PartAddRemoveTest {
 
 		// Destroy entity
 		e.destroy();
-		
-		// Check that events are correctly reported to listeners		
+
+		// Check that events are correctly reported to listeners
 		Assert.assertEquals(3, pl.detached); // Destroying the entity should detach its parts
 		Assert.assertEquals(1, el.detached);
 		Assert.assertEquals(1, el.destroyed);
 	}
-	
+
 	/**
 	 * A more complex test for add/remove behavior.
 	 */
@@ -49,13 +49,13 @@ public class PartAddRemoveTest {
 	public void multiAddRemove() {
 		TestPartRegistry pr = new TestPartRegistry();
 		World world = new World(pr);
-		
+
 		Scene scene = world.createScene();
 		CountingEntityListener el = new CountingEntityListener();
 		scene.addEntityListener(el);
 		CountingPartListener pl = new CountingPartListener();
 		scene.addPartListener(pl);
-		
+
 		// Create entities
 		int count = 10;
 		Entity[] entities = new Entity[count];
@@ -66,12 +66,12 @@ public class PartAddRemoveTest {
 			e.addPart(pr.typeC, new ModelPart());
 			entities[n] = e;
 		}
-		
+
 		// Destroy entities
 		for (Entity e : entities) {
 			e.destroy();
 		}
-		
+
 		// Check listener counts
 		Assert.assertEquals(count, el.created);
 		Assert.assertEquals(count, el.attached);
@@ -80,7 +80,7 @@ public class PartAddRemoveTest {
 		Assert.assertEquals(count, el.detached);
 		Assert.assertEquals(count, el.destroyed);
 	}
-	
+
 	/**
 	 * A more complex test for add/remove behavior.
 	 */
@@ -88,13 +88,13 @@ public class PartAddRemoveTest {
 	public void partGetSet() {
 		TestPartRegistry pr = new TestPartRegistry();
 		World world = new World(pr);
-		
+
 		Scene scene = world.createScene();
 		Entity e = scene.createEntity();
-		
+
 		ModelPart alpha = new ModelPart();
 		ModelPart beta = new ModelPart();
-		
+
 		// Double-add part
 		e.addPart(pr.typeA, alpha);
 		try {
@@ -109,37 +109,41 @@ public class PartAddRemoveTest {
 		} catch (IllegalArgumentException iae) {
 			// Behavior ok, parts can't be overwritten with add
 		}
-		
+
 		// Double-remove part
 		e.removePart(pr.typeA);
 		e.removePart(pr.typeA);
-		
+
 		// Double-add part using setPart (overwrites)
-		e.setPart(pr.typeA, alpha);		
+		e.setPart(pr.typeA, alpha);
 		e.setPart(pr.typeA, beta);
-		Assert.assertEquals(0, alpha.refcount);
-		Assert.assertEquals(1, beta.refcount);
-		
+		Assert.assertEquals(false, alpha.isAttached());
+		Assert.assertEquals(true, beta.isAttached());
+
 		// Remove part using setPart
 		e.setPart(pr.typeA, null);
-		Assert.assertEquals(0, alpha.refcount);
-		Assert.assertEquals(0, beta.refcount);
-		
+        Assert.assertEquals(false, alpha.isAttached());
+        Assert.assertEquals(false, beta.isAttached());
+
 		// Use same part for multiple types
 		e.setPart(pr.typeA, alpha);
 		e.setPart(pr.typeB, alpha);
 		e.setPart(pr.typeC, alpha);
-		Assert.assertEquals(3, alpha.refcount);
-		
+        Assert.assertEquals(true, alpha.isAttached());
+
+        // Still attached to typeB/typeC
+        e.removePart(pr.typeA);
+        Assert.assertEquals(true, alpha.isAttached());
+
 		// Get invalid part types
 		Assert.assertNull(e.getPart(-1));
 		Assert.assertNull(e.getPart(4));
-		
+
 		// Remove all
 		e.removeAllParts();
-		Assert.assertEquals(0, alpha.refcount);
-		Assert.assertEquals(0, beta.refcount);
+        Assert.assertEquals(false, alpha.isAttached());
+        Assert.assertEquals(false, beta.isAttached());
 		Assert.assertEquals(0, e.getPartsCount());
 	}
-	
+
 }

@@ -163,7 +163,7 @@ public final class World implements Externalizable {
 	/**
 	 * Gets called by parts whenever one of their properties changes.
 	 */
-	void firePartPropertyChanged(Part part, String propertyName, Object newValue) {
+	void firePartPropertyChanged(IPart part, String propertyName, Object newValue) {
 		for (Scene scene : scenes.values()) {
 			scene.firePartPropertyChanged(part, propertyName, newValue);
 		}

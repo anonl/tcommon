@@ -70,10 +70,10 @@ public class SaveLoadTest {
 		Assert.assertEquals(1, scene.getEntitiesCount());
 
 		TestUtil.assertEntitiesEqual(e, loaded.findEntity(e.getId()));
-		Assert.assertEquals(2, e.getPart(pr.typeA).refcount);
-		Assert.assertEquals(2, e.getPart(pr.typeB).refcount);
+		Assert.assertEquals(true, e.getPart(pr.typeA).isAttached());
+		Assert.assertEquals(true, e.getPart(pr.typeB).isAttached());
 		Assert.assertTrue(e.getPart(pr.typeA) == e.getPart(pr.typeB));
-		Assert.assertEquals(1, e.getPart(pr.typeC).refcount);
+		Assert.assertEquals(true, e.getPart(pr.typeC).isAttached());
 	}
 
 

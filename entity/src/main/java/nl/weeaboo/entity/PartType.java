@@ -19,7 +19,7 @@ public final class PartType<T> implements Serializable {
         this.partInterface = partInterface;
 	}
 
-	public T cast(Part part) {
+	public T cast(IPart part) {
         return partInterface.cast(part);
 	}
 

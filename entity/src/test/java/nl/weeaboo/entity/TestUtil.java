@@ -18,41 +18,41 @@ import java.util.zip.DeflaterOutputStream;
 import java.util.zip.Inflater;
 import java.util.zip.InflaterInputStream;
 
-import nl.weeaboo.common.StringUtil;
-
 import org.junit.Assert;
+
+import nl.weeaboo.common.StringUtil;
 
 public final class TestUtil {
 
 	private static final int COMPRESSION_LEVEL = Deflater.BEST_SPEED;
-	
-	private TestUtil() {		
+
+	private TestUtil() {
 	}
-	
+
 	public static void serializeWorld(File file, boolean compress, World world) throws IOException {
 		serialize(file, compress, world);
 	}
-	private static <T> void serialize(File file, boolean compress, T obj) throws IOException {		
+	private static <T> void serialize(File file, boolean compress, T obj) throws IOException {
 		OutputStream raw = new BufferedOutputStream(new FileOutputStream(file));
 		raw.write(compress ? 1 : 0);
 		if (compress) {
 			raw = new DeflaterOutputStream(raw, new Deflater(COMPRESSION_LEVEL, true));
 		}
-		
+
 		ObjectOutputStream out = new ObjectOutputStream(raw);
-		try {			
+		try {
 			out.writeObject(obj);
 		} finally {
 			out.close();
 		}
-		
+
 		System.out.println("Serialized file size (" + file + "): " + StringUtil.formatMemoryAmount(file.length()));
-	}	
+	}
 
 	public static World deserializeWorld(File file) throws IOException, ClassNotFoundException {
 		return deserialize(file, World.class);
 	}
-	private static <T> T deserialize(File file, Class<T> clazz) throws IOException, ClassNotFoundException {		
+	private static <T> T deserialize(File file, Class<T> clazz) throws IOException, ClassNotFoundException {
 		InputStream raw = new BufferedInputStream(new FileInputStream(file));
 		int compress = raw.read();
 		if (compress == 1) {
@@ -68,30 +68,29 @@ public final class TestUtil {
 		}
 		return result;
 	}
-	
+
 	public static void assertEntitiesEqual(List<Entity> aEntities, List<Entity> bEntities) {
 		Assert.assertEquals(aEntities.size(), bEntities.size());
 		for (int n = 0; n < Math.min(aEntities.size(), bEntities.size()); n++) {
 			assertEntitiesEqual(aEntities.get(n), bEntities.get(n));
 		}
 	}
-	
+
 	public static void assertEntitiesEqual(Entity a, Entity b) {
-		List<Part> aParts = new ArrayList<Part>();
+		List<IPart> aParts = new ArrayList<IPart>();
 		Collections.addAll(aParts, a.parts());
-		
-		List<Part> bParts = new ArrayList<Part>();
+
+		List<IPart> bParts = new ArrayList<IPart>();
 		Collections.addAll(bParts, b.parts());
-		
+
 		Assert.assertEquals(aParts.size(), bParts.size());
 		for (int n = 0; n < Math.min(aParts.size(), bParts.size()); n++) {
 			assertPartsEqual(aParts.get(n), bParts.get(n));
 		}
 	}
-	
-	public static void assertPartsEqual(Part a, Part b) {
+
+	public static void assertPartsEqual(IPart a, IPart b) {
 		Assert.assertEquals(a.getClass(), b.getClass());
-		Assert.assertEquals(a.refcount, b.refcount);
 	}
-	
+
 }
