@@ -2,6 +2,8 @@ package nl.weeaboo.filesystem;
 
 import java.io.Serializable;
 
+import nl.weeaboo.io.Filenames;
+
 public final class FilePath implements Serializable, Comparable<FilePath> {
 
     private static final long serialVersionUID = 1L;
@@ -63,7 +65,10 @@ public final class FilePath implements Serializable, Comparable<FilePath> {
     }
 
     public FilePath resolve(FilePath relPath) {
-        return FilePath.of(path + "/" +  relPath);
+        return FilePath.of(path + "/" + relPath);
+    }
+    public FilePath resolve(String relPath) {
+        return FilePath.of(path + "/" + relPath);
     }
 
     public FilePath relativize(FilePath fullPath) {
@@ -91,6 +96,14 @@ public final class FilePath implements Serializable, Comparable<FilePath> {
     public String getName() {
         int index = getSplitIndex();
         return path.substring(index + 1);
+    }
+
+    public String getExt() {
+        return Filenames.getExtension(getName());
+    }
+
+    public FilePath withExt(String newExtension) {
+        return FilePath.of(Filenames.replaceExt(path, newExtension));
     }
 
     public boolean hasParent() {

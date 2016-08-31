@@ -4,10 +4,10 @@ import nl.weeaboo.common.Checks;
 
 public final class FileCollectOptions {
 
-    public FilePath prefix;
+    public final FilePath prefix;
 
-    public boolean recursive;
-    public boolean collectFiles;
+    public boolean recursive = true;
+    public boolean collectFiles = true;
     public boolean collectFolders;
 
     public FileCollectOptions() {
