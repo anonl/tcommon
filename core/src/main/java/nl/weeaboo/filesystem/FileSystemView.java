@@ -3,28 +3,28 @@ package nl.weeaboo.filesystem;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.List;
 
 import nl.weeaboo.common.Checks;
 
 public class FileSystemView implements IFileSystem {
 
 	private final IFileSystem fileSystem;
-	private final String prefix;
-	
-	public FileSystemView(IFileSystem fileSystem, String prefix) {
+	private final FilePath basePath;
+
+	public FileSystemView(IFileSystem fileSystem, FilePath basePath) {
 		this.fileSystem = Checks.checkNotNull(fileSystem);
-		this.prefix = Checks.checkNotNull(prefix);
+		this.basePath = Checks.checkNotNull(basePath);
 	}
-	
+
 	@Override
 	public void close() {
 		fileSystem.close();
 	}
 
 	@Override
-	public InputStream openInputStream(String path) throws IOException {
-		return fileSystem.openInputStream(prefix + path);
+	public InputStream openInputStream(FilePath path) throws IOException {
+		return fileSystem.openInputStream(resolvePath(path));
 	}
 
 	@Override
@@ -37,39 +37,40 @@ public class FileSystemView implements IFileSystem {
 		return fileSystem.isReadOnly();
 	}
 
-	public String getPrefix() {
-		return prefix;
+	public FilePath getBasePath() {
+		return basePath;
 	}
-	
+
+    protected FilePath resolvePath(FilePath relPath) {
+        return basePath.resolve(relPath);
+    }
+
+    protected FilePath relativizePath(FilePath fullPath) {
+        return basePath.relativize(fullPath);
+    }
+
 	@Override
-	public boolean getFileExists(String path) {
-		return fileSystem.getFileExists(prefix + path);
+	public boolean getFileExists(FilePath path) {
+		return fileSystem.getFileExists(resolvePath(path));
 	}
 
 	@Override
-	public long getFileSize(String path) throws IOException {
-		return fileSystem.getFileSize(prefix + path);
+	public long getFileSize(FilePath path) throws IOException {
+		return fileSystem.getFileSize(resolvePath(path));
 	}
 
 	@Override
-	public long getFileModifiedTime(String path) throws IOException {
-		return fileSystem.getFileModifiedTime(prefix + path);
+	public long getFileModifiedTime(FilePath path) throws IOException {
+		return fileSystem.getFileModifiedTime(resolvePath(path));
 	}
 
-	@Override
-	public void getFiles(Collection<String> out, String path, boolean recursive) throws IOException {
-		Collection<String> temp = new ArrayList<String>();
-		fileSystem.getFiles(temp, prefix + path, recursive);
-		temp = FileSystemUtil.withoutPathPrefix(temp, prefix);
-		out.addAll(temp);
-	}
+    @Override
+    public Iterable<FilePath> getFiles(FileCollectOptions opts) throws IOException {
+        List<FilePath> result = new ArrayList<FilePath>();
+        for (FilePath path : fileSystem.getFiles(opts)) {
+            result.add(basePath.relativize(path));
+        }
+        return result;
+    }
 
-	@Override
-	public void getSubFolders(Collection<String> out, String path, boolean recursive) throws IOException {
-		Collection<String> temp = new ArrayList<String>();
-		fileSystem.getSubFolders(temp, prefix + path, recursive);
-		temp = FileSystemUtil.withoutPathPrefix(temp, prefix);
-		out.addAll(temp);
-	}
-	
 }

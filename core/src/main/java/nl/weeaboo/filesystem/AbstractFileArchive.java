@@ -5,11 +5,11 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Comparator;
 import java.util.Iterator;
-import java.util.NoSuchElementException;
+import java.util.List;
 
 import nl.weeaboo.io.IRandomAccessFile;
 import nl.weeaboo.io.RandomAccessUtil;
@@ -69,7 +69,7 @@ public abstract class AbstractFileArchive extends AbstractFileSystem implements 
     }
 
     @Override
-    protected boolean getFileExistsImpl(String path) {
+    protected boolean getFileExistsImpl(FilePath path) {
         try {
             return getFileImpl(path) != null;
         } catch (FileNotFoundException e) {
@@ -78,28 +78,28 @@ public abstract class AbstractFileArchive extends AbstractFileSystem implements 
     }
 
     @Override
-    protected long getFileSizeImpl(String path) throws IOException {
+    protected long getFileSizeImpl(FilePath path) throws IOException {
         return getFileImpl(path).getUncompressedLength();
     }
 
     @Override
-    protected long getFileModifiedTimeImpl(String path) throws IOException {
+    protected long getFileModifiedTimeImpl(FilePath path) throws IOException {
         return getFileImpl(path).getModifiedTime();
     }
 
-    public final ArchiveFileRecord getFile(String path) throws FileNotFoundException {
-        return getFileImpl(normalizePath(path, false));
+    public final ArchiveFileRecord getFile(FilePath path) throws FileNotFoundException {
+        return getFileImpl(resolvePath(path, false));
     }
 
-    protected ArchiveFileRecord getFileImpl(String path) throws FileNotFoundException {
+    protected ArchiveFileRecord getFileImpl(FilePath path) throws FileNotFoundException {
         int index = Arrays.binarySearch(records, path, pathComparator);
         if (index < 0) {
-            throw new FileNotFoundException(path);
+            throw new FileNotFoundException(path.toString());
         }
         return records[index];
     }
 
-	public long getFileOffset(String path) throws IOException {
+	public long getFileOffset(FilePath path) throws IOException {
 		return getFileOffset(getFileImpl(path).getHeaderOffset());
 	}
 
@@ -107,54 +107,33 @@ public abstract class AbstractFileArchive extends AbstractFileSystem implements 
 
 	@Override
 	public Iterator<ArchiveFileRecord> iterator() {
-		return new Iterator<ArchiveFileRecord>() {
-			int t = 0;
-
-			@Override
-			public boolean hasNext() {
-				return t < records.length;
-			}
-
-			@Override
-			public ArchiveFileRecord next() {
-                if (t >= records.length) {
-                    throw new NoSuchElementException(Integer.toString(t));
-                }
-			    return records[t++];
-			}
-
-			@Override
-			public void remove() {
-				throw new UnsupportedOperationException("Archive is read-only");
-			}
-		};
+	    return Arrays.asList(records).iterator();
 	}
 
     @Override
-    protected void getFiles(Collection<String> out, String prefix, FileCollectOptions opts)
-            throws IOException {
-
-		int index = Arrays.binarySearch(records, prefix, pathComparator);
+    public Iterable<FilePath> getFiles(FileCollectOptions opts) throws IOException {
+		int index = Arrays.binarySearch(records, opts.prefix, pathComparator);
 		if (index < 0) {
 			index = -(index+1);
 		}
 
+		List<FilePath> result = new ArrayList<FilePath>();
 		while (index >= 0 && index < records.length) {
 			ArchiveFileRecord record = records[index];
-			if (record.getPath().startsWith(prefix)) {
-				boolean isFolder = record.isFolder();
-				if ((isFolder && opts.collectFolders) || (!isFolder && opts.collectFiles)) {
-					String path = record.getPath();
-					int slashIndex = path.indexOf('/', prefix.length());
-					if (opts.recursive || slashIndex < 0 || slashIndex == path.length()-1) {
-						out.add(path);
-					}
+			if (!record.getPath().startsWith(opts.prefix)) {
+                break; //We're past the subrange that matches the prefix
+			}
+
+			boolean isFolder = record.isFolder();
+			if ((isFolder && opts.collectFolders) || (!isFolder && opts.collectFiles)) {
+				FilePath path = record.getPath();
+				if (opts.recursive || !path.hasParent()) {
+				    result.add(path);
 				}
-			} else {
-				break; //We're past the subrange that matches the prefix
 			}
 			index++;
 		}
+		return result;
 	}
 
 	/**
@@ -183,11 +162,11 @@ public abstract class AbstractFileArchive extends AbstractFileSystem implements 
             return getPath(a).compareTo(getPath(b));
         }
 
-        private static String getPath(Object obj) {
+        private static FilePath getPath(Object obj) {
             if (obj instanceof ArchiveFileRecord) {
                 return ((ArchiveFileRecord)obj).getPath();
             }
-            return String.valueOf(obj);
+            return (FilePath)obj;
         }
 
     }

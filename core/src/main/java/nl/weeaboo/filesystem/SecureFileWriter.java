@@ -16,17 +16,16 @@ public class SecureFileWriter {
 		this.fs = fs;
 	}
 
-	// Functions
-	public InputStream newInputStream(String path) throws IOException {
+	public InputStream newInputStream(FilePath path) throws IOException {
 		if (fs.getFileExists(path) && fs.getFileSize(path) > 0) {
 			return fs.openInputStream(path);
 		}
 		return fs.openInputStream(backupPath(path));
 	}
 
-	public OutputStream newOutputStream(final String path, boolean append) throws IOException {
-	    final String backupPath = backupPath(path);
-	    
+	public OutputStream newOutputStream(final FilePath path, boolean append) throws IOException {
+	    final FilePath backupPath = backupPath(path);
+
 		if (append) {
 			if (fs.getFileExists(path)) {
 				fs.copy(path, backupPath);
@@ -36,7 +35,7 @@ public class SecureFileWriter {
 			@Override
 			public void close() throws IOException {
 				super.close();
-				
+
 				if (fs.getFileExists(path)) {
 					fs.delete(path);
 				}
@@ -44,20 +43,20 @@ public class SecureFileWriter {
 			}
 		};
 	}
-	
-	private static String backupPath(String path) {
-	    return path + ".bak";
+
+	private static FilePath backupPath(FilePath path) {
+	    return FilePath.of(path + ".bak");
 	}
 
-	protected boolean isMainFileOK(String path) {
+	protected boolean isMainFileOK(FilePath path) {
 		try {
 			return fs.getFileExists(path) && fs.getFileSize(path) > 0;
 		} catch (IOException e) {
 			return false;
-		}		
+		}
 	}
-	
-	public long getFileSize(String path) throws IOException {
+
+	public long getFileSize(FilePath path) throws IOException {
 		if (isMainFileOK(path)) {
 			return fs.getFileSize(path);
 		}

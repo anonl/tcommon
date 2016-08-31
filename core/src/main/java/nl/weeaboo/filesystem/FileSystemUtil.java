@@ -15,7 +15,7 @@ public final class FileSystemUtil {
 	private FileSystemUtil() {
 	}
 
-    public static byte[] readBytes(IFileSystem fs, String path) throws IOException {
+    public static byte[] readBytes(IFileSystem fs, FilePath path) throws IOException {
         byte[] bytes;
         InputStream in = fs.openInputStream(path);
         try {
@@ -26,17 +26,17 @@ public final class FileSystemUtil {
         return bytes;
     }
 
-    public static String readString(IFileSystem fs, String path) throws IOException {
+    public static String readString(IFileSystem fs, FilePath path) throws IOException {
         byte[] bytes = readBytes(fs, path);
         int skip = StreamUtil.skipBOM(bytes, 0, bytes.length);
         return StringUtil.fromUTF8(bytes, skip, bytes.length - skip);
     }
 
-    public static void writeString(IWritableFileSystem fs, String path, String content) throws IOException {
+    public static void writeString(IWritableFileSystem fs, FilePath path, String content) throws IOException {
         writeBytes(fs, path, StringUtil.toUTF8(content));
     }
 
-    public static void writeBytes(IWritableFileSystem fs, String path, byte[] content) throws IOException {
+    public static void writeBytes(IWritableFileSystem fs, FilePath path, byte[] content) throws IOException {
         OutputStream out = fs.openOutputStream(path, false);
         try {
             out.write(content);
@@ -45,6 +45,7 @@ public final class FileSystemUtil {
         }
     }
 
+    @Deprecated
     public static Collection<String> withoutPathPrefix(Collection<String> paths, String prefix) {
 		final int pL = prefix.length();
 
@@ -60,6 +61,7 @@ public final class FileSystemUtil {
 		return result;
 	}
 
+    @Deprecated
 	public static Comparator<String> getFilenameComparator() {
 		return new Comparator<String>() {
 			@Override

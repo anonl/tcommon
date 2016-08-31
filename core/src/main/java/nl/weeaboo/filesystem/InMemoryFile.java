@@ -8,9 +8,9 @@ import java.io.OutputStream;
 
 import nl.weeaboo.common.Checks;
 
-class InMemoryFile {
+final class InMemoryFile {
 
-	private final String path;
+	private final FilePath path;
 
 	private long modifiedTime;
 	private byte[] contents = new byte[0];
@@ -19,7 +19,7 @@ class InMemoryFile {
 	private int openInputStreams;
 	private int openOutputStreams;
 
-	public InMemoryFile(String path) {
+	public InMemoryFile(FilePath path) {
 		this.path = path;
 	}
 
@@ -31,7 +31,7 @@ class InMemoryFile {
 	public InMemoryFile copy() throws IOException {
 		return copy(path);
 	}
-	public InMemoryFile copy(String path) throws IOException {
+	public InMemoryFile copy(FilePath path) throws IOException {
 		InMemoryFile copy = new InMemoryFile(path);
         synchronized (copy) {
             synchronized (this) {
@@ -55,7 +55,7 @@ class InMemoryFile {
 		}
 	}
 
-	public String getName() {
+	public FilePath getPath() {
 		return path;
 	}
 

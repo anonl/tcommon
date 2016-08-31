@@ -5,10 +5,10 @@ import java.io.OutputStream;
 
 public interface IWritableFileSystem extends IFileSystem {
 
-    void delete(String path) throws IOException;
-    void rename(String src, String dst) throws IOException;
-    void copy(String src, String dst) throws IOException;        
-    
-    OutputStream openOutputStream(String path, boolean append) throws IOException;
-    
+    void delete(FilePath path) throws IOException;
+    void rename(FilePath src, FilePath dst) throws IOException;
+    void copy(FilePath src, FilePath dst) throws IOException;
+
+    OutputStream openOutputStream(FilePath path, boolean append) throws IOException;
+
 }

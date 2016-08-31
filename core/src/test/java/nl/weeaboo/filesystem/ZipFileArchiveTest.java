@@ -34,11 +34,11 @@ public class ZipFileArchiveTest {
 
         arc.open(zipFile);
 
-        ArchiveFileRecord record = arc.getFile("a.txt");
+        ArchiveFileRecord record = arc.getFile(FilePath.of("a.txt"));
         Assert.assertNotNull(record);
 
         // Check file contents
-        Assert.assertEquals("a", FileSystemUtil.readString(arc, "a.txt"));
+        Assert.assertEquals("a", FileSystemUtil.readString(arc, FilePath.of("a.txt")));
     }
 
 }

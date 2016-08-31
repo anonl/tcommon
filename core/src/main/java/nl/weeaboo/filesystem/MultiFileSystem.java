@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Set;
+import java.util.TreeSet;
 
 public class MultiFileSystem implements IFileSystem {
 
@@ -37,17 +39,17 @@ public class MultiFileSystem implements IFileSystem {
 	}
 
     @Override
-    public InputStream openInputStream(String path) throws IOException {
+    public InputStream openInputStream(FilePath path) throws IOException {
         for (IFileSystem fs : fileSystems) {
             if (fs.getFileExists(path)) {
                 return fs.openInputStream(path);
             }
         }
-        throw new FileNotFoundException(path);
+        throw new FileNotFoundException(path.toString());
     }
 
 	@Override
-	public boolean getFileExists(String path) {
+	public boolean getFileExists(FilePath path) {
 		for (IFileSystem fs : fileSystems) {
 			if (fs.getFileExists(path)) {
 			    return true;
@@ -57,49 +59,23 @@ public class MultiFileSystem implements IFileSystem {
 	}
 
 	@Override
-	public long getFileSize(String path) throws IOException {
+	public long getFileSize(FilePath path) throws IOException {
 		for (IFileSystem fs : fileSystems) {
 			if (fs.getFileExists(path)) {
 			    return fs.getFileSize(path);
 			}
 		}
-		throw new FileNotFoundException(path);
+		throw new FileNotFoundException(path.toString());
 	}
 
 	@Override
-	public long getFileModifiedTime(String path) throws IOException {
+	public long getFileModifiedTime(FilePath path) throws IOException {
 		for (IFileSystem fs : fileSystems) {
 			if (fs.getFileExists(path)) {
 			    return fs.getFileModifiedTime(path);
 			}
 		}
-		throw new FileNotFoundException(path);
-	}
-
-	@Override
-	public void getFiles(Collection<String> out, String path, boolean recursive) throws IOException {
-		for (IFileSystem fs : fileSystems) {
-            if (fs.isOpen()) {
-                try {
-                    fs.getFiles(out, path, recursive);
-                } catch (FileNotFoundException fnfe) {
-                    // Ignore and try the next file system
-                }
-			}
-		}
-	}
-
-	@Override
-	public void getSubFolders(Collection<String> out, String path, boolean recursive) throws IOException {
-		for (IFileSystem fs : fileSystems) {
-			if (fs.isOpen()) {
-                try {
-                    fs.getSubFolders(out, path, recursive);
-                } catch (FileNotFoundException fnfe) {
-                    // Ignore and try the next file system
-                }
-			}
-		}
+		throw new FileNotFoundException(path.toString());
 	}
 
     /**
@@ -113,6 +89,23 @@ public class MultiFileSystem implements IFileSystem {
             }
         }
         return null;
+    }
+
+    @Override
+    public Iterable<FilePath> getFiles(FileCollectOptions opts) throws IOException {
+        Set<FilePath> files = new TreeSet<FilePath>();
+        for (IFileSystem fs : fileSystems) {
+            if (fs.isOpen()) {
+                try {
+                    for (FilePath path : fs.getFiles(opts)) {
+                        files.add(path);
+                    }
+                } catch (FileNotFoundException fnfe) {
+                    // Ignore and try the next file system
+                }
+            }
+        }
+        return files;
     }
 
 }

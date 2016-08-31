@@ -7,7 +7,7 @@ public final class ArchiveFileRecord implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private final String path;
+    private final FilePath path;
 
     private final long headerOffset;
     private final long compressedLength;
@@ -16,25 +16,25 @@ public final class ArchiveFileRecord implements Serializable {
 
     private final int dosDateTime;
 
-    public ArchiveFileRecord(String path, long offset, long compressedLength, long uncompressedLength,
+    public ArchiveFileRecord(FilePath path, long offset, long compressedLength, long uncompressedLength,
             byte compression, int dosDateTime) {
-        
+
         this.path = path;
 
         this.headerOffset = offset;
         this.compressedLength = compressedLength;
         this.uncompressedLength = uncompressedLength;
         this.compression = compression;
-        
+
         this.dosDateTime = dosDateTime;
     }
 
-    public String getPath() {
+    public FilePath getPath() {
         return path;
     }
 
     public boolean isFolder() {
-        return path.endsWith("/");
+        return path.isFolder();
     }
 
     public long getModifiedTime() {
@@ -71,7 +71,7 @@ public final class ArchiveFileRecord implements Serializable {
     public long getUncompressedLength() {
         return uncompressedLength;
     }
-    
+
     /** Record-specific compression method */
     public byte getCompression() {
         return compression;

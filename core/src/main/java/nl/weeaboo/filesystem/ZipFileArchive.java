@@ -81,12 +81,12 @@ public class ZipFileArchive extends AbstractFileArchive {
 
                 byte[] filenameBytes = new byte[filenameLength];
                 StreamUtil.readFully(in, filenameBytes, 0, filenameLength);
-                String filename = StringUtil.fromUTF8(filenameBytes);
+                FilePath filePath = FilePath.of(StringUtil.fromUTF8(filenameBytes));
 
                 StreamUtil.forceSkip(in, extraFieldLength + commentLength);
 
-                records[n] = new ArchiveFileRecord(filename, headerOffset, compressedLength, uncompressedLength,
-                        (byte) compressionMethod, dosDateTime);
+                records[n] = new ArchiveFileRecord(filePath, headerOffset,
+                        compressedLength, uncompressedLength, (byte)compressionMethod, dosDateTime);
             }
         } finally {
             in.close();
@@ -139,7 +139,7 @@ public class ZipFileArchive extends AbstractFileArchive {
     }
 
     @Override
-    protected InputStream openInputStreamImpl(String path) throws IOException {
+    protected InputStream openInputStreamImpl(FilePath path) throws IOException {
         ArchiveFileRecord file = getFileImpl(path);
 
         long fileOffset = getFileOffset(file.getHeaderOffset());

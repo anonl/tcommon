@@ -12,9 +12,9 @@ import nl.weeaboo.common.StringUtil;
 
 public abstract class AbstractFileSystemTest {
 
-    protected static final String VALID_NAME = "valid.txt";
+    protected static final FilePath VALID_NAME = FilePath.of("valid.txt");
     protected static final String VALID_CONTENTS = "test";
-    protected static final String INVALID_NAME = "invalid.txt";
+    protected static final FilePath INVALID_NAME = FilePath.of("invalid.txt");
 
     private long startTime;
     private IWritableFileSystem fs;

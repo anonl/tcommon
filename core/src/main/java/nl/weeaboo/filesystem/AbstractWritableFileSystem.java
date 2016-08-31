@@ -18,40 +18,40 @@ public abstract class AbstractWritableFileSystem extends AbstractFileSystem impl
             throw new IOException("FileSystem is closed");
         }
     }
-    
+
     @Override
-    public final OutputStream openOutputStream(String path, boolean append) throws IOException {
+    public final OutputStream openOutputStream(FilePath path, boolean append) throws IOException {
         checkWritable();
-        return newOutputStreamImpl(normalizePath(path, true), append);
+        return newOutputStreamImpl(resolvePath(path, true), append);
     }
-    
-    protected abstract OutputStream newOutputStreamImpl(String path, boolean append) throws IOException;
-    
+
+    protected abstract OutputStream newOutputStreamImpl(FilePath path, boolean append) throws IOException;
+
     @Override
-    public final void delete(String path) throws IOException {
+    public final void delete(FilePath path) throws IOException {
         checkWritable();
-        deleteImpl(normalizePath(path, true));
+        deleteImpl(resolvePath(path, true));
     }
-    
-    protected abstract void deleteImpl(String path) throws IOException;
-    
+
+    protected abstract void deleteImpl(FilePath path) throws IOException;
+
     @Override
-    public final void rename(String src, String dst) throws IOException {
+    public final void rename(FilePath src, FilePath dst) throws IOException {
         checkWritable();
-        renameImpl(normalizePath(src, false), normalizePath(dst, true));
+        renameImpl(resolvePath(src, false), resolvePath(dst, true));
     }
-    
-    protected void renameImpl(String src, String dst) throws IOException {
+
+    protected void renameImpl(FilePath src, FilePath dst) throws IOException {
         copyImpl(src, dst);
         deleteImpl(src);
     }
-    
+
     @Override
-    public final void copy(String src, String dst) throws IOException {
+    public final void copy(FilePath src, FilePath dst) throws IOException {
         checkWritable();
-        copyImpl(normalizePath(src, false), normalizePath(dst, true));
+        copyImpl(resolvePath(src, false), resolvePath(dst, true));
     }
-    
-    protected abstract void copyImpl(String src, String dst) throws IOException;
-    
+
+    protected abstract void copyImpl(FilePath src, FilePath dst) throws IOException;
+
 }

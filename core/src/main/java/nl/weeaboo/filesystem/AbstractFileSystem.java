@@ -3,7 +3,6 @@ package nl.weeaboo.filesystem;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Collection;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public abstract class AbstractFileSystem implements IFileSystem {
@@ -14,12 +13,12 @@ public abstract class AbstractFileSystem implements IFileSystem {
     }
 
     /**
-     * @param path The user-specified unnormalized path.
+     * @param path The user-specified path.
      * @param allowNonExistant If {@code true}, allow paths to non-existant files.
      * @throws FileNotFoundException If {@code allowNonExistant} is false and the path doesn't point to a
      *         valid file.
      */
-    protected String normalizePath(String path, boolean allowNonExistant) throws FileNotFoundException {
+    protected FilePath resolvePath(FilePath path, boolean allowNonExistant) throws FileNotFoundException {
         return path;
     }
 
@@ -38,57 +37,35 @@ public abstract class AbstractFileSystem implements IFileSystem {
     }
 
     @Override
-    public final InputStream openInputStream(String path) throws IOException {
-        return openInputStreamImpl(normalizePath(path, false));
+    public final InputStream openInputStream(FilePath path) throws IOException {
+        return openInputStreamImpl(resolvePath(path, false));
     }
 
-    protected abstract InputStream openInputStreamImpl(String path) throws IOException;
-    
+    protected abstract InputStream openInputStreamImpl(FilePath path) throws IOException;
+
     @Override
-    public final boolean getFileExists(String path) {
+    public final boolean getFileExists(FilePath path) {
         try {
-            return getFileExistsImpl(normalizePath(path, true));
+            return getFileExistsImpl(resolvePath(path, true));
         } catch (FileNotFoundException e) {
             return false;
         }
     }
 
-    protected abstract boolean getFileExistsImpl(String path);
+    protected abstract boolean getFileExistsImpl(FilePath path);
 
     @Override
-    public final long getFileSize(String path) throws IOException {
-        return getFileSizeImpl(normalizePath(path, false));
+    public final long getFileSize(FilePath path) throws IOException {
+        return getFileSizeImpl(resolvePath(path, false));
     }
 
-    protected abstract long getFileSizeImpl(String path) throws IOException;
+    protected abstract long getFileSizeImpl(FilePath path) throws IOException;
 
     @Override
-    public final long getFileModifiedTime(String path) throws IOException {
-        return getFileModifiedTimeImpl(normalizePath(path, false));
+    public final long getFileModifiedTime(FilePath path) throws IOException {
+        return getFileModifiedTimeImpl(resolvePath(path, false));
     }
 
-    protected abstract long getFileModifiedTimeImpl(String path) throws IOException;
-
-    @Override
-    public void getFiles(Collection<String> out, String path, boolean recursive) throws IOException {
-        FileCollectOptions opts = new FileCollectOptions();
-        opts.recursive = recursive;
-        opts.collectFolders = false;
-        opts.collectFiles = true;
-
-        getFiles(out, path, opts);
-    }
-
-    @Override
-    public void getSubFolders(Collection<String> out, String path, boolean recursive) throws IOException {
-        FileCollectOptions opts = new FileCollectOptions();
-        opts.recursive = recursive;
-        opts.collectFolders = true;
-        opts.collectFiles = false;
-        
-        getFiles(out, path, opts);
-    }
-
-    protected abstract void getFiles(Collection<String> out, String prefix, FileCollectOptions opts) throws IOException;
+    protected abstract long getFileModifiedTimeImpl(FilePath path) throws IOException;
 
 }
