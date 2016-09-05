@@ -112,7 +112,7 @@ public final class FilePath implements Serializable, Comparable<FilePath> {
 
     private int getSplitIndex() {
         if (isFolder()) {
-            return path.lastIndexOf('/', path.length() - 1);
+            return path.lastIndexOf('/', path.length() - 2);
         } else {
             return path.lastIndexOf('/');
         }
