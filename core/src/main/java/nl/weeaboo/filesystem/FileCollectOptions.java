@@ -32,4 +32,23 @@ public final class FileCollectOptions {
         return opts;
     }
 
+    public boolean isValid(FilePath file) {
+        if (recursive) {
+            // This folder is equal to, or a descendant of the base search path
+            return file.startsWith(prefix);
+        } else {
+            // This file is equal to, or a direct child of the base search path
+            if (prefix.equals(file)) {
+                return true;
+            }
+
+            FilePath parent = file.getParent();
+            if (parent == null) {
+                return prefix.equals(FilePath.empty());
+            } else {
+                return prefix.equals(parent);
+            }
+        }
+    }
+
 }

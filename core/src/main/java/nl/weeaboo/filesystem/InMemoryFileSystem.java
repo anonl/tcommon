@@ -111,29 +111,19 @@ public class InMemoryFileSystem extends AbstractWritableFileSystem {
                     if (opts.collectFolders) {
                         FilePath parent = path;
                         while ((parent = parent.getParent()) != null) {
-                            if (isValid(parent, opts)) {
+                            if (opts.isValid(parent)) {
                                 result.add(parent);
                             }
                         }
                     }
 
-                    if (opts.collectFiles && isValid(path, opts)) {
+                    if (opts.collectFiles && opts.isValid(path)) {
                         result.add(path);
                     }
                 }
             }
         }
         return result;
-    }
-
-    private boolean isValid(FilePath file, FileCollectOptions opts) {
-        if (opts.recursive) {
-            // This folder is equal to, or a descendant of the base search path
-            return file.startsWith(opts.prefix);
-        } else {
-            // This file is equal to, or a direct child of the base search path
-            return opts.prefix.equals(file) || opts.prefix.equals(file.getParent());
-        }
     }
 
 }

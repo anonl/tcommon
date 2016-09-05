@@ -127,7 +127,7 @@ public abstract class AbstractFileArchive extends AbstractFileSystem implements 
 			boolean isFolder = record.isFolder();
 			if ((isFolder && opts.collectFolders) || (!isFolder && opts.collectFiles)) {
 				FilePath path = record.getPath();
-				if (opts.recursive || !path.hasParent()) {
+				if (opts.isValid(path)) {
 				    result.add(path);
 				}
 			}
