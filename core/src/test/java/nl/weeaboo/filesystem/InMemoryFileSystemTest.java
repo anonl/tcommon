@@ -2,7 +2,7 @@ package nl.weeaboo.filesystem;
 
 import java.io.IOException;
 
-public class InMemoryFileSystemTest extends AbstractFileSystemTest {
+public class InMemoryFileSystemTest extends AbstractWritableFileSystemTest<InMemoryFileSystem> {
 
     @Override
     protected InMemoryFileSystem createTestFileSystem() throws IOException {
