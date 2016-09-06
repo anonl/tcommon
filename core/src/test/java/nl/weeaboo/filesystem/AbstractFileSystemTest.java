@@ -21,7 +21,7 @@ public abstract class AbstractFileSystemTest<FS extends IFileSystem> {
     protected static final FilePath INVALID_NAME = FilePath.of("invalid.txt");
 
     protected static final FilePath SUBFOLDER_FILE = FilePath.of("sub1/sub2/sub.txt");
-    protected static final String SUBFOLDER_FILE_CONTENTS = "sub";
+    protected static final String SUBFOLDER_FILE_CONTENTS = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
 
     protected FS fileSystem;
 
@@ -59,6 +59,12 @@ public abstract class AbstractFileSystemTest<FS extends IFileSystem> {
     @Test(expected = FileNotFoundException.class)
     public void fileSizeNonExisting() throws IOException {
         fileSystem.getFileSize(INVALID_NAME);
+    }
+
+    @Test
+    public void testReadFile() throws IOException {
+        Assert.assertEquals(VALID_CONTENTS, FileSystemUtil.readString(fileSystem, VALID_NAME));
+        Assert.assertEquals(SUBFOLDER_FILE_CONTENTS, FileSystemUtil.readString(fileSystem, SUBFOLDER_FILE));
     }
 
     @Test
