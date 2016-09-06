@@ -1,7 +1,5 @@
 package nl.weeaboo.common;
 
-import java.util.Arrays;
-
 public final class VersionNumber implements Comparable<VersionNumber> {
 
     private final int[] versionParts;
@@ -18,12 +16,17 @@ public final class VersionNumber implements Comparable<VersionNumber> {
 	 * @throws NumberFormatException If the string isn't parseable as a version number.
 	 */
 	public static VersionNumber parse(String str) throws NumberFormatException {
-		String[] stringParts = str.split("\\.");
+		String[] stringParts = str.split("\\.", -1);
 		int[] intParts = new int[stringParts.length];
 		for (int n = 0; n < stringParts.length; n++) {
 			intParts[n] = Integer.parseInt(stringParts[n]);
 		}
 		return new VersionNumber(intParts);
+	}
+
+	/** Visible for testing */
+	int[] getParts() {
+	    return versionParts.clone();
 	}
 
 	/**
@@ -50,7 +53,15 @@ public final class VersionNumber implements Comparable<VersionNumber> {
 
 	@Override
 	public int hashCode() {
-		return Arrays.hashCode(versionParts);
+        /*
+         * Hash code of 1.0.0 and 1.0 must be the same for hashCode() to match the implementation of equals().
+         * To achieve this, hash the parts in reverse.
+         */
+	    int hash = 0;
+	    for (int n = versionParts.length - 1; n >= 0; n--) {
+	        hash = 31 * hash + versionParts[n];
+	    }
+		return hash;
 	}
 
 	@Override
