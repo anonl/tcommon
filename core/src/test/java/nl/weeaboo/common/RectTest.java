@@ -163,6 +163,11 @@ public class RectTest {
         Rect.EMPTY.intersects(0, 0, 0, -1);
     }
 
+    @Test
+    public void testToString() {
+        Assert.assertEquals("Rect(1, 2, 3, 4)", Rect.of(1, 2, 3, 4).toString());
+    }
+
     private static void assertRect(Rect rect, int expectedX, int expectedY, int expectedW, int expectedH) {
         Assert.assertEquals(expectedX, rect.x);
         Assert.assertEquals(expectedY, rect.y);

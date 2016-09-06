@@ -1,7 +1,6 @@
 package nl.weeaboo.common;
 
 import java.io.Serializable;
-import java.util.Locale;
 
 public final class Insets2D implements Serializable {
 
@@ -51,7 +50,7 @@ public final class Insets2D implements Serializable {
 
 	@Override
 	public String toString() {
-        return String.format(Locale.ROOT, "Insets(%f,%f,%f,%f)", top, right, bottom, left);
+        return StringUtil.formatRoot("Insets2D(%f,%f,%f,%f)", top, right, bottom, left);
 	}
 
 }

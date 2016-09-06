@@ -155,6 +155,11 @@ public class Rect2DTest {
         Rect2D.EMPTY.intersects(0, 0, 0, -1);
     }
 
+    @Test
+    public void testToString() {
+        Assert.assertEquals("Rect2D(1.5, 2.25, 3.125, 4.0)", Rect2D.of(1.5, 2.25, 3.125, 4).toString());
+    }
+
     private static void assertRect(Rect2D rect, double expectedX, double expectedY, double expectedW,
             double expectedH) {
 
