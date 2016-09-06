@@ -42,7 +42,9 @@ public class FileCachedOutputStream extends OutputStream {
                 fileOutput.close();
             }
         } finally {
-            tempFile.delete();
+            if (tempFile != null) {
+                tempFile.delete();
+            }
         }
     }
 
@@ -92,11 +94,15 @@ public class FileCachedOutputStream extends OutputStream {
     }
 
     public synchronized void writeTo(OutputStream out) throws IOException {
-        FileInputStream fin = new FileInputStream(tempFile);
-        try {
-            StreamUtil.writeBytes(fin, out);
-        } finally {
-            fin.close();
+        if (fileOutput != null) {
+            FileInputStream fin = new FileInputStream(tempFile);
+            try {
+                StreamUtil.writeBytes(fin, out);
+            } finally {
+                fin.close();
+            }
+        } else {
+            memoryBuffer.writeTo(out);
         }
     }
 }

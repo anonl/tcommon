@@ -13,6 +13,9 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
+import nl.weeaboo.filesystem.FilePath;
+import nl.weeaboo.filesystem.FileSystemUtil;
+import nl.weeaboo.filesystem.ZipFileArchive;
 import nl.weeaboo.io.ZipUtil.Compression;
 
 public class ZipUtilTest {
@@ -61,6 +64,46 @@ public class ZipUtilTest {
 
         // Since we're using compression, expect the resulting ZIP file to be much smaller than the input
         Assert.assertTrue("ZIP file size: " + zipFile.length(), zipFile.length() < size / 10);
+    }
+
+    /** Add File to ZIP archive */
+    @Test
+    public void addFile() throws IOException {
+        File file = tempFolder.newFile("file");
+        File folder = tempFolder.newFolder("folder");
+
+        ZipUtil.add(zout, file.getName(), file, Compression.DEFLATE);
+        ZipUtil.add(zout, folder.getName(), folder, Compression.DEFLATE);
+
+        ZipFileArchive arc = openZipFile();
+        try {
+            Assert.assertEquals(true, arc.getFileExists(FilePath.of("file")));
+            Assert.assertEquals(true, arc.getFileExists(FilePath.of("folder/")));
+        } finally {
+            arc.close();
+        }
+    }
+
+    @Test
+    public void addFromByteArray() throws IOException {
+        byte[] bytes = {9, 8, 7, 6};
+        ZipUtil.writeFileEntry(zout, "bytes", bytes, 1, 2, Compression.NONE);
+
+        ZipFileArchive arc = openZipFile();
+        try {
+            Assert.assertArrayEquals(new byte[] {8, 7},
+                    FileSystemUtil.readBytes(arc, FilePath.of("bytes")));
+        } finally {
+            arc.close();
+        }
+    }
+
+    private ZipFileArchive openZipFile() throws IOException {
+        zout.close();
+
+        ZipFileArchive arc = new ZipFileArchive();
+        arc.open(zipFile);
+        return arc;
     }
 
     private void writeHugeEntry(long size, Compression compression) throws IOException {
