@@ -80,20 +80,21 @@ public final class Rect2D implements Serializable {
         return px >= x && px <= x + w && py >= y && py <= y + h;
 	}
 
-	public boolean contains(double rx, double ry, double rw, double rh) {
-        Dim.checkDimensions(rw, rh);
-        if (w <= 0 || h <= 0) {
-            return false; // Special case: empty rect contains nothing
-        }
-		return rx >= x && ry >= y && rx+rw <= x+w && ry+rh <= y+h;
-	}
+    public boolean contains(double ax, double ay, double aw, double ah) {
+        return contains(ax, ay) && contains(ax+aw, ay+ah);
+    }
 
-	public boolean intersects(double rx, double ry, double rw, double rh) {
-        Dim.checkDimensions(rw, rh);
-        if (w <= 0 || h <= 0 || rw <= 0 || rh <= 0) {
+    public boolean intersects(double ax, double ay, double aw, double ah) {
+        if (w <= 0 || h <= 0) {
             return false; // Special case: empty rects intersect nothing
         }
-		return rx + rw > x && ry + rh > y && rx < x + w && ry < y + h;
-	}
+
+        double x0 = Math.min(ax, ax + aw);
+        double x1 = Math.max(ax, ax + aw);
+        double y0 = Math.min(ay, ay + ah);
+        double y1 = Math.max(ay, ay + ah);
+
+        return x1 > x && y1 > y && x0 < x + w && y0 < y + h;
+    }
 
 }

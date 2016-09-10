@@ -82,38 +82,41 @@ public class Rect2DTest {
         Rect2D r = Rect2D.of(1, 2, 3, 4);
 
         // Zero width or zero height rects contains nothing (not even itself)
-        Assert.assertEquals(false, Rect2D.of(1, 2, 0, 4).contains(1, 2, 0, 4));
-        Assert.assertEquals(false, Rect2D.of(1, 2, 3, 0).contains(1, 2, 3, 0));
+        assertRectContains(false, Rect2D.of(1, 2, 0, 4), 1, 2, 0, 4);
+        assertRectContains(false, Rect2D.of(1, 2, 3, 0), 1, 2, 3, 0);
 
         // Empty rects are treated as points
-        Assert.assertEquals(true, r.contains(1, 2, 0, 0));
-        Assert.assertEquals(false, r.contains(0, 1, 0, 0));
+        assertRectContains(true, r, 1, 2, 0, 0);
+        assertRectContains(false, r, 0, 1, 0, 0);
 
         // Rects that touch the inside boundary (completely inside)
-        Assert.assertEquals(true, r.contains(1, 2, 1, 1));
-        Assert.assertEquals(true, r.contains(3, 2, 1, 1));
-        Assert.assertEquals(true, r.contains(1, 5, 1, 1));
-        Assert.assertEquals(true, r.contains(3, 5, 1, 1));
+        assertRectContains(true, r, 1, 2, 1, 1);
+        assertRectContains(true, r, 3, 2, 1, 1);
+        assertRectContains(true, r, 1, 5, 1, 1);
+        assertRectContains(true, r, 3, 5, 1, 1);
 
         // Rects that touch the outside boundary (completely outside)
-        Assert.assertEquals(false, r.contains(0, 2, 1, 1));
-        Assert.assertEquals(false, r.contains(4, 2, 1, 1));
-        Assert.assertEquals(false, r.contains(1, 1, 1, 1));
-        Assert.assertEquals(false, r.contains(1, 6, 1, 1));
+        assertRectContains(false, r, 0, 2, 1, 1);
+        assertRectContains(false, r, 4, 2, 1, 1);
+        assertRectContains(false, r, 1, 1, 1, 1);
+        assertRectContains(false, r, 1, 6, 1, 1);
 
         // Partial overlap
-        Assert.assertEquals(false, r.contains(1, 3, 4, 1));
-        Assert.assertEquals(false, r.contains(0, 3, 4, 1));
+        assertRectContains(false, r, 1, 3, 4, 1);
+        assertRectContains(false, r, 0, 3, 4, 1);
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void containsRectNegativeWidth() {
-        Rect2D.EMPTY.contains(0, 0, -1, 0);
-    }
+    private void assertRectContains(boolean expected, Rect2D rect, int x, int y, int w, int h) {
+        Assert.assertEquals(expected, rect.contains(x, y, w, h));
 
-    @Test(expected = IllegalArgumentException.class)
-    public void containsRectNegativeHeight() {
-        Rect2D.EMPTY.contains(0, 0, 0, -1);
+        // Mirrored in the x-axis
+        Assert.assertEquals(expected, rect.contains(x + w, y, -w, h));
+
+        // Mirrored in the y-axis
+        Assert.assertEquals(expected, rect.contains(x, y + h, w, -h));
+
+        // Mirrored both the x-axis and y-axis
+        Assert.assertEquals(expected, rect.contains(x + w, y + h, -w, -h));
     }
 
     @Test
@@ -121,38 +124,41 @@ public class Rect2DTest {
         Rect2D r = Rect2D.of(1, 2, 3, 4);
 
         // Zero width or zero height rects intersect nothing
-        Assert.assertEquals(false, Rect2D.of(1, 2, 0, 4).intersects(1, 2, 0, 4));
-        Assert.assertEquals(false, Rect2D.of(1, 2, 3, 0).intersects(1, 2, 3, 0));
+        assertRectIntersects(false, Rect2D.of(1, 2, 0, 4), 1, 2, 0, 4);
+        assertRectIntersects(false, Rect2D.of(1, 2, 3, 0), 1, 2, 3, 0);
 
         // Empty rects
-        Assert.assertEquals(false, r.intersects(1, 2, 0, 0));
-        Assert.assertEquals(false, r.intersects(0, 1, 0, 0));
+        assertRectIntersects(false, r, 1, 2, 0, 0);
+        assertRectIntersects(false, r, 0, 1, 0, 0);
 
         // Rects that touch the inside boundary (completely inside)
-        Assert.assertEquals(true, r.intersects(1, 2, 1, 1));
-        Assert.assertEquals(true, r.intersects(3, 2, 1, 1));
-        Assert.assertEquals(true, r.intersects(1, 5, 1, 1));
-        Assert.assertEquals(true, r.intersects(3, 5, 1, 1));
+        assertRectIntersects(true, r, 1, 2, 1, 1);
+        assertRectIntersects(true, r, 3, 2, 1, 1);
+        assertRectIntersects(true, r, 1, 5, 1, 1);
+        assertRectIntersects(true, r, 3, 5, 1, 1);
 
         // Rects that touch the outside boundary (completely outside)
-        Assert.assertEquals(false, r.intersects(0, 2, 1, 1));
-        Assert.assertEquals(false, r.intersects(4, 2, 1, 1));
-        Assert.assertEquals(false, r.intersects(1, 1, 1, 1));
-        Assert.assertEquals(false, r.intersects(1, 6, 1, 1));
+        assertRectIntersects(false, r, 0, 2, 1, 1);
+        assertRectIntersects(false, r, 4, 2, 1, 1);
+        assertRectIntersects(false, r, 1, 1, 1, 1);
+        assertRectIntersects(false, r, 1, 6, 1, 1);
 
         // Partial overlap
-        Assert.assertEquals(true, r.intersects(1, 3, 4, 1));
-        Assert.assertEquals(true, r.intersects(0, 3, 4, 1));
+        assertRectIntersects(true, r, 1, 3, 4, 1);
+        assertRectIntersects(true, r, 0, 3, 4, 1);
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void intersectsRectNegativeWidth() {
-        Rect2D.EMPTY.intersects(0, 0, -1, 0);
-    }
+    private void assertRectIntersects(boolean expected, Rect2D rect, int x, int y, int w, int h) {
+        Assert.assertEquals(expected, rect.intersects(x, y, w, h));
 
-    @Test(expected = IllegalArgumentException.class)
-    public void intersectsRectNegativeHeight() {
-        Rect2D.EMPTY.intersects(0, 0, 0, -1);
+        // Mirrored in the x-axis
+        Assert.assertEquals(expected, rect.intersects(x + w, y, -w, h));
+
+        // Mirrored in the y-axis
+        Assert.assertEquals(expected, rect.intersects(x, y + h, w, -h));
+
+        // Mirrored both the x-axis and y-axis
+        Assert.assertEquals(expected, rect.intersects(x + w, y + h, -w, -h));
     }
 
     private static void assertRect(Rect2D rect, double expectedX, double expectedY, double expectedW,
