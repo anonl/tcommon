@@ -15,9 +15,10 @@ public final class Area2D implements Serializable {
 	public final double x, y, w, h;
 
 	private Area2D(double x, double y, double w, double h) {
-		if (Double.isNaN(w) || Double.isInfinite(w) || Double.isNaN(h) || Double.isInfinite(h)) {
-			throw new IllegalArgumentException("Dimensions must finite, w=" + w + ", h=" + h);
-		}
+        Checks.checkRange(x, "x");
+        Checks.checkRange(y, "y");
+        Checks.checkRange(w, "w");
+        Checks.checkRange(h, "h");
 
 		this.x = x;
 		this.y = y;

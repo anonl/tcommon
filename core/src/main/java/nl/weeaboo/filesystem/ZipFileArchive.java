@@ -161,7 +161,9 @@ public class ZipFileArchive extends AbstractFileArchive {
             header.order(ByteOrder.LITTLE_ENDIAN);
             while (header.hasRemaining()) {
                 int read = headerIn.read(header.array(), header.position(), header.remaining());
-                if (read < 0) break;
+                if (read < 0) {
+                    break;
+                }
                 header.position(header.position() + read);
             }
 
@@ -185,7 +187,7 @@ public class ZipFileArchive extends AbstractFileArchive {
             super(in, new Inflater(true));
         }
 
-        //Provide 1-byte padding at end of compressed data (required when using inflator with nowrap=true)
+        // Provide 1-byte padding at end of compressed data (required when using inflator with nowrap=true)
         @Override
         protected synchronized void fill() throws IOException {
             if (eof) {

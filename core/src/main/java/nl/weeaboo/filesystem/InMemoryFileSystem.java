@@ -4,11 +4,10 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 public class InMemoryFileSystem extends AbstractWritableFileSystem {
 
@@ -92,6 +91,9 @@ public class InMemoryFileSystem extends AbstractWritableFileSystem {
                 if (!createIfNeeded) {
                     throw new FileNotFoundException(path.toString());
                 }
+                if (path.isFolder()) {
+                    throw new FileNotFoundException("Unable to create file using a folder path: " + path);
+                }
                 file = new InMemoryFile(path);
                 files.put(path, file);
 			}
@@ -101,17 +103,23 @@ public class InMemoryFileSystem extends AbstractWritableFileSystem {
 
     @Override
     public Iterable<FilePath> getFiles(FileCollectOptions opts) throws IOException {
-        if (!opts.collectFiles) {
-            // Folders aren't supported
-            return Collections.emptyList();
-        }
-
-        List<FilePath> result = new ArrayList<FilePath>();
+        Set<FilePath> result = new HashSet<FilePath>();
         synchronized (files) {
             for (InMemoryFile file : files.values()) {
                 FilePath path = file.getPath();
                 if (path.startsWith(opts.prefix)) {
-                    result.add(path);
+                    if (opts.collectFolders) {
+                        FilePath parent = path;
+                        while ((parent = parent.getParent()) != null) {
+                            if (opts.isValid(parent)) {
+                                result.add(parent);
+                            }
+                        }
+                    }
+
+                    if (opts.collectFiles && opts.isValid(path)) {
+                        result.add(path);
+                    }
                 }
             }
         }

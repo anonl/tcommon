@@ -1,7 +1,6 @@
 package nl.weeaboo.common;
 
 import java.io.Serializable;
-import java.util.Locale;
 
 public final class Insets2D implements Serializable {
 
@@ -12,10 +11,10 @@ public final class Insets2D implements Serializable {
 	public final double top, right, bottom, left;
 
     private Insets2D(double top, double right, double bottom, double left) {
-		if (top < 0 || right < 0 || bottom < 0 || left < 0) {
-            throw new IllegalArgumentException(String.format(Locale.ROOT,
-                    "Insets must be >= 0, top=%f, right=%f, bottom=%f, left=%f", top, right, bottom, left));
-		}
+        Checks.checkRange(top, "top", 0.0);
+        Checks.checkRange(right, "right", 0.0);
+        Checks.checkRange(bottom, "bottom", 0.0);
+        Checks.checkRange(left, "left", 0.0);
 
 		this.top = top;
 		this.right = right;
@@ -51,7 +50,7 @@ public final class Insets2D implements Serializable {
 
 	@Override
 	public String toString() {
-        return String.format(Locale.ROOT, "Insets(%f,%f,%f,%f)", top, right, bottom, left);
+        return StringUtil.formatRoot("Insets2D(%f,%f,%f,%f)", top, right, bottom, left);
 	}
 
 }

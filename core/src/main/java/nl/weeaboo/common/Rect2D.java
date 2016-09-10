@@ -12,6 +12,8 @@ public final class Rect2D implements Serializable {
 	public final double x, y, w, h;
 
 	private Rect2D(double x, double y, double w, double h) {
+        Checks.checkRange(x, "x");
+        Checks.checkRange(y, "y");
         Dim.checkDimensions(w, h);
 
 		this.x = x;
@@ -63,7 +65,7 @@ public final class Rect2D implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Rect2D(" + x + "," + y + "," + w + "," + h + ")";
+		return "Rect2D(" + x + ", " + y + ", " + w + ", " + h + ")";
 	}
 
 	public Area2D toArea2D() {
