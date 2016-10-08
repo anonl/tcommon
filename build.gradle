@@ -19,6 +19,7 @@ subprojects {
     apply plugin: "eclipse"
     apply plugin: "idea"
     apply plugin: "java"
+    apply plugin: "jacoco"
 
     ext {
         junitVersion = '4.12'
@@ -37,7 +38,13 @@ subprojects {
     task sourceJar(type: Jar) {
         from sourceSets.main.allJava
         classifier "sources"
-    }    
+    }
+    
+    jacocoTestReport {
+	    reports {
+	        xml.enabled true
+	    }
+    }
 }
 
 project(':tcommon-core') {
