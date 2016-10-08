@@ -3,3 +3,6 @@ language: java
 
 jdk:
   - openjdk6
+  
+after_success:
+  - bash <(curl -s https://codecov.io/bash)
