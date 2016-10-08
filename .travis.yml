@@ -3,6 +3,9 @@ language: java
 
 jdk:
   - openjdk6
-  
+
+script:
+  ./gradlew clean build --info
+
 after_success:
   - bash <(curl -s https://codecov.io/bash)
