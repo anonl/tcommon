@@ -21,12 +21,18 @@ public class AbstractIdTest {
     }
 
     private static class AlphaId extends AbstractId {
+
+        private static final long serialVersionUID = 1L;
+
         public AlphaId(String id) {
             super(id);
         }
     }
 
     private static class BetaId extends AbstractId {
+
+        private static final long serialVersionUID = 1L;
+
         public BetaId(String id) {
             super(id);
         }

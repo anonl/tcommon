@@ -1,10 +1,14 @@
 package nl.weeaboo.common;
 
+import java.io.Serializable;
+
 /**
  * Base class for type-safe string-based identifiers. For each class of identifier, create a subclass of
  * {@llink AbstractId}.
  */
-public abstract class AbstractId {
+public abstract class AbstractId implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     private final String id;
 
