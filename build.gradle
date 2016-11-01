@@ -6,7 +6,7 @@ plugins {
 allprojects {
     apply plugin: "maven-publish"
     group = 'nl.weeaboo.common'
-    version = '1.2.3'
+    version = '1.2.4'
 
     repositories {
         mavenCentral()
@@ -24,6 +24,7 @@ subprojects {
     ext {
         junitVersion = '4.12'
         slf4jVersion = '1.7.21'
+        guavaVersion = '19.0' // Guava only used for testing
     }
     
     sourceCompatibility = 1.6
@@ -33,6 +34,7 @@ subprojects {
 
     dependencies {
         testCompile "junit:junit:$junitVersion"
+        testCompile "com.google.guava:guava-testlib:$guavaVersion"
     }
     
     task sourceJar(type: Jar) {
