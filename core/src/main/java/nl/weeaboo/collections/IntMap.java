@@ -11,15 +11,15 @@ import java.util.Map;
  */
 public final class IntMap<V> implements Serializable {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	private static final Object REMOVED = new Object();
+    private static final Object REMOVED = new Object();
 
     /** Sorted array of keys */
     private int[] keys;
 
     /** Associated values for each key index. Uses {@link #REMOVED} to indicate an invalid/removed slot. */
-	private Object[] values;
+    private Object[] values;
 
     /** Only the first {@code length} slots contain values */
     private int length;
@@ -30,14 +30,14 @@ public final class IntMap<V> implements Serializable {
     /** Internal modification counter used to detect concurrent modification errors */
     private int modCount;
 
-	public IntMap() {
-		this(8);
-	}
+    public IntMap() {
+        this(8);
+    }
 
-	public IntMap(int initialCapacity) {
-		keys = new int[initialCapacity];
-		values = new Object[initialCapacity];
-	}
+    public IntMap(int initialCapacity) {
+        keys = new int[initialCapacity];
+        values = new Object[initialCapacity];
+    }
 
     public IntMap(Map<Integer, ? extends V> map) {
         this(map.size());
@@ -61,63 +61,63 @@ public final class IntMap<V> implements Serializable {
                     "New capacity (" + capacity + ") is smaller than the current length (" + length + ")");
         }
 
-		int[] newKeys = new int[capacity];
-		Object[] newVals = new Object[capacity];
+        int[] newKeys = new int[capacity];
+        Object[] newVals = new Object[capacity];
 
-		System.arraycopy(keys, 0, newKeys, 0, length);
-		System.arraycopy(values, 0, newVals, 0, length);
+        System.arraycopy(keys, 0, newKeys, 0, length);
+        System.arraycopy(values, 0, newVals, 0, length);
 
-		keys = newKeys;
-		values = newVals;
-	}
+        keys = newKeys;
+        values = newVals;
+    }
 
-	public V remove(int key) {
-		int i = Arrays.binarySearch(keys, 0, length, key);
-		if (i >= 0 && values[i] != REMOVED) {
-			@SuppressWarnings("unchecked")
-			V oldval = (V)values[i];
-			values[i] = REMOVED;
-			size--;
+    public V remove(int key) {
+        int i = Arrays.binarySearch(keys, 0, length, key);
+        if (i >= 0 && values[i] != REMOVED) {
+            @SuppressWarnings("unchecked")
+            V oldval = (V)values[i];
+            values[i] = REMOVED;
+            size--;
             modCount++;
-			return oldval;
-		}
-		return null;
-	}
+            return oldval;
+        }
+        return null;
+    }
 
-	private void compact() {
+    private void compact() {
         if (size == length) {
             return; // Already compacted
         }
 
-		int removed = 0;
-		for (int n = 0; n < length; n++) {
-			Object val = values[n];
-			if (val == REMOVED) {
-				removed++;
-			} else if (removed > 0) {
-				keys[n - removed] = keys[n];
-				values[n - removed] = val;
-			}
-		}
-		for (int n = length - removed; n < length; n++) {
-			values[n] = null;
-		}
-		length -= removed;
+        int removed = 0;
+        for (int n = 0; n < length; n++) {
+            Object val = values[n];
+            if (val == REMOVED) {
+                removed++;
+            } else if (removed > 0) {
+                keys[n - removed] = keys[n];
+                values[n - removed] = val;
+            }
+        }
+        for (int n = length - removed; n < length; n++) {
+            values[n] = null;
+        }
+        length -= removed;
         modCount++;
-	}
+    }
 
-	public void clear() {
-		Arrays.fill(values, 0, length, null);
-		length = 0;
-		size = 0;
+    public void clear() {
+        Arrays.fill(values, 0, length, null);
+        length = 0;
+        size = 0;
         modCount++;
-	}
+    }
 
-	public Iterable<V> values() {
-		return new Iterable<V>() {
-			@Override
-			public Iterator<V> iterator() {
-				return new Iterator<V>() {
+    public Iterable<V> values() {
+        return new Iterable<V>() {
+            @Override
+            public Iterator<V> iterator() {
+                return new Iterator<V>() {
 
                     private final int expectedModCount = modCount;
                     private int cursor = -1;
@@ -128,58 +128,58 @@ public final class IntMap<V> implements Serializable {
                         }
                     }
 
-					@Override
-					public boolean hasNext() {
-						return cursor + 1 < size;
-					}
+                    @Override
+                    public boolean hasNext() {
+                        return cursor + 1 < size;
+                    }
 
-					@Override
-					public V next() {
+                    @Override
+                    public V next() {
                         checkModCount();
-						return valueAt(++cursor);
-					}
+                        return valueAt(++cursor);
+                    }
 
-					@Override
-					public void remove() {
+                    @Override
+                    public void remove() {
                         checkModCount();
-						removeAt(cursor);
-					}
-				};
-			}
-		};
-	}
+                        removeAt(cursor);
+                    }
+                };
+            }
+        };
+    }
 
-	public int[] getKeys() {
+    public int[] getKeys() {
         compact();
 
-		int[] result = new int[length];
-		System.arraycopy(keys, 0, result, 0, length);
-		return result;
-	}
+        int[] result = new int[length];
+        System.arraycopy(keys, 0, result, 0, length);
+        return result;
+    }
 
-	public boolean containsKey(int key) {
-		int i = Arrays.binarySearch(keys, 0, length, key);
-		return i >= 0 && values[i] != REMOVED;
-	}
+    public boolean containsKey(int key) {
+        int i = Arrays.binarySearch(keys, 0, length, key);
+        return i >= 0 && values[i] != REMOVED;
+    }
 
-	public V get(int key) {
-		int i = Arrays.binarySearch(keys, 0, length, key);
-		if (i < 0 || values[i] == REMOVED) {
-			return null;
-		}
+    public V get(int key) {
+        int i = Arrays.binarySearch(keys, 0, length, key);
+        if (i < 0 || values[i] == REMOVED) {
+            return null;
+        }
 
-		@SuppressWarnings("unchecked")
-		V val = (V) values[i];
-		return val;
-	}
+        @SuppressWarnings("unchecked")
+        V val = (V) values[i];
+        return val;
+    }
 
-	public boolean isEmpty() {
-		return size() == 0;
-	}
+    public boolean isEmpty() {
+        return size() == 0;
+    }
 
-	public int size() {
-		return size;
-	}
+    public int size() {
+        return size;
+    }
 
     private void checkIndex(int index) {
         compact(); // Clear removed slots
@@ -189,27 +189,27 @@ public final class IntMap<V> implements Serializable {
         }
     }
 
-	public int keyAt(int index) {
+    public int keyAt(int index) {
         compact();
         checkIndex(index);
 
         return keys[index];
-	}
+    }
 
-	public V valueAt(int index) {
+    public V valueAt(int index) {
         compact();
         checkIndex(index);
 
-		@SuppressWarnings("unchecked")
+        @SuppressWarnings("unchecked")
         V val = (V)values[index];
-		return val;
-	}
+        return val;
+    }
 
     public <T extends V> void putAll(Map<Integer, T> map) {
         putAll(new IntMap<T>(map));
-	}
+    }
 
-	public void putAll(IntMap<? extends V> map) {
+    public void putAll(IntMap<? extends V> map) {
         if (this == map) {
             throw new IllegalArgumentException("Cannot add map to itself");
         }
@@ -221,55 +221,55 @@ public final class IntMap<V> implements Serializable {
                 put(map.keys[n], val);
             }
         }
-	}
+    }
 
-	public V put(int key, V val) {
+    public V put(int key, V val) {
         modCount++;
 
-		int i = Arrays.binarySearch(keys, 0, length, key);
-		if (i >= 0) {
-			// Key already exists, overwrite exiting value
+        int i = Arrays.binarySearch(keys, 0, length, key);
+        if (i >= 0) {
+            // Key already exists, overwrite exiting value
             return doPutAtIndex(i, val);
-		}
+        }
 
-		// Find insertion index
-		i = -(i + 1);
+        // Find insertion index
+        i = -(i + 1);
 
-		if (i < length && values[i] == REMOVED) {
+        if (i < length && values[i] == REMOVED) {
             // Key doesn't exist, but the value following it has been deleted so we can use its slot
-			keys[i] = key;
-			values[i] = val;
-			size++;
-			return null; //Old value was a dummy
-		}
+            keys[i] = key;
+            values[i] = val;
+            size++;
+            return null; //Old value was a dummy
+        }
 
         if (size < length && length >= keys.length) {
             // Array is full, but contains gaps so try to compact in order to make room
-			compact();
+            compact();
 
-			// Update i for the new situation
-			i = Arrays.binarySearch(keys, 0, length, key);
-			i = -(i + 1);
-		}
+            // Update i for the new situation
+            i = Arrays.binarySearch(keys, 0, length, key);
+            i = -(i + 1);
+        }
 
-		if (length >= keys.length) {
-			// We need more room for the new index
+        if (length >= keys.length) {
+            // We need more room for the new index
             reserve(length + 16);
-		}
+        }
 
-		if (i < length) {
-			// Move the existing entries (following out insertion point) one
-			// position further down the list to make room
-			System.arraycopy(keys, i, keys, i + 1, length - i);
-			System.arraycopy(values, i, values, i + 1, length - i);
-		}
+        if (i < length) {
+            // Move the existing entries (following out insertion point) one
+            // position further down the list to make room
+            System.arraycopy(keys, i, keys, i + 1, length - i);
+            System.arraycopy(values, i, values, i + 1, length - i);
+        }
 
-		keys[i] = key;
-		values[i] = val;
-		size++;
-		length++;
-		return null; // Old value doesn't exist
-	}
+        keys[i] = key;
+        values[i] = val;
+        size++;
+        length++;
+        return null; // Old value doesn't exist
+    }
 
     public V removeAt(int index) {
         compact();
@@ -278,19 +278,19 @@ public final class IntMap<V> implements Serializable {
         modCount++;
 
         Object oldval = values[index];
-		if (oldval == REMOVED) {
+        if (oldval == REMOVED) {
             return null;
-		}
+        }
 
-		values[index] = REMOVED;
-		size--;
+        values[index] = REMOVED;
+        size--;
 
         @SuppressWarnings("unchecked")
         V result = (V)oldval;
         return result;
-	}
+    }
 
-	public V putAtIndex(int index, V val) {
+    public V putAtIndex(int index, V val) {
         compact();
         checkIndex(index);
 
@@ -310,6 +310,6 @@ public final class IntMap<V> implements Serializable {
         @SuppressWarnings("unchecked")
         V result = (V)oldval;
         return result;
-	}
+    }
 
 }

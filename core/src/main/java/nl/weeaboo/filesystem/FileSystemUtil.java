@@ -12,8 +12,8 @@ import nl.weeaboo.io.StreamUtil;
 
 public final class FileSystemUtil {
 
-	private FileSystemUtil() {
-	}
+    private FileSystemUtil() {
+    }
 
     public static byte[] readBytes(IFileSystem fs, FilePath path) throws IOException {
         byte[] bytes;
@@ -47,33 +47,33 @@ public final class FileSystemUtil {
 
     @Deprecated
     public static Collection<String> withoutPathPrefix(Collection<String> paths, String prefix) {
-		final int pL = prefix.length();
+        final int pL = prefix.length();
 
-		Collection<String> result = new ArrayList<String>(paths.size());
-		for (String path : paths) {
+        Collection<String> result = new ArrayList<String>(paths.size());
+        for (String path : paths) {
             if (path.length() > pL && path.charAt(pL) == '/') {
-				//Path without pathPrefix would otherwise start with a '/'
-				result.add(path.substring(pL+1));
-			} else {
-				result.add(path.substring(pL));
-			}
-		}
-		return result;
-	}
+                //Path without pathPrefix would otherwise start with a '/'
+                result.add(path.substring(pL+1));
+            } else {
+                result.add(path.substring(pL));
+            }
+        }
+        return result;
+    }
 
     @Deprecated
-	public static Comparator<String> getFilenameComparator() {
-		return new Comparator<String>() {
-			@Override
-			public int compare(String a, String b) {
-				boolean aDir = a.endsWith("/");
-				boolean bDir = b.endsWith("/");
-				if (aDir && !bDir) return -1;
-				if (!aDir && bDir) return 1;
+    public static Comparator<String> getFilenameComparator() {
+        return new Comparator<String>() {
+            @Override
+            public int compare(String a, String b) {
+                boolean aDir = a.endsWith("/");
+                boolean bDir = b.endsWith("/");
+                if (aDir && !bDir) return -1;
+                if (!aDir && bDir) return 1;
 
-				return a.compareToIgnoreCase(b);
-			}
-		};
-	}
+                return a.compareToIgnoreCase(b);
+            }
+        };
+    }
 
 }

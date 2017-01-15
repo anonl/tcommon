@@ -18,38 +18,38 @@ public abstract class AbstractFileArchive extends AbstractFileSystem implements 
 
     private static final RecordPathComparator pathComparator = new RecordPathComparator();
 
-	protected File file;
-	protected IRandomAccessFile rfile;
-	protected ArchiveFileRecord records[];
+    protected File file;
+    protected IRandomAccessFile rfile;
+    protected ArchiveFileRecord records[];
 
-	public AbstractFileArchive() {
-	}
+    public AbstractFileArchive() {
+    }
 
     @Override
-	public void open(File f) throws IOException {
-		file = f;
+    public void open(File f) throws IOException {
+        file = f;
 
-		try {
+        try {
             open(RandomAccessUtil.wrap(new RandomAccessFile(f, "r")));
-		} catch (IOException ioe) {
-			throw ioe;
-		}
-	}
+        } catch (IOException ioe) {
+            throw ioe;
+        }
+    }
 
-	@Override
-	public void open(IRandomAccessFile f) throws IOException {
-		rfile = f;
+    @Override
+    public void open(IRandomAccessFile f) throws IOException {
+        rfile = f;
 
-		try {
-			records = initRecords(f);
+        try {
+            records = initRecords(f);
             Arrays.sort(records, pathComparator);
-		} catch (IOException ioe) {
-			close();
-			throw ioe;
-		}
-	}
+        } catch (IOException ioe) {
+            close();
+            throw ioe;
+        }
+    }
 
-	@Override
+    @Override
     protected void closeImpl() {
         if (rfile != null) {
             try {
@@ -59,9 +59,9 @@ public abstract class AbstractFileArchive extends AbstractFileSystem implements 
             }
             rfile = null;
         }
-	}
+    }
 
-	protected abstract ArchiveFileRecord[] initRecords(IRandomAccessFile f) throws IOException;
+    protected abstract ArchiveFileRecord[] initRecords(IRandomAccessFile f) throws IOException;
 
     @Override
     public boolean isReadOnly() {
@@ -99,56 +99,56 @@ public abstract class AbstractFileArchive extends AbstractFileSystem implements 
         return records[index];
     }
 
-	public long getFileOffset(FilePath path) throws IOException {
-		return getFileOffset(getFileImpl(path).getHeaderOffset());
-	}
+    public long getFileOffset(FilePath path) throws IOException {
+        return getFileOffset(getFileImpl(path).getHeaderOffset());
+    }
 
-	protected abstract long getFileOffset(long headerOffset) throws IOException;
+    protected abstract long getFileOffset(long headerOffset) throws IOException;
 
-	@Override
-	public Iterator<ArchiveFileRecord> iterator() {
-	    return Arrays.asList(records).iterator();
-	}
+    @Override
+    public Iterator<ArchiveFileRecord> iterator() {
+        return Arrays.asList(records).iterator();
+    }
 
     @Override
     public Iterable<FilePath> getFiles(FileCollectOptions opts) throws IOException {
-		int index = Arrays.binarySearch(records, opts.prefix, pathComparator);
-		if (index < 0) {
-			index = -(index+1);
-		}
+        int index = Arrays.binarySearch(records, opts.prefix, pathComparator);
+        if (index < 0) {
+            index = -(index+1);
+        }
 
-		List<FilePath> result = new ArrayList<FilePath>();
-		while (index >= 0 && index < records.length) {
-			ArchiveFileRecord record = records[index];
-			if (!record.getPath().startsWith(opts.prefix)) {
+        List<FilePath> result = new ArrayList<FilePath>();
+        while (index >= 0 && index < records.length) {
+            ArchiveFileRecord record = records[index];
+            if (!record.getPath().startsWith(opts.prefix)) {
                 break; //We're past the subrange that matches the prefix
-			}
+            }
 
-			boolean isFolder = record.isFolder();
-			if ((isFolder && opts.collectFolders) || (!isFolder && opts.collectFiles)) {
-				FilePath path = record.getPath();
-				if (opts.isValid(path)) {
-				    result.add(path);
-				}
-			}
-			index++;
-		}
-		return result;
-	}
+            boolean isFolder = record.isFolder();
+            if ((isFolder && opts.collectFolders) || (!isFolder && opts.collectFiles)) {
+                FilePath path = record.getPath();
+                if (opts.isValid(path)) {
+                    result.add(path);
+                }
+            }
+            index++;
+        }
+        return result;
+    }
 
-	/**
-	 * @return The backing File object if one exists.
-	 */
-	public File getFile() {
-		return file;
-	}
+    /**
+     * @return The backing File object if one exists.
+     */
+    public File getFile() {
+        return file;
+    }
 
-	/**
-	 * @return The backing IRandomAccessFile object used by this ZipArchive
-	 */
-	public IRandomAccessFile getRandomAccessFile() {
-		return rfile;
-	}
+    /**
+     * @return The backing IRandomAccessFile object used by this ZipArchive
+     */
+    public IRandomAccessFile getRandomAccessFile() {
+        return rfile;
+    }
 
     private static class RecordPathComparator implements Comparator<Object>, Serializable {
 

@@ -9,37 +9,37 @@ import nl.weeaboo.common.Checks;
 
 public class FileSystemView implements IFileSystem {
 
-	private final IFileSystem fileSystem;
-	private final FilePath basePath;
+    private final IFileSystem fileSystem;
+    private final FilePath basePath;
 
-	public FileSystemView(IFileSystem fileSystem, FilePath basePath) {
-		this.fileSystem = Checks.checkNotNull(fileSystem);
-		this.basePath = Checks.checkNotNull(basePath);
-	}
+    public FileSystemView(IFileSystem fileSystem, FilePath basePath) {
+        this.fileSystem = Checks.checkNotNull(fileSystem);
+        this.basePath = Checks.checkNotNull(basePath);
+    }
 
-	@Override
-	public void close() {
-		fileSystem.close();
-	}
+    @Override
+    public void close() {
+        fileSystem.close();
+    }
 
-	@Override
-	public InputStream openInputStream(FilePath path) throws IOException {
-		return fileSystem.openInputStream(resolvePath(path));
-	}
+    @Override
+    public InputStream openInputStream(FilePath path) throws IOException {
+        return fileSystem.openInputStream(resolvePath(path));
+    }
 
-	@Override
-	public boolean isOpen() {
-		return fileSystem.isOpen();
-	}
+    @Override
+    public boolean isOpen() {
+        return fileSystem.isOpen();
+    }
 
-	@Override
-	public boolean isReadOnly() {
-		return fileSystem.isReadOnly();
-	}
+    @Override
+    public boolean isReadOnly() {
+        return fileSystem.isReadOnly();
+    }
 
-	public FilePath getBasePath() {
-		return basePath;
-	}
+    public FilePath getBasePath() {
+        return basePath;
+    }
 
     protected FilePath resolvePath(FilePath relPath) {
         return basePath.resolve(relPath);
@@ -49,20 +49,20 @@ public class FileSystemView implements IFileSystem {
         return basePath.relativize(fullPath);
     }
 
-	@Override
-	public boolean getFileExists(FilePath path) {
-		return fileSystem.getFileExists(resolvePath(path));
-	}
+    @Override
+    public boolean getFileExists(FilePath path) {
+        return fileSystem.getFileExists(resolvePath(path));
+    }
 
-	@Override
-	public long getFileSize(FilePath path) throws IOException {
-		return fileSystem.getFileSize(resolvePath(path));
-	}
+    @Override
+    public long getFileSize(FilePath path) throws IOException {
+        return fileSystem.getFileSize(resolvePath(path));
+    }
 
-	@Override
-	public long getFileModifiedTime(FilePath path) throws IOException {
-		return fileSystem.getFileModifiedTime(resolvePath(path));
-	}
+    @Override
+    public long getFileModifiedTime(FilePath path) throws IOException {
+        return fileSystem.getFileModifiedTime(resolvePath(path));
+    }
 
     @Override
     public Iterable<FilePath> getFiles(FileCollectOptions opts) throws IOException {

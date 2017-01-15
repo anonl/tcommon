@@ -10,109 +10,109 @@ import nl.weeaboo.common.Checks;
 
 final class InMemoryFile {
 
-	private final FilePath path;
+    private final FilePath path;
 
-	private long modifiedTime;
-	private byte[] contents = new byte[0];
+    private long modifiedTime;
+    private byte[] contents = new byte[0];
 
-	// Number of open input/output streams to this file entry
-	private int openInputStreams;
-	private int openOutputStreams;
+    // Number of open input/output streams to this file entry
+    private int openInputStreams;
+    private int openOutputStreams;
 
-	public InMemoryFile(FilePath path) {
-		this.path = path;
-	}
+    public InMemoryFile(FilePath path) {
+        this.path = path;
+    }
 
-	public void delete() throws IOException {
-		checkNotReading();
-		checkNotWriting();
-	}
+    public void delete() throws IOException {
+        checkNotReading();
+        checkNotWriting();
+    }
 
-	public InMemoryFile copy() throws IOException {
-		return copy(path);
-	}
-	public InMemoryFile copy(FilePath path) throws IOException {
-		InMemoryFile copy = new InMemoryFile(path);
+    public InMemoryFile copy() throws IOException {
+        return copy(path);
+    }
+    public InMemoryFile copy(FilePath path) throws IOException {
+        InMemoryFile copy = new InMemoryFile(path);
         synchronized (copy) {
             synchronized (this) {
                 checkNotWriting();
                 copy.modifiedTime = modifiedTime;
                 copy.contents = contents;
             }
-		}
-		return copy;
-	}
+        }
+        return copy;
+    }
 
     private synchronized void checkNotReading() throws IOException {
-		if (openInputStreams > 0) {
-			throw new IOException("File is currently opened for reading: " + path);
-		}
-	}
+        if (openInputStreams > 0) {
+            throw new IOException("File is currently opened for reading: " + path);
+        }
+    }
 
     private synchronized void checkNotWriting() throws IOException {
-		if (openOutputStreams > 0) {
-			throw new IOException("File is currently opened for writing: " + path);
-		}
-	}
+        if (openOutputStreams > 0) {
+            throw new IOException("File is currently opened for writing: " + path);
+        }
+    }
 
-	public FilePath getPath() {
-		return path;
-	}
+    public FilePath getPath() {
+        return path;
+    }
 
-	public synchronized long getFileSize() {
-		return contents.length;
-	}
+    public synchronized long getFileSize() {
+        return contents.length;
+    }
 
-	public synchronized long getModifiedTime() {
-		return modifiedTime;
-	}
+    public synchronized long getModifiedTime() {
+        return modifiedTime;
+    }
 
-	public synchronized InputStream openInputStream() throws IOException {
-		checkNotWriting();
+    public synchronized InputStream openInputStream() throws IOException {
+        checkNotWriting();
 
-		openInputStreams++;
-		return new ByteArrayInputStream(contents) {
-			@Override
-			public void close() throws IOException {
-				synchronized (this) {
-					openInputStreams--;
-				}
+        openInputStreams++;
+        return new ByteArrayInputStream(contents) {
+            @Override
+            public void close() throws IOException {
+                synchronized (this) {
+                    openInputStreams--;
+                }
 
-				super.close();
-			}
-		};
-	}
+                super.close();
+            }
+        };
+    }
 
-	public synchronized OutputStream openOutputStream() throws IOException {
+    public synchronized OutputStream openOutputStream() throws IOException {
         return openOutputStream(false);
     }
 
     public synchronized OutputStream openOutputStream(boolean append) throws IOException {
-		checkNotReading();
-		checkNotWriting();
+        checkNotReading();
+        checkNotWriting();
 
-		openOutputStreams++;
+        openOutputStreams++;
 
         ByteArrayOutputStream bout = new ByteArrayOutputStream() {
-			@Override
-			public void close() throws IOException {
-				synchronized (this) {
-					openOutputStreams--;
-					setContents(toByteArray());
-				}
+            @Override
+            public void close() throws IOException {
+                synchronized (this) {
+                    openOutputStreams--;
+                    setContents(toByteArray());
+                }
 
-				super.close();
-			}
-		};
+                super.close();
+            }
+        };
         if (append) {
             bout.write(contents);
         }
         return bout;
-	}
+    }
 
-	synchronized void setContents(byte[] data) {
+    synchronized void setContents(byte[] data) {
         contents = Checks.checkNotNull(data);
-		modifiedTime = System.currentTimeMillis();
-	}
+        modifiedTime = System.currentTimeMillis();
+    }
 
 }

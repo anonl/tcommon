@@ -16,137 +16,137 @@ import nl.weeaboo.io.IWriteReplaceSerializable;
  */
 public final class Entity implements IWriteReplaceSerializable {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	/**
-	 * The minimum number of extra array elements that are added when the internal parts array needs to grow.
-	 */
-	private static final int MIN_PART_ARRAY_INC = 4;
+    /**
+     * The minimum number of extra array elements that are added when the internal parts array needs to grow.
+     */
+    private static final int MIN_PART_ARRAY_INC = 4;
 
-	private static final IPart[] EMPTY = {};
+    private static final IPart[] EMPTY = {};
 
 
-	// -------------------------------------------------------------------------
-	// * Attributes must be serialized manually
-	// * Update reset method after adding/removing attributes
-	// -------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
+    // * Attributes must be serialized manually
+    // * Update reset method after adding/removing attributes
+    // -------------------------------------------------------------------------
 
-	private int id; //Unique entity identifier
+    private int id; //Unique entity identifier
 
-	/**
-	 * The scene to which this entity is attached.
-	 */
-	transient Scene scene;
+    /**
+     * The scene to which this entity is attached.
+     */
+    transient Scene scene;
 
-	/**
-	 * <p>
-	 * Array of parts attached to this entity. The array indices correspond to PartType ids. An entity may
-	 * only store one part of each type.
-	 *
-	 * <p>
-	 * The parts array only needs to be large enough to hold the highest PartType id currently attached to the
-	 * entity. Ids that fall outside the array are treated as absent.
-	 */
-	private IPart[] parts = EMPTY;
+    /**
+     * <p>
+     * Array of parts attached to this entity. The array indices correspond to PartType ids. An entity may
+     * only store one part of each type.
+     *
+     * <p>
+     * The parts array only needs to be large enough to hold the highest PartType id currently attached to the
+     * entity. Ids that fall outside the array are treated as absent.
+     */
+    private IPart[] parts = EMPTY;
 
-	/**
-	 * The number of Part objects in the parts array.
-	 */
-	private int partsCount = 0;
+    /**
+     * The number of Part objects in the parts array.
+     */
+    private int partsCount = 0;
 
-	// -------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
 
-	Entity(Scene scene, int id) {
-		this.scene = scene;
-		this.id = id;
-	}
+    Entity(Scene scene, int id) {
+        this.scene = scene;
+        this.id = id;
+    }
 
-	@Override
-	public Object writeReplace() throws ObjectStreamException {
-		return new EntityRef(scene, id);
-	}
+    @Override
+    public Object writeReplace() throws ObjectStreamException {
+        return new EntityRef(scene, id);
+    }
 
-	private void reset() {
-		id = 0;
-		scene = null;
-		parts = EMPTY;
-		partsCount = 0;
-	}
+    private void reset() {
+        id = 0;
+        scene = null;
+        parts = EMPTY;
+        partsCount = 0;
+    }
 
-	void serialize(ObjectOutput out) throws IOException {
-		out.writeInt(id);
+    void serialize(ObjectOutput out) throws IOException {
+        out.writeInt(id);
 
-		final int partsL = parts.length;
-		out.writeInt(partsCount);
-		out.writeInt(partsL);
-		for (int n = 0; n < partsL; n++) {
-			if (parts[n] != null) {
-				if (partsL < 256) {
-					out.writeByte(n);
-				} else {
-					out.writeInt(n);
-				}
-				out.writeObject(parts[n]);
-			}
-		}
-	}
+        final int partsL = parts.length;
+        out.writeInt(partsCount);
+        out.writeInt(partsL);
+        for (int n = 0; n < partsL; n++) {
+            if (parts[n] != null) {
+                if (partsL < 256) {
+                    out.writeByte(n);
+                } else {
+                    out.writeInt(n);
+                }
+                out.writeObject(parts[n]);
+            }
+        }
+    }
 
-	void deserialize(Scene s, ObjectInput in) throws IOException, ClassNotFoundException {
-		reset();
+    void deserialize(Scene s, ObjectInput in) throws IOException, ClassNotFoundException {
+        reset();
 
-		scene = s;
-		id = in.readInt();
+        scene = s;
+        id = in.readInt();
 
-		partsCount = in.readInt();
-		int partsL = in.readInt();
-		parts = new IPart[partsL];
-		for (int n = 0; n < partsCount; n++) {
-			int index = (partsL < 256 ? in.readByte() & 0xFF : in.readInt());
-			parts[index] = (IPart)in.readObject();
-		}
+        partsCount = in.readInt();
+        int partsL = in.readInt();
+        parts = new IPart[partsL];
+        for (int n = 0; n < partsCount; n++) {
+            int index = (partsL < 256 ? in.readByte() & 0xFF : in.readInt());
+            parts[index] = (IPart)in.readObject();
+        }
 
-		s.registerEntity(this, false);
-	}
+        s.registerEntity(this, false);
+    }
 
-	/**
-	 * Destroys this entity, detaching all parts from it and removing the entity from its scene.
-	 */
-	public final void destroy() {
-		removeAllParts();
-		if (scene != null) {
-			scene.onEntityDestroyed(this);
-		}
-	}
+    /**
+     * Destroys this entity, detaching all parts from it and removing the entity from its scene.
+     */
+    public final void destroy() {
+        removeAllParts();
+        if (scene != null) {
+            scene.onEntityDestroyed(this);
+        }
+    }
 
-	public final boolean isDestroyed() {
-		return scene == null;
-	}
+    public final boolean isDestroyed() {
+        return scene == null;
+    }
 
-	/**
-	 * Moves this entity from its current Scene to <code>newScene</code>.
-	 */
-	public void moveToScene(Scene newScene) {
-		if (scene == newScene) {
-			return;
-		}
+    /**
+     * Moves this entity from its current Scene to <code>newScene</code>.
+     */
+    public void moveToScene(Scene newScene) {
+        if (scene == newScene) {
+            return;
+        }
 
-		scene.unregisterEntity(this, true);
-		scene = newScene;
-		scene.registerEntity(this, true);
-	}
+        scene.unregisterEntity(this, true);
+        scene = newScene;
+        scene.registerEntity(this, true);
+    }
 
-	private void reserveRoomForPart(int partId) {
-		IPart[] oldParts = parts;
-		IPart[] newParts = new IPart[Math.max(partId+1, oldParts.length + MIN_PART_ARRAY_INC)];
-		if (partsCount > 0) { // No need to copy if the array was empty
-			System.arraycopy(oldParts, 0, newParts, 0, oldParts.length);
-		}
-		parts = newParts;
-	}
+    private void reserveRoomForPart(int partId) {
+        IPart[] oldParts = parts;
+        IPart[] newParts = new IPart[Math.max(partId+1, oldParts.length + MIN_PART_ARRAY_INC)];
+        if (partsCount > 0) { // No need to copy if the array was empty
+            System.arraycopy(oldParts, 0, newParts, 0, oldParts.length);
+        }
+        parts = newParts;
+    }
 
-	public int getId() {
-		return id;
-	}
+    public int getId() {
+        return id;
+    }
 
     public void handleSignal(ISignal signal) {
         for (IPart part : parts) {
@@ -159,135 +159,135 @@ public final class Entity implements IWriteReplaceSerializable {
         }
     }
 
-	/**
-	 *  Returns an snapshot of all parts currently attached to this entity.
-	 */
+    /**
+     *  Returns an snapshot of all parts currently attached to this entity.
+     */
     IPart[] parts() {
-		IPart[] result = new IPart[partsCount];
-		int r = 0;
-		for (int index = 0; index < parts.length; index++) {
-			IPart p = parts[index];
-			if (p != null) {
-				result[r++] = p;
-			}
-		}
-		return result;
-	}
+        IPart[] result = new IPart[partsCount];
+        int r = 0;
+        for (int index = 0; index < parts.length; index++) {
+            IPart p = parts[index];
+            if (p != null) {
+                result[r++] = p;
+            }
+        }
+        return result;
+    }
 
     public <T> void addPart(PartType<T> type, T part) {
         addPart(type.getId(), (IPart)part); // Perform explicit cast for non-generic aware calling code
-	}
-	protected void addPart(int partId, IPart part) {
-		if (partId < parts.length && parts[partId] != null) {
-			throw new IllegalArgumentException("Part index " + partId + " is already in use");
-		}
-		setPart(partId, part);
-	}
+    }
+    protected void addPart(int partId, IPart part) {
+        if (partId < parts.length && parts[partId] != null) {
+            throw new IllegalArgumentException("Part index " + partId + " is already in use");
+        }
+        setPart(partId, part);
+    }
 
-	public void removeAllParts() {
-		for (int n = 0; n < parts.length; n++) {
-			if (parts[n] != null) {
-				removePart(n);
-			}
-		}
-	}
+    public void removeAllParts() {
+        for (int n = 0; n < parts.length; n++) {
+            if (parts[n] != null) {
+                removePart(n);
+            }
+        }
+    }
 
-	public void removePart(PartType<?> type) {
-		removePart(type.getId());
-	}
-	protected void removePart(int partId) {
-		setPart(partId, null);
-	}
+    public void removePart(PartType<?> type) {
+        removePart(type.getId());
+    }
+    protected void removePart(int partId) {
+        setPart(partId, null);
+    }
 
-	public boolean hasPart(PartType<?> type) {
-		return hasPart(type.getId());
-	}
-	protected boolean hasPart(int partId) {
-		return partId >= 0 && partId < parts.length && parts[partId] != null;
-	}
+    public boolean hasPart(PartType<?> type) {
+        return hasPart(type.getId());
+    }
+    protected boolean hasPart(int partId) {
+        return partId >= 0 && partId < parts.length && parts[partId] != null;
+    }
 
     public <T> T getPart(PartType<T> type) {
-		return type.cast(getPart(type.getId()));
-	}
-	protected IPart getPart(int partId) {
-		if (partId < 0 || partId >= parts.length) {
-			return null;
-		}
-		return parts[partId];
-	}
+        return type.cast(getPart(type.getId()));
+    }
+    protected IPart getPart(int partId) {
+        if (partId < 0 || partId >= parts.length) {
+            return null;
+        }
+        return parts[partId];
+    }
 
     public <T> void setPart(PartType<T> type, T part) {
         setPart(type.getId(), (IPart)part); // Perform explicit cast for non-generic aware calling code
-	}
-	protected void setPart(int partId, IPart part) {
-		if (part != null) {
-			//Set part
-			if (partId >= parts.length) {
-				reserveRoomForPart(partId);
-			}
+    }
+    protected void setPart(int partId, IPart part) {
+        if (part != null) {
+            //Set part
+            if (partId >= parts.length) {
+                reserveRoomForPart(partId);
+            }
 
-			IPart oldPart = parts[partId];
-			parts[partId] = part;
+            IPart oldPart = parts[partId];
+            parts[partId] = part;
 
-			if (oldPart == null) {
-				partsCount++; // Filled an empty slot
-			} else {
-				if (scene != null) {
-					scene.unregisterPart(this, oldPart, true);
-				}
-			}
-			if (scene != null) {
-				scene.registerPart(this, part, true);
-			}
-		} else if (partId >= 0 && partId < parts.length) {
-			//Remove part
-			IPart oldPart = parts[partId];
-			parts[partId] = null;
+            if (oldPart == null) {
+                partsCount++; // Filled an empty slot
+            } else {
+                if (scene != null) {
+                    scene.unregisterPart(this, oldPart, true);
+                }
+            }
+            if (scene != null) {
+                scene.registerPart(this, part, true);
+            }
+        } else if (partId >= 0 && partId < parts.length) {
+            //Remove part
+            IPart oldPart = parts[partId];
+            parts[partId] = null;
 
-			if (oldPart != null) {
-				partsCount--; // Cleared a filled slot
-				if (scene != null) {
-					scene.unregisterPart(this, oldPart, true);
-				}
-			}
-		}
-	}
+            if (oldPart != null) {
+                partsCount--; // Cleared a filled slot
+                if (scene != null) {
+                    scene.unregisterPart(this, oldPart, true);
+                }
+            }
+        }
+    }
 
-	public int getPartsCount() {
-		return partsCount;
-	}
+    public int getPartsCount() {
+        return partsCount;
+    }
 
-	protected Scene getScene() {
-		return scene;
-	}
+    protected Scene getScene() {
+        return scene;
+    }
 
-	public String toDetailedString() {
-		StringBuilder sb = new StringBuilder();
-		sb.append("Entity{id=").append(id);
-		for (IPart p : parts()) {
-			sb.append("\n  ").append(p.toDetailedString());
-		}
-		sb.append("\n}");
-		return sb.toString();
-	}
+    public String toDetailedString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Entity{id=").append(id);
+        for (IPart p : parts()) {
+            sb.append("\n  ").append(p.toDetailedString());
+        }
+        sb.append("\n}");
+        return sb.toString();
+    }
 
-	private static class EntityRef implements IReadResolveSerializable {
+    private static class EntityRef implements IReadResolveSerializable {
 
-		private static final long serialVersionUID = Entity.serialVersionUID;
+        private static final long serialVersionUID = Entity.serialVersionUID;
 
-		private final Scene scene;
-		private final int id;
+        private final Scene scene;
+        private final int id;
 
-		public EntityRef(Scene s, int id) {
-			this.scene = s;
-			this.id = id;
-		}
+        public EntityRef(Scene s, int id) {
+            this.scene = s;
+            this.id = id;
+        }
 
-		@Override
-		public Object readResolve() throws ObjectStreamException {
-			return scene.getEntity(id);
-		}
+        @Override
+        public Object readResolve() throws ObjectStreamException {
+            return scene.getEntity(id);
+        }
 
-	}
+    }
 
 }

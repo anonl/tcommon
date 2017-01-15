@@ -10,33 +10,33 @@ import java.util.TreeSet;
 
 public class MultiFileSystem implements IFileSystem {
 
-	private final IFileSystem[] fileSystems;
-	private boolean closed;
+    private final IFileSystem[] fileSystems;
+    private boolean closed;
 
-	public MultiFileSystem(IFileSystem... fileSystems) {
-		this(Arrays.asList(fileSystems));
-	}
-	public MultiFileSystem(Collection<IFileSystem> fileSystems) {
-		this.fileSystems = fileSystems.toArray(new IFileSystem[fileSystems.size()]);
-	}
+    public MultiFileSystem(IFileSystem... fileSystems) {
+        this(Arrays.asList(fileSystems));
+    }
+    public MultiFileSystem(Collection<IFileSystem> fileSystems) {
+        this.fileSystems = fileSystems.toArray(new IFileSystem[fileSystems.size()]);
+    }
 
-	@Override
-	public void close() {
-		closed = true;
-		for (IFileSystem fs : fileSystems) {
-			fs.close();
-		}
-	}
+    @Override
+    public void close() {
+        closed = true;
+        for (IFileSystem fs : fileSystems) {
+            fs.close();
+        }
+    }
 
-	@Override
-	public boolean isOpen() {
-		return !closed;
-	}
+    @Override
+    public boolean isOpen() {
+        return !closed;
+    }
 
-	@Override
-	public final boolean isReadOnly() {
+    @Override
+    public final boolean isReadOnly() {
         return true;
-	}
+    }
 
     @Override
     public InputStream openInputStream(FilePath path) throws IOException {
@@ -48,35 +48,35 @@ public class MultiFileSystem implements IFileSystem {
         throw new FileNotFoundException(path.toString());
     }
 
-	@Override
-	public boolean getFileExists(FilePath path) {
-		for (IFileSystem fs : fileSystems) {
-			if (fs.getFileExists(path)) {
-			    return true;
-			}
-		}
-		return false;
-	}
+    @Override
+    public boolean getFileExists(FilePath path) {
+        for (IFileSystem fs : fileSystems) {
+            if (fs.getFileExists(path)) {
+                return true;
+            }
+        }
+        return false;
+    }
 
-	@Override
-	public long getFileSize(FilePath path) throws IOException {
-		for (IFileSystem fs : fileSystems) {
-			if (fs.getFileExists(path)) {
-			    return fs.getFileSize(path);
-			}
-		}
-		throw new FileNotFoundException(path.toString());
-	}
+    @Override
+    public long getFileSize(FilePath path) throws IOException {
+        for (IFileSystem fs : fileSystems) {
+            if (fs.getFileExists(path)) {
+                return fs.getFileSize(path);
+            }
+        }
+        throw new FileNotFoundException(path.toString());
+    }
 
-	@Override
-	public long getFileModifiedTime(FilePath path) throws IOException {
-		for (IFileSystem fs : fileSystems) {
-			if (fs.getFileExists(path)) {
-			    return fs.getFileModifiedTime(path);
-			}
-		}
-		throw new FileNotFoundException(path.toString());
-	}
+    @Override
+    public long getFileModifiedTime(FilePath path) throws IOException {
+        for (IFileSystem fs : fileSystems) {
+            if (fs.getFileExists(path)) {
+                return fs.getFileModifiedTime(path);
+            }
+        }
+        throw new FileNotFoundException(path.toString());
+    }
 
     /**
      * @return The primary (first) writable file system in this multi filesystem, or {@code null} if no

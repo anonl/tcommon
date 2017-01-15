@@ -13,22 +13,22 @@ public final class StreamUtil {
     private StreamUtil() {
     }
 
-	public static int skipBOM(byte b[], int off, int len) {
-		if (len >= 2) {
-			if ((b[off] == (byte)0xFF && b[off+1] == (byte)0xFE)
-				|| (b[off] == (byte)0xFE && b[off+1] == (byte)0xFF))
-			{
-				//Skip UTF-16 BOM
-				off += 2;
-			} else if (len >= 3 && b[off] == (byte)0xEF
-					&& b[off+1] == (byte)0xBB && b[off+2] == (byte)0xBF)
-			{
-				//Skip UTF-8 BOM
-				off += 3;
-			}
-		}
-		return off;
-	}
+    public static int skipBOM(byte b[], int off, int len) {
+        if (len >= 2) {
+            if ((b[off] == (byte)0xFF && b[off+1] == (byte)0xFE)
+                || (b[off] == (byte)0xFE && b[off+1] == (byte)0xFF))
+            {
+                //Skip UTF-16 BOM
+                off += 2;
+            } else if (len >= 3 && b[off] == (byte)0xEF
+                    && b[off+1] == (byte)0xBB && b[off+2] == (byte)0xBF)
+            {
+                //Skip UTF-8 BOM
+                off += 3;
+            }
+        }
+        return off;
+    }
 
     public static byte[] readBytes(InputStream in) throws IOException {
         ByteArrayOutputStream bout = new ByteArrayOutputStream(READ_BUFFER_SIZE);

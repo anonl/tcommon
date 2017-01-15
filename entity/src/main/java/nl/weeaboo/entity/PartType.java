@@ -7,38 +7,38 @@ import java.io.Serializable;
  */
 public final class PartType<T> implements Serializable {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	private final int id;
-	private final String name;
+    private final int id;
+    private final String name;
     private final Class<T> partInterface;
 
     public PartType(int id, String name, Class<T> partInterface) {
-		this.id = id;
-		this.name = name;
+        this.id = id;
+        this.name = name;
         this.partInterface = partInterface;
-	}
+    }
 
-	public T cast(IPart part) {
+    public T cast(IPart part) {
         return partInterface.cast(part);
-	}
+    }
 
-	@Override
-	public int hashCode() {
-		return id;
-	}
+    @Override
+    public int hashCode() {
+        return id;
+    }
 
-	@Override
-	public boolean equals(Object obj) {
-		if (obj == null || !(obj instanceof PartType)) {
-			return false;
-		}
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null || !(obj instanceof PartType)) {
+            return false;
+        }
 
-		PartType<?> pt = (PartType<?>)obj;
-		return id == pt.id
-			&& name.equals(pt.name)
-			&& partInterface == pt.partInterface;
-	}
+        PartType<?> pt = (PartType<?>)obj;
+        return id == pt.id
+            && name.equals(pt.name)
+            && partInterface == pt.partInterface;
+    }
 
     public int getId() {
         return id;

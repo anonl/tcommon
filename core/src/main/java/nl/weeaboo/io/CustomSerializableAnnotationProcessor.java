@@ -33,26 +33,26 @@ import javax.tools.Diagnostic;
 @SupportedSourceVersion(SourceVersion.RELEASE_6)
 public class CustomSerializableAnnotationProcessor extends AbstractProcessor {
 
-	private Messager messager;
+    private Messager messager;
     private Types typeUtils;
 
-	@Override
-	public synchronized void init(ProcessingEnvironment env) {
-	    super.init(env);
+    @Override
+    public synchronized void init(ProcessingEnvironment env) {
+        super.init(env);
 
-		messager = env.getMessager();
+        messager = env.getMessager();
         typeUtils = env.getTypeUtils();
-	}
+    }
 
-	@Override
+    @Override
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment env) {
-		for (Element e : env.getRootElements()) {
+        for (Element e : env.getRootElements()) {
             if (e.getKind() == ElementKind.CLASS && e.getAnnotation(CustomSerializable.class) != null) {
-				processClass((TypeElement)e);
-			}
-		}
+                processClass((TypeElement)e);
+            }
+        }
         return true;
-	}
+    }
 
     private void processClass(TypeElement classElement) {
         List<ExecutableElement> methods = ElementFilter.methodsIn(classElement.getEnclosedElements());
@@ -66,7 +66,7 @@ public class CustomSerializableAnnotationProcessor extends AbstractProcessor {
             messager.printMessage(Diagnostic.Kind.WARNING, "Invalid writeObject implementation",
                     classElement);
         }
-	}
+    }
 
     private boolean checkReadObject(List<ExecutableElement> methods) {
         // private void readObject(ObjectInputStream stream) throws IOException, ClassNotFoundException;

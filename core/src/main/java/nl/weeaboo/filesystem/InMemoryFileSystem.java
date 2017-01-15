@@ -11,83 +11,83 @@ import java.util.Set;
 
 public class InMemoryFileSystem extends AbstractWritableFileSystem {
 
-	private final Map<FilePath, InMemoryFile> files = new HashMap<FilePath, InMemoryFile>();
+    private final Map<FilePath, InMemoryFile> files = new HashMap<FilePath, InMemoryFile>();
 
     private final boolean readOnly;
 
-	public InMemoryFileSystem(boolean readOnly) {
-		this.readOnly = readOnly;
-	}
+    public InMemoryFileSystem(boolean readOnly) {
+        this.readOnly = readOnly;
+    }
 
-	@Override
-	public boolean isReadOnly() {
-		return readOnly;
-	}
+    @Override
+    public boolean isReadOnly() {
+        return readOnly;
+    }
 
-	@Override
-	protected void closeImpl() {
-	}
+    @Override
+    protected void closeImpl() {
+    }
 
-	@Override
-	protected void deleteImpl(FilePath path) throws IOException {
-		synchronized (files) {
+    @Override
+    protected void deleteImpl(FilePath path) throws IOException {
+        synchronized (files) {
             InMemoryFile file = getFile(path, false);
-			file.delete();
-			files.remove(path);
-		}
-	}
+            file.delete();
+            files.remove(path);
+        }
+    }
 
-	@Override
-	protected void copyImpl(FilePath src, FilePath dst) throws IOException {
-		synchronized (files) {
+    @Override
+    protected void copyImpl(FilePath src, FilePath dst) throws IOException {
+        synchronized (files) {
             InMemoryFile file = getFile(src, false);
-			files.put(dst, file.copy(dst));
-		}
-	}
+            files.put(dst, file.copy(dst));
+        }
+    }
 
-	@Override
-	protected InputStream openInputStreamImpl(FilePath path) throws IOException {
-		synchronized (files) {
+    @Override
+    protected InputStream openInputStreamImpl(FilePath path) throws IOException {
+        synchronized (files) {
             InMemoryFile file = getFile(path, false);
-			return file.openInputStream();
-		}
-	}
+            return file.openInputStream();
+        }
+    }
 
-	@Override
-	protected OutputStream newOutputStreamImpl(FilePath path, boolean append) throws IOException {
-		synchronized (files) {
+    @Override
+    protected OutputStream newOutputStreamImpl(FilePath path, boolean append) throws IOException {
+        synchronized (files) {
             InMemoryFile file = getFile(path, true);
             return file.openOutputStream(append);
-		}
-	}
+        }
+    }
 
-	@Override
-	protected boolean getFileExistsImpl(FilePath path) {
-		synchronized (files) {
-			return files.containsKey(path);
-		}
-	}
+    @Override
+    protected boolean getFileExistsImpl(FilePath path) {
+        synchronized (files) {
+            return files.containsKey(path);
+        }
+    }
 
-	@Override
-	protected long getFileSizeImpl(FilePath path) throws IOException {
-		synchronized (files) {
+    @Override
+    protected long getFileSizeImpl(FilePath path) throws IOException {
+        synchronized (files) {
             InMemoryFile file = getFile(path, false);
-			return file.getFileSize();
-		}
-	}
+            return file.getFileSize();
+        }
+    }
 
-	@Override
-	protected long getFileModifiedTimeImpl(FilePath path) throws IOException {
-		synchronized (files) {
+    @Override
+    protected long getFileModifiedTimeImpl(FilePath path) throws IOException {
+        synchronized (files) {
             InMemoryFile file = getFile(path, false);
-			return file.getModifiedTime();
-		}
-	}
+            return file.getModifiedTime();
+        }
+    }
 
     protected InMemoryFile getFile(FilePath path, boolean createIfNeeded) throws FileNotFoundException {
-		synchronized (files) {
-			InMemoryFile file = files.get(path);
-			if (file == null) {
+        synchronized (files) {
+            InMemoryFile file = files.get(path);
+            if (file == null) {
                 if (!createIfNeeded) {
                     throw new FileNotFoundException(path.toString());
                 }
@@ -96,10 +96,10 @@ public class InMemoryFileSystem extends AbstractWritableFileSystem {
                 }
                 file = new InMemoryFile(path);
                 files.put(path, file);
-			}
-			return file;
-		}
-	}
+            }
+            return file;
+        }
+    }
 
     @Override
     public Iterable<FilePath> getFiles(FileCollectOptions opts) throws IOException {

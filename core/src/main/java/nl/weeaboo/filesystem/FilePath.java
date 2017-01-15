@@ -82,7 +82,7 @@ public final class FilePath implements Serializable, Comparable<FilePath> {
     }
 
     public boolean isFolder() {
-        return path.endsWith("/");
+        return path.length() == 0 || path.endsWith("/");
     }
 
     public FilePath getParent() {

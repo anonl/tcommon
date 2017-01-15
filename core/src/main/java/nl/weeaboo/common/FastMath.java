@@ -2,37 +2,37 @@ package nl.weeaboo.common;
 
 public final class FastMath {
 
-	private FastMath() {
-	}
+    private FastMath() {
+    }
 
-	public static float PI = (float)Math.PI;
-	public static float TWO_PI = PI + PI;
+    public static float PI = (float)Math.PI;
+    public static float TWO_PI = PI + PI;
     public static float HALF_PI = PI * .5f;
 
     /** Lookup table based drop-in replacement for {@link Math#sin(double)} */
-	public static float sin(float s) {
+    public static float sin(float s) {
         return fastSin(s * SinLut.fastAngleScale);
-	}
+    }
 
     /** Lookup table based drop-in replacement for {@link Math#cos(double)} */
-	public static float cos(float s) {
+    public static float cos(float s) {
         return fastCos(s * SinLut.fastAngleScale);
-	}
+    }
 
-	public static float acos(float s) {
+    public static float acos(float s) {
         return fastArcCos(s) / SinLut.fastAngleScale;
-	}
-	public static float asin(float s) {
+    }
+    public static float asin(float s) {
         return fastArcSin(s) / SinLut.fastAngleScale;
-	}
+    }
 
-	public static boolean isPowerOfTwo(int w, int h) {
-		return isPowerOfTwo(w) && isPowerOfTwo(h);
-	}
-	public static boolean isPowerOfTwo(int sz) {
-		return sz > 0 && (sz & (sz-1)) == 0;
-	}
-	public static int toPowerOfTwo(int target) {
+    public static boolean isPowerOfTwo(int w, int h) {
+        return isPowerOfTwo(w) && isPowerOfTwo(h);
+    }
+    public static boolean isPowerOfTwo(int sz) {
+        return sz > 0 && (sz & (sz-1)) == 0;
+    }
+    public static int toPowerOfTwo(int target) {
         if (target <= 0) {
             throw new IllegalArgumentException("target must be positive");
         }
@@ -40,47 +40,47 @@ public final class FastMath {
             throw new IllegalArgumentException("No greater power-of-two possible in 32 bits: " + target);
         }
 
-		int cur = (target < 16 ? 1 : 16); //Start with a valid power of two lower than target
-		while (cur < target) {
-			cur <<= 1; //Double cur until at least as large as target
-		}
-		return cur;
-	}
-	public static Dim toPowerOfTwo(int w, int h) {
+        int cur = (target < 16 ? 1 : 16); //Start with a valid power of two lower than target
+        while (cur < target) {
+            cur <<= 1; //Double cur until at least as large as target
+        }
+        return cur;
+    }
+    public static Dim toPowerOfTwo(int w, int h) {
         return Dim.of(toPowerOfTwo(w), toPowerOfTwo(h));
-	}
+    }
 
-	public static int align(int val, int align) {
-		if (!isPowerOfTwo(align)) {
-			throw new IllegalArgumentException("Alignment must be a power of two");
-		}
-		return (val+align-1) & ~(align-1);
-	}
+    public static int align(int val, int align) {
+        if (!isPowerOfTwo(align)) {
+            throw new IllegalArgumentException("Alignment must be a power of two");
+        }
+        return (val+align-1) & ~(align-1);
+    }
 
-	//-------------------------------------------------------------------------
-	//--- LUT implementations of trig functions -------------------------------
-	//-------------------------------------------------------------------------
+    //-------------------------------------------------------------------------
+    //--- LUT implementations of trig functions -------------------------------
+    //-------------------------------------------------------------------------
 
-	public static float fastSin(int angle) {
+    public static float fastSin(int angle) {
         return SinLut.LUT[angle & SinLut.MASK];
-	}
-	public static float fastCos(int angle) {
+    }
+    public static float fastCos(int angle) {
         return SinLut.LUT[(angle + SinLut.COS_OFFSET) & SinLut.MASK];
-	}
+    }
 
-	public static float fastSin(float angle) {
+    public static float fastSin(float angle) {
         int a = (angle >= 0 ? (int)(angle) : (int)(angle - 1));
-		float prev = fastSin(a);
-		float next = fastSin(a + 1);
+        float prev = fastSin(a);
+        float next = fastSin(a + 1);
 
-		float result = prev + (next-prev) * Math.abs(angle - a);
-		return result;
-	}
-	public static float fastCos(float angle) {
+        float result = prev + (next-prev) * Math.abs(angle - a);
+        return result;
+    }
+    public static float fastCos(float angle) {
         return fastSin(angle + (SinLut.SIZE >> 2));
-	}
+    }
 
-	public static float fastArcSin(float a) {
+    public static float fastArcSin(float a) {
         if (Float.isNaN(a) || a < -1 || a > 1) {
             return Float.NaN;
         }
@@ -96,11 +96,11 @@ public final class FastMath {
 
         float result = prev + (next - prev) * Math.abs(floatIndex - index);
         return result;
-	}
+    }
 
-	public static float fastArcCos(float a) {
+    public static float fastArcCos(float a) {
         return (SinLut.SIZE >> 2) - fastArcSin(a);
-	}
+    }
 
     public static float fastArcTan2(float dy, float dx) {
         float c1 = SinLut.SIZE >> 3;

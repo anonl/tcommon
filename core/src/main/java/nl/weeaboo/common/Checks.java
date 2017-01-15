@@ -41,17 +41,17 @@ public final class Checks {
         return val;
     }
 
-	public static double checkRange(double val, String name) {
-	    return checkRange(val, name, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY);
-	}
-	public static double checkRange(double val, String name, double min) {
-	    return checkRange(val, name, min, Double.POSITIVE_INFINITY);
-	}
-	public static double checkRange(double val, String name, double min, double max) {
-	    if (Double.isNaN(val) || Double.isInfinite(val) || !(val >= min && val <= max)) {
-	        throw new IllegalArgumentException("Invalid value for " + nameString(name) + ": " + val);
-	    }
-	    return val;
-	}
+    public static double checkRange(double val, String name) {
+        return checkRange(val, name, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY);
+    }
+    public static double checkRange(double val, String name, double min) {
+        return checkRange(val, name, min, Double.POSITIVE_INFINITY);
+    }
+    public static double checkRange(double val, String name, double min, double max) {
+        if (Double.isNaN(val) || Double.isInfinite(val) || !(val >= min && val <= max)) {
+            throw new IllegalArgumentException("Invalid value for " + nameString(name) + ": " + val);
+        }
+        return val;
+    }
 }
 
