@@ -53,4 +53,14 @@ public final class Insets2D implements Serializable {
         return StringUtil.formatRoot("Insets2D(%f,%f,%f,%f)", top, right, bottom, left);
     }
 
+    /** The sum of the insets in the horizontal direction */
+    public double getHorizontal() {
+        return left + right;
+    }
+
+    /** The sum of the insets in the vertical direction */
+    public double getVertical() {
+        return top + bottom;
+    }
+
 }
