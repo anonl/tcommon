@@ -49,27 +49,41 @@ subprojects {
     }
 }
 
-project(':tcommon-core') {
-    task aptJar(type: Jar) {
-        classifier = 'apt'
-        from sourceSets.main.output
-        include 'nl/weeaboo/io/CustomSerializable.*'
-        include 'nl/weeaboo/io/CustomSerializableAnnotationProcessor.*'
-        include 'META-INF/services/javax.annotation.processing.Processor'
+project(':core') {
+    eclipse.project {
+        name = 'tcommon-core'
     }    
 }
 
-project(':tcommon-entity') {
+project(':apt6') {
     dependencies {
-        compile project(':tcommon-core')
+        compile project(':core')
     }
+    
+    eclipse.project {
+        name = 'tcommon-apt6'
+    }    
 }
 
-project(':tcommon-logging') {
+project(':entity') {
     dependencies {
-        compile project(':tcommon-core')
+        compile project(':core')
+    }
+
+    eclipse.project {
+        name = 'tcommon-entity'
+    }    
+}
+
+project(':logging') {
+    dependencies {
+        compile project(':core')
         compile "org.slf4j:slf4j-api:$slf4jVersion"
     }
+
+    eclipse.project {
+        name = 'tcommon-logging'
+    }    
 }
 
 publishing {
@@ -77,21 +91,28 @@ publishing {
         core(MavenPublication) {
             artifactId = 'tcommon-core'
 
-            def proj = project(":tcommon-core")
+            def proj = project(":core")
+            from proj.components.java            
+            artifact(proj.sourceJar)
+        }
+        apt6(MavenPublication) {
+            artifactId = 'tcommon-apt6'
+
+            def proj = project(":apt6")
             from proj.components.java            
             artifact(proj.sourceJar)
         }
         logging(MavenPublication) {
             artifactId = 'tcommon-logging'
 
-            def proj = project(":tcommon-logging")
+            def proj = project(":logging")
             from proj.components.java            
             artifact(proj.sourceJar)
         }
         entity(MavenPublication) {
             artifactId = 'tcommon-entity'
 
-            def proj = project(":tcommon-entity")
+            def proj = project(":entity")
             from proj.components.java            
             artifact(proj.sourceJar)
         }
@@ -101,7 +122,7 @@ publishing {
 bintray {   
     user = System.getenv('BINTRAY_USER')
     key = System.getenv('BINTRAY_KEY')
-    publications = ['core', 'entity', 'logging']
+    publications = ['core', 'apt6', 'entity', 'logging']
     pkg {
         repo = 'tcommon'
         name = 'tcommon'

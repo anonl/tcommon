@@ -1,4 +1,4 @@
-package nl.weeaboo.io;
+package nl.weeaboo.apt6;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -28,6 +28,8 @@ import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.ElementFilter;
 import javax.lang.model.util.Types;
 import javax.tools.Diagnostic;
+
+import nl.weeaboo.io.CustomSerializable;
 
 @SupportedAnnotationTypes("nl.weeaboo.io.CustomSerializable")
 @SupportedSourceVersion(SourceVersion.RELEASE_6)

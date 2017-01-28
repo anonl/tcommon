@@ -1,9 +1,2 @@
 
-include ':tcommon-core'
-project(':tcommon-core').projectDir=new File('core')
-
-include ':tcommon-entity'
-project(':tcommon-entity').projectDir=new File('entity')
-
-include ':tcommon-logging'
-project(':tcommon-logging').projectDir=new File('logging')
+include 'core', 'apt6', 'entity', 'logging'
