@@ -4,6 +4,10 @@ public final class VersionNumber implements Comparable<VersionNumber> {
 
     private final int[] versionParts;
 
+    /**
+     * @param major First version part.
+     * @param minor Second version part.
+     */
     public VersionNumber(int major, int minor) {
         versionParts = new int[] {major, minor};
     }

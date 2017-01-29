@@ -34,15 +34,24 @@ public final class IntMap<V> implements Serializable {
     /** Internal modification counter used to detect concurrent modification errors. */
     private int modCount;
 
+    /**
+     * Creates an empty int map with the default initial capacity.
+     */
     public IntMap() {
         this(8);
     }
 
+    /**
+     * Creates an empty int map with the specified initial capacity.
+     */
     public IntMap(int initialCapacity) {
         keys = new int[initialCapacity];
         values = new Object[initialCapacity];
     }
 
+    /**
+     * Creates an int map from an existing {@link Map}.
+     */
     public IntMap(Map<Integer, ? extends V> map) {
         this(map.size());
 
@@ -75,6 +84,11 @@ public final class IntMap<V> implements Serializable {
         values = newVals;
     }
 
+    /**
+     * Removes the values stored under {@code key}.
+     *
+     * @return The value previously associated with {@code key}, or {@code null} if no such value exists.
+     */
     public V remove(int key) {
         int i = Arrays.binarySearch(keys, 0, length, key);
         if (i >= 0 && values[i] != REMOVED) {
@@ -110,6 +124,9 @@ public final class IntMap<V> implements Serializable {
         modCount++;
     }
 
+    /**
+     * Completely clears the map, removing all entries.
+     */
     public void clear() {
         Arrays.fill(values, 0, length, null);
         length = 0;
@@ -117,6 +134,9 @@ public final class IntMap<V> implements Serializable {
         modCount++;
     }
 
+    /**
+     * Returns an iterable for iterating over the values in this map.
+     */
     public Iterable<V> values() {
         return new Iterable<V>() {
             @Override
@@ -153,6 +173,9 @@ public final class IntMap<V> implements Serializable {
         };
     }
 
+    /**
+     * Returns a copy of the keys used in this map.
+     */
     public int[] getKeys() {
         compact();
 
@@ -161,11 +184,17 @@ public final class IntMap<V> implements Serializable {
         return result;
     }
 
+    /**
+     * Checks if the specified key exists in this map.
+     */
     public boolean containsKey(int key) {
         int i = Arrays.binarySearch(keys, 0, length, key);
         return i >= 0 && values[i] != REMOVED;
     }
 
+    /**
+     * Returns the value associated with the given key, or {@code null} if no such value exists.
+     */
     public V get(int key) {
         int i = Arrays.binarySearch(keys, 0, length, key);
         if (i < 0 || values[i] == REMOVED) {
@@ -177,10 +206,16 @@ public final class IntMap<V> implements Serializable {
         return val;
     }
 
+    /**
+     * Returns {@code true} if this map has zero entries.
+     */
     public boolean isEmpty() {
         return size() == 0;
     }
 
+    /**
+     * Returns the number of entries in this map.
+     */
     public int size() {
         return size;
     }
@@ -193,6 +228,9 @@ public final class IntMap<V> implements Serializable {
         }
     }
 
+    /**
+     * Returns the key stored at the specified internal index.
+     */
     public int keyAt(int index) {
         compact();
         checkIndex(index);
@@ -200,6 +238,9 @@ public final class IntMap<V> implements Serializable {
         return keys[index];
     }
 
+    /**
+     * Returns the value stored at the specified internal index.
+     */
     public V valueAt(int index) {
         compact();
         checkIndex(index);
@@ -209,10 +250,18 @@ public final class IntMap<V> implements Serializable {
         return val;
     }
 
+    /**
+     * Adds all entries in the supplied map to this map.
+     */
     public <T extends V> void putAll(Map<Integer, T> map) {
         putAll(new IntMap<T>(map));
     }
 
+    /**
+     * Adds all entries in the supplied map to this map.
+     *
+     * @throws IllegalArgumentException When trying to add a map to itself.
+     */
     public void putAll(IntMap<? extends V> map) {
         if (this == map) {
             throw new IllegalArgumentException("Cannot add map to itself");
@@ -227,6 +276,11 @@ public final class IntMap<V> implements Serializable {
         }
     }
 
+    /**
+     * Sets the value for a certain key.
+     *
+     * @return The value previously associated with the key, or {@code null} if no such value exists.
+     */
     public V put(int key, V val) {
         modCount++;
 
@@ -275,6 +329,11 @@ public final class IntMap<V> implements Serializable {
         return null; // Old value doesn't exist
     }
 
+    /**
+     * Removed the value stored at the specified internal index.
+     *
+     * @return The value previously stored at that index, or {@code null} if no such value exists.
+     */
     public V removeAt(int index) {
         compact();
         checkIndex(index);
@@ -294,6 +353,11 @@ public final class IntMap<V> implements Serializable {
         return result;
     }
 
+    /**
+     * Overwrites the value stored at the specified internal index.
+     *
+     * @return The value previously stored at that index, or {@code null} if no such value exists.
+     */
     public V putAtIndex(int index, V val) {
         compact();
         checkIndex(index);

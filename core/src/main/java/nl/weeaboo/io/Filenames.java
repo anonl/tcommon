@@ -23,6 +23,7 @@ public final class Filenames {
         return path;
     }
 
+    /** Strips the file extension, then appends a new one. */
     public static String replaceExt(String filename, String ext) {
         return stripExtension(filename) + "." + ext;
     }

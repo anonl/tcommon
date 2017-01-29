@@ -25,14 +25,25 @@ public final class Rect2D implements Serializable {
         this.h = h;
     }
 
+    /**
+     * Factory constructor for creating a new rect. For specific values of x/y/w/h a cached instance may be returned.
+     */
     public static Rect2D of(double x, double y, double w, double h) {
         return new Rect2D(x, y, w, h);
     }
 
+    /**
+     * Returns a rect translated by {@code (dx, dy)}.
+     */
     public Rect2D translatedCopy(double dx, double dy) {
         return Rect2D.of(x + dx, y + dy, w, h);
     }
 
+    /**
+     * Returns the bounding rect for the set of input rectangles.
+     *
+     * @return The bounding rect, or {@code Rect2D#EMPTY} if the input array is empty.
+     */
     public static Rect2D combine(Rect2D... r) {
         if (r.length == 0) {
             return EMPTY;
@@ -71,6 +82,9 @@ public final class Rect2D implements Serializable {
         return "Rect2D(" + x + ", " + y + ", " + w + ", " + h + ")";
     }
 
+    /**
+     * Returns an equivalent {@link Area2D} instance.
+     */
     public Area2D toArea2D() {
         return Area2D.of(x, y, w, h);
     }
@@ -85,10 +99,16 @@ public final class Rect2D implements Serializable {
         return px >= x && px <= x + w && py >= y && py <= y + h;
     }
 
+    /**
+     * Checks if this rect completely contains the rectangle described by {@code (ax, ay, aw, ah)}.
+     */
     public boolean contains(double ax, double ay, double aw, double ah) {
         return contains(ax, ay) && contains(ax + aw, ay + ah);
     }
 
+    /**
+     * Checks if this rect is intersected by the rectangle described by {@code (ax, ay, aw, ah)}.
+     */
     public boolean intersects(double ax, double ay, double aw, double ah) {
         if (w <= 0 || h <= 0) {
             return false; // Special case: empty rects intersect nothing

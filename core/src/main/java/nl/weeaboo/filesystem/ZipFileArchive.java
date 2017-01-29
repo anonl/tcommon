@@ -105,7 +105,7 @@ public class ZipFileArchive extends AbstractFileArchive {
         StreamUtil.readFully(in, buf.array(), buf.arrayOffset(), buf.limit());
     }
 
-    public static long findCentralDir(IRandomAccessFile file) throws IOException {
+    private static long findCentralDir(IRandomAccessFile file) throws IOException {
         ByteBuffer buf = ByteBuffer.allocate(READ_BUF);
         buf.order(ByteOrder.LITTLE_ENDIAN);
 

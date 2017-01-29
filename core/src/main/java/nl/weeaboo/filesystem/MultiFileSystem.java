@@ -13,10 +13,17 @@ public class MultiFileSystem implements IFileSystem {
     private final IFileSystem[] fileSystems;
     private boolean closed;
 
+    /**
+     * @param fileSystems The file systems that this multi filesystem delegates to.
+     * @see #MultiFileSystem(Collection)
+     */
     public MultiFileSystem(IFileSystem... fileSystems) {
         this(Arrays.asList(fileSystems));
     }
 
+    /**
+     * @param fileSystems The file systems that this multi filesystem delegates to.
+     */
     public MultiFileSystem(Collection<IFileSystem> fileSystems) {
         this.fileSystems = fileSystems.toArray(new IFileSystem[fileSystems.size()]);
     }

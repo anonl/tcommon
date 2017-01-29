@@ -2,12 +2,24 @@ package nl.weeaboo.entity;
 
 public interface IEntityListener {
 
-    public void onEntityCreated(Entity e);
-    
-    public void onEntityAttached(Scene s, Entity e);
-    
-    public void onEntityDetached(Scene s, Entity e);
+    /**
+     * Called when a new entity is created.
+     */
+    void onEntityCreated(Entity e);
 
-    public void onEntityDestroyed(Entity e);
-    
+    /**
+     * Called when an entity is attached to a scene.
+     */
+    void onEntityAttached(Scene s, Entity e);
+
+    /**
+     * Called when an entity is detached from a scene.
+     */
+    void onEntityDetached(Scene s, Entity e);
+
+    /**
+     * Called when an entity is destroyed.
+     */
+    void onEntityDestroyed(Entity e);
+
 }

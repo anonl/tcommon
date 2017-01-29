@@ -22,7 +22,7 @@ import org.junit.Assert;
 
 import nl.weeaboo.common.StringUtil;
 
-public final class TestUtil {
+final class TestUtil {
 
     private static final int COMPRESSION_LEVEL = Deflater.BEST_SPEED;
 

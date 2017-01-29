@@ -25,9 +25,9 @@ public class PartRegistry implements Serializable {
 
     // -------------------------------------------------------------------------
 
-    public PartRegistry() {
-    }
-
+    /**
+     * Clears all entries in this part registry.
+     */
     public void clear() {
         entriesByName.clear();
         entriesById.clear();
@@ -75,6 +75,9 @@ public class PartRegistry implements Serializable {
         return entriesById.get(id);
     }
 
+    /**
+     * Returns a collection of all part types that exist in this registry.
+     */
     public List<PartType<?>> getAll() {
         return new ArrayList<PartType<?>>(entriesByName.values());
     }

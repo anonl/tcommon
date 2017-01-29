@@ -49,6 +49,9 @@ public class Part implements IPart {
         attached = false;
     }
 
+    /**
+     * Is this part attached to a scene.
+     */
     public boolean isAttached() {
         return attached;
     }

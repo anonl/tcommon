@@ -29,18 +29,27 @@ public class InMemoryLogger extends MarkerIgnoringBase {
     private LogLevel logLevel = LogLevel.ALL;
     private final Deque<LogEntry> entries = new ArrayDeque<LogEntry>();
 
+    /**
+     * Adds a new log entry.
+     */
     public void log(LogLevel level, String message, Throwable throwable) {
         synchronized (entries) {
             entries.add(new LogEntry(level, message, throwable));
         }
     }
 
+    /**
+     * Returns a read-only view of the available log entries.
+     */
     public List<LogEntry> getEntries() {
         synchronized (entries) {
             return Collections.unmodifiableList(new ArrayList<LogEntry>(entries));
         }
     }
 
+    /**
+     * Returns the available log entries and clears all stored log entries in this logger.
+     */
     public List<LogEntry> consumeEntries() {
         synchronized (entries) {
             List<LogEntry> result = new ArrayList<LogEntry>(entries);
@@ -210,20 +219,39 @@ public class InMemoryLogger extends MarkerIgnoringBase {
         private final String message;
         private final Throwable exception;
 
+        /**
+         * Constructs a log entry with no exception.
+         *
+         * @param level Log level
+         * @param message Log message
+         */
         public LogEntry(LogLevel level, String message) {
             this(level, message, null);
         }
 
+        /**
+         * Constructs a log entry with an associated exception.
+         *
+         * @param level Log level
+         * @param message Log message
+         * @param exception (optional) Associated exception.
+         */
         public LogEntry(LogLevel level, String message, Throwable exception) {
             this.level = Checks.checkNotNull(level);
             this.message = Checks.checkNotNull(message);
             this.exception = exception;
         }
 
+        /**
+         * The log level associated with this entry.
+         */
         public LogLevel getLevel() {
             return level;
         }
 
+        /**
+         * The log message associated with this entry.
+         */
         public String getMessage() {
             return message;
         }

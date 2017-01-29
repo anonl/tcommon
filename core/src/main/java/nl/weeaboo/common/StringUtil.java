@@ -22,14 +22,25 @@ public final class StringUtil {
         return String.format(Locale.ROOT, format, args);
     }
 
+    /**
+     * Decodes UTF-8 bytes to String.
+     *
+     * @see #fromUTF8(byte[], int, int)
+     */
     public static String fromUTF8(byte[] bytes) {
         return fromUTF8(bytes, 0, bytes.length);
     }
 
+    /**
+     * Decodes UTF-8 bytes to String.
+     */
     public static String fromUTF8(byte[] bytes, int off, int len) {
         return new String(bytes, off, len, UTF_8);
     }
 
+    /**
+     * Encodes a String to UTF-8.
+     */
     public static byte[] toUTF8(String string) {
         return string.getBytes(UTF_8);
     }
@@ -49,6 +60,9 @@ public final class StringUtil {
         return true;
     }
 
+    /**
+     * Formats a byte amount to a human-readable string.
+     */
     public static String formatMemoryAmount(long bytes) {
         if (bytes < 0) {
             throw new IllegalArgumentException("Negative values not supported: " + bytes);
@@ -65,6 +79,9 @@ public final class StringUtil {
         }
     }
 
+    /**
+     * Formats a time amount to a human-readable string.
+     */
     public static String formatTime(long t, TimeUnit unit) {
         long nanos = TimeUnit.NANOSECONDS.convert(t, unit);
         if (unit.compareTo(TimeUnit.SECONDS) < 0 && nanos > Long.MIN_VALUE && nanos < Long.MAX_VALUE) {

@@ -18,6 +18,11 @@ public final class ZipUtil {
     private ZipUtil() {
     }
 
+    /**
+     * Writes a new folder entry to the ZIP file.
+     *
+     * @throws IOException If an I/O error occurs while writing the entry.
+     */
     public static void writeFolderEntry(ZipOutputStream zout, String relpath) throws IOException {
         if (relpath.length() > 0 && !relpath.endsWith("/")) {
             relpath += "/";
@@ -28,9 +33,12 @@ public final class ZipUtil {
         zout.closeEntry();
     }
 
-    public static void add(ZipOutputStream zout, String relpath, File file, Compression c)
-            throws IOException {
-
+    /**
+     * Writes a new entry to the ZIP file.
+     *
+     * @throws IOException If an I/O error occurs while writing the entry.
+     */
+    public static void add(ZipOutputStream zout, String relpath, File file, Compression c) throws IOException {
         if (file.isDirectory()) {
             writeFolderEntry(zout, relpath);
         } else {
@@ -43,8 +51,13 @@ public final class ZipUtil {
         }
     }
 
-    public static void writeFileEntry(ZipOutputStream zout, String relpath, byte[] b, int off, int len,
-            Compression c) throws IOException {
+    /**
+     * Writes a new file entry to the ZIP file.
+     *
+     * @throws IOException If an I/O error occurs while writing the entry.
+     */
+    public static void writeFileEntry(ZipOutputStream zout, String relpath, byte[] b, int off, int len, Compression c)
+            throws IOException {
 
         ByteArrayInputStream bin = new ByteArrayInputStream(b, off, len);
         try {
@@ -54,8 +67,13 @@ public final class ZipUtil {
         }
     }
 
-    public static void writeFileEntry(ZipOutputStream zout, String relpath,
-            InputStream in, long size, Compression compression) throws IOException {
+    /**
+     * Writes a new file entry to the ZIP file.
+     *
+     * @throws IOException If an I/O error occurs while writing the entry.
+     */
+    public static void writeFileEntry(ZipOutputStream zout, String relpath, InputStream in, long size,
+            Compression compression) throws IOException {
 
         ZipEntryWriter writer = new ZipEntryWriter(relpath, in, size, compression);
         try {

@@ -47,14 +47,39 @@ public interface IRandomAccessFile extends Closeable {
      */
     void write(byte[] buf, int off, int len) throws IOException;
 
+    /**
+     * Returns the current byte-offset within the file.
+     *
+     * @throws IOException If the file is not accessible.
+     */
     long pos() throws IOException;
 
+    /**
+     * Modifies the current byte-offset within the file.
+     *
+     * @throws IOException If the file is not accessible.
+     */
     void seek(long pos) throws IOException;
 
+    /**
+     * Returns the length of the file in bytes.
+     *
+     * @throws IOException If the file is not accessible.
+     */
     long length() throws IOException;
 
+    /**
+     * Opens an inputstream for reading the file's contents, starting at the beginning of the file.
+     *
+     * @throws IOException If the file is not accessible for reading.
+     */
     InputStream getInputStream() throws IOException;
 
+    /**
+     * Opens an inputstream for reading the file's contents, limiting the stream to the specified file segment.
+     *
+     * @throws IOException If the file is not accessible for reading.
+     */
     InputStream getInputStream(long offset, long length) throws IOException;
 
 }

@@ -25,14 +25,23 @@ public final class Insets2D implements Serializable {
         this.left = left;
     }
 
+    /**
+     * Returns an insets object with {@code top=right=bottom=left=pad}.
+     */
     public static Insets2D of(double pad) {
         return of(pad, pad);
     }
 
+    /**
+     * Returns an insets object with {@code top=bottom=vertical} and {@code left=right=horizontal}.
+     */
     public static Insets2D of(double vertical, double horizontal) {
         return of(vertical, horizontal, vertical, horizontal);
     }
 
+    /**
+     * Factory constructor for creating a new insets. For specific input values, a cached instance may be returned.
+     */
     public static Insets2D of(double top, double right, double bottom, double left) {
         return new Insets2D(top, right, bottom, left);
     }

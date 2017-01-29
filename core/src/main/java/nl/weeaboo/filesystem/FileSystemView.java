@@ -12,6 +12,10 @@ public class FileSystemView implements IFileSystem {
     private final IFileSystem fileSystem;
     private final FilePath basePath;
 
+    /**
+     * @param basePath Base path for this file system view. This view will resolve all of its paths relative to the base
+     *        path.
+     */
     public FileSystemView(IFileSystem fileSystem, FilePath basePath) {
         this.fileSystem = Checks.checkNotNull(fileSystem);
         this.basePath = Checks.checkNotNull(basePath);
@@ -37,6 +41,9 @@ public class FileSystemView implements IFileSystem {
         return fileSystem.isReadOnly();
     }
 
+    /**
+     * Returns the base path that's used to resolve all path strings unto the underlying file system.
+     */
     public FilePath getBasePath() {
         return basePath;
     }

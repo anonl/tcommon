@@ -22,6 +22,9 @@ public final class Rect implements Serializable {
         this.h = h;
     }
 
+    /**
+     * Factory constructor for creating a new rect. For specific values of x/y/w/h a cached instance may be returned.
+     */
     public static Rect of(int x, int y, int w, int h) {
         if (x == 0 && y == 0 && w == 0 && h == 0) {
             return EMPTY;
@@ -29,6 +32,9 @@ public final class Rect implements Serializable {
         return new Rect(x, y, w, h);
     }
 
+    /**
+     * Returns a rect translated by {@code (dx, dy)}.
+     */
     public Rect translatedCopy(int dx, int dy) {
         return Rect.of(x + dx, y + dy, w, h);
     }
@@ -76,14 +82,23 @@ public final class Rect implements Serializable {
         return "Rect(" + x + ", " + y + ", " + w + ", " + h + ")";
     }
 
+    /**
+     * Returns an equivalent {@link Area} instance.
+     */
     public Area toArea() {
         return Area.of(x, y, w, h);
     }
 
+    /**
+     * Returns an equivalent {@link Area2D} instance.
+     */
     public Area2D toArea2D() {
         return Area2D.of(x, y, w, h);
     }
 
+    /**
+     * Returns an equivalent {@link Rect2D} instance.
+     */
     public Rect2D toRect2D() {
         return Rect2D.of(x, y, w, h);
     }
@@ -98,10 +113,16 @@ public final class Rect implements Serializable {
         return px >= x && px <= x + w && py >= y && py <= y + h;
     }
 
+    /**
+     * Checks if this rect completely contains the rectangle described by {@code (ax, ay, aw, ah)}.
+     */
     public boolean contains(double ax, double ay, double aw, double ah) {
         return contains(ax, ay) && contains(ax + aw, ay + ah);
     }
 
+    /**
+     * Checks if this rect is intersected by the rectangle described by {@code (ax, ay, aw, ah)}.
+     */
     public boolean intersects(double ax, double ay, double aw, double ah) {
         if (w <= 0 || h <= 0) {
             return false; // Special case: empty rects intersect nothing

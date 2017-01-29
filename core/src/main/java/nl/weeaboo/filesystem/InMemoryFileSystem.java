@@ -15,6 +15,9 @@ public class InMemoryFileSystem extends AbstractWritableFileSystem {
 
     private final boolean readOnly;
 
+    /**
+     * @param readOnly Sets the {@link #isReadOnly()} flag, which prevents modification.
+     */
     public InMemoryFileSystem(boolean readOnly) {
         this.readOnly = readOnly;
     }

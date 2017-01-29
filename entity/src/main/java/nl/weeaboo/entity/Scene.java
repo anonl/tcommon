@@ -96,6 +96,9 @@ public final class Scene implements IWriteReplaceSerializable {
         }
     }
 
+    /**
+     * Destroys the scene and everything in it.
+     */
     public final void destroy() {
         clear();
 
@@ -104,10 +107,17 @@ public final class Scene implements IWriteReplaceSerializable {
         }
     }
 
+    /**
+     * Returns {@code true} if this scene is destroyed.
+     * @see #destroy()
+     */
     public final boolean isDestroyed() {
         return world == null;
     }
 
+    /**
+     * The unique scene ID.
+     */
     public int getId() {
         return id;
     }
@@ -129,18 +139,30 @@ public final class Scene implements IWriteReplaceSerializable {
         enabled = e;
     }
 
+    /**
+     * Attaches a new entity listener.
+     */
     public void addEntityListener(IEntityListener el) {
         entityListeners.add(el);
     }
 
+    /**
+     * Removes a previously attached entity listener.
+     */
     public void removeEntityListener(IEntityListener el) {
         entityListeners.remove(el);
     }
 
+    /**
+     * Attaches a new part listener.
+     */
     public void addPartListener(IPartListener pl) {
         partListeners.add(pl);
     }
 
+    /**
+     * Removes a previously attached part listener.
+     */
     public void removePartListener(IPartListener pl) {
         partListeners.remove(pl);
     }
@@ -260,28 +282,46 @@ public final class Scene implements IWriteReplaceSerializable {
         return entityManager.removeStream(esd);
     }
 
+    /**
+     * Returns all entities attached to this scene.
+     */
     public List<Entity> getEntities() {
         List<Entity> out = new ArrayList<Entity>(getEntitiesCount());
         getEntities(out);
         return out;
     }
 
+    /**
+     * Adds all entities attached to this scene to the supplied output collection.
+     */
     public void getEntities(Collection<Entity> out) {
         entityManager.getEntities(out);
     }
 
+    /**
+     * The number of entities attaches to this scene.
+     */
     public int getEntitiesCount() {
         return entityManager.getEntitiesCount();
     }
 
+    /**
+     * Returns the entity with the given ID, or {@code null} if no such entity was attached to this scene.
+     */
     public Entity getEntity(int id) {
         return entityManager.getEntity(id);
     }
 
+    /**
+     * Returns {@code true} if this scene contains the specified entity.
+     */
     public boolean contains(Entity e) {
         return e != null && contains(e.getId());
     }
 
+    /**
+     * Returns {@code true} if this scene contains the entity with the specified ID.
+     */
     public boolean contains(int id) {
         return getEntity(id) != null;
     }

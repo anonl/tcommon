@@ -30,7 +30,7 @@ public abstract class AbstractWritableFileSystem extends AbstractFileSystem impl
     @Override
     public final void delete(FilePath path) throws IOException {
         checkWritable();
-        deleteImpl(resolvePath(path, true));
+        deleteImpl(resolvePath(path, false));
     }
 
     protected abstract void deleteImpl(FilePath path) throws IOException;

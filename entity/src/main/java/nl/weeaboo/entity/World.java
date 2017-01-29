@@ -139,6 +139,9 @@ public final class World implements Externalizable {
         return out;
     }
 
+    /**
+     * Adds all scenes inside this world to the supplied output collection.
+     */
     public void getScenes(Collection<Scene> out) {
         final int scenesCount = scenes.size();
         for (int n = 0; n < scenesCount; n++) {
@@ -153,6 +156,9 @@ public final class World implements Externalizable {
         return partRegistry;
     }
 
+    /**
+     * Returns the entity with the given ID, or {@code null} if no such entity is attached to this world.
+     */
     public Entity findEntity(int id) {
         int scenesL = scenes.size();
         for (int n = 0; n < scenesL; n++) {
