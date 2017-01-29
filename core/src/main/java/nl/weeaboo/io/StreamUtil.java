@@ -48,12 +48,24 @@ public final class StreamUtil {
         return bytes[off] == (byte)0xEF && bytes[off + 1] == (byte)0xBB && bytes[off + 2] == (byte)0xBF;
     }
 
+    /**
+     * Reads an entire file and returns its contents as a byte array.
+     *
+     * @throws IOException If an I/O exception occurs while reading bytes from the input stream.
+     */
     public static byte[] readBytes(InputStream in) throws IOException {
         ByteArrayOutputStream bout = new ByteArrayOutputStream(READ_BUFFER_SIZE);
         writeBytes(in, bout);
         return bout.toByteArray();
     }
 
+    /**
+     * Reads {@code dstLen} bytes from {@code in} into the output buffer {@code dst}, starting at {@code dstOff} in the
+     * destination buffer.
+     *
+     * @throws EOFException If the end of the stream was reached before the desired number of bytes was read.
+     * @throws IOException If an I/O exception occurs while reading bytes from the input stream.
+     */
     public static void readFully(InputStream in, byte[] dst, int dstOff, int dstLen) throws IOException {
         int read = 0;
         while (read < dstLen) {
@@ -65,6 +77,12 @@ public final class StreamUtil {
         }
     }
 
+    /**
+     * Skips a number of bytes from the given input stream. Unlike {@link InputStream#skip(long)}, this method throws
+     * an exception if the desired number of bytes wasn't skipped.
+     *
+     * @throws IOException If the required number of bytes couldn't be skipped.
+     */
     public static void forceSkip(InputStream in, long toSkip) throws IOException {
         long skipped = 0;
         while (skipped < toSkip) {
@@ -81,6 +99,8 @@ public final class StreamUtil {
 
     /**
      * Fully reads the input stream and writes its contents to the output stream.
+     *
+     * @throws IOException If an I/O error occurs while reading the input, or writing the output.
      */
     public static void writeBytes(InputStream in, OutputStream out) throws IOException {
         byte[] buf = new byte[READ_BUFFER_SIZE];

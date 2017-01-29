@@ -9,7 +9,7 @@ public abstract class AbstractFileSystem implements IFileSystem {
 
     private AtomicBoolean closed = new AtomicBoolean();
 
-    public AbstractFileSystem() {
+    protected AbstractFileSystem() {
     }
 
     /**

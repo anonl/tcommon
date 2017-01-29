@@ -16,6 +16,9 @@ public final class EntityStream implements Iterable<Entity> {
     private transient Entity[] tempArray;
     private transient int tempArrayL;
 
+    /**
+     * @param esd Stream definition containing the filter and sort logic.
+     */
     public EntityStream(EntityStreamDef esd) {
         this.esd = esd;
     }
@@ -36,6 +39,9 @@ public final class EntityStream implements Iterable<Entity> {
         }
     }
 
+    /**
+     * Invalidate internal caches.
+     */
     public void invalidate() {
         invalidateItr();
 
@@ -43,6 +49,9 @@ public final class EntityStream implements Iterable<Entity> {
         tempArrayL = 0;
     }
 
+    /**
+     * Returns {@code true} if the specified entity is contained in this stream.
+     */
     public boolean contains(Entity e) {
         validate();
 
@@ -54,6 +63,9 @@ public final class EntityStream implements Iterable<Entity> {
         return false;
     }
 
+    /**
+     * Returns the number of entities in this stream.
+     */
     public int count() {
         validate();
         return tempArrayL;
@@ -86,16 +98,19 @@ public final class EntityStream implements Iterable<Entity> {
         Arrays.sort(tempArray, 0, tempArrayL, esd);
     }
 
+    /**
+     * Sends a signal to all entities in this stream.
+     */
     public void sendSignal(ISignal signal) {
         for (Entity e : this) {
             if (signal.isHandled()) {
                 break;
             }
 
-            e.handleSignal(signal);            
+            e.handleSignal(signal);
         }
     }
-    
+
     /**
      * Sets the source collection this entity stream is a sorted, filtered view of.
      */

@@ -23,22 +23,30 @@ public final class FastMath {
         return fastCos(s * SinLut.fastAngleScale);
     }
 
+    /**
+     * Lookup table based drop-in replacement for {@link Math#acos(double)}.
+     */
     public static float acos(float s) {
         return fastArcCos(s) / SinLut.fastAngleScale;
     }
 
+    /**
+     * Lookup table based drop-in replacement for {@link Math#asin(double)}.
+     */
     public static float asin(float s) {
         return fastArcSin(s) / SinLut.fastAngleScale;
     }
 
-    public static boolean isPowerOfTwo(int w, int h) {
-        return isPowerOfTwo(w) && isPowerOfTwo(h);
+    /**
+     * Returns {@code true} if the supplied value is a positive power of two.
+     */
+    public static boolean isPowerOfTwo(int value) {
+        return value > 0 && (value & (value - 1)) == 0;
     }
 
-    public static boolean isPowerOfTwo(int sz) {
-        return sz > 0 && (sz & (sz - 1)) == 0;
-    }
-
+    /**
+     * Returns the next positive power of two greater than or equal to the supplied value.
+     */
     public static int toPowerOfTwo(int value) {
         if (value <= 0) {
             throw new IllegalArgumentException("target must be positive");
@@ -54,22 +62,30 @@ public final class FastMath {
         return cur;
     }
 
-    public static Dim toPowerOfTwo(int w, int h) {
-        return Dim.of(toPowerOfTwo(w), toPowerOfTwo(h));
-    }
-
-    public static int align(int val, int align) {
+    /**
+     * Rounds up the supplied value to the next multiple of {@code align}. This method is primarily intended to
+     * calculate required alignments for memory addresses.
+     *
+     * @param align Alignment. Must be a power of two.
+     */
+    public static int align(int value, int align) {
         if (!isPowerOfTwo(align)) {
             throw new IllegalArgumentException("Alignment must be a power of two");
         }
+
         final int mask = ~(align - 1);
-        return (val + align - 1) & mask;
+        return (value + align - 1) & mask;
     }
 
     //-------------------------------------------------------------------------
     //--- LUT implementations of trig functions -------------------------------
     //-------------------------------------------------------------------------
 
+    /**
+     * Lookup table implementation of sin().
+     *
+     * @param angle A full circle is 512-degrees.
+     */
     public static float fastSin(float angle) {
         int a = (angle >= 0 ? (int)(angle) : (int)(angle - 1));
         float prev = fastSin(a);
@@ -79,18 +95,38 @@ public final class FastMath {
         return result;
     }
 
+    /**
+     * Lookup table implementation of sin().
+     *
+     * @param angle A full circle is 512-degrees.
+     */
     public static float fastSin(int angle) {
         return SinLut.LUT[angle & SinLut.MASK];
     }
 
+    /**
+     * Lookup table implementation of cos().
+     *
+     * @param angle A full circle is 512-degrees.
+     */
     public static float fastCos(float angle) {
         return fastSin(angle + (SinLut.SIZE >> 2));
     }
 
+    /**
+     * Lookup table implementation of cos().
+     *
+     * @param angle A full circle is 512-degrees.
+     */
     public static float fastCos(int angle) {
         return SinLut.LUT[(angle + SinLut.COS_OFFSET) & SinLut.MASK];
     }
 
+    /**
+     * Lookup table implementation of asin().
+     * <p>
+     * A full circle is 512-degrees.
+     */
     public static float fastArcSin(float a) {
         if (Float.isNaN(a) || a < -1 || a > 1) {
             return Float.NaN;
@@ -109,10 +145,20 @@ public final class FastMath {
         return result;
     }
 
+    /**
+     * Lookup table implementation of acos().
+     * <p>
+     * A full circle is 512-degrees.
+     */
     public static float fastArcCos(float a) {
         return (SinLut.SIZE >> 2) - fastArcSin(a);
     }
 
+    /**
+     * Lookup table implementation of atan2().
+     * <p>
+     * A full circle is 512-degrees.
+     */
     public static float fastArcTan2(float dy, float dx) {
         float c1 = SinLut.SIZE >> 3;
         float c2 = 3 * c1;

@@ -23,10 +23,19 @@ public class FileCachedOutputStream extends OutputStream {
     private File tempFile;
     private FileOutputStream fileOutput;
 
+    /**
+     * Uses the default threshold for switching between in-memory and file-based mode.
+     *
+     * @see #FileCachedOutputStream(int)
+     */
     public FileCachedOutputStream() {
         this(DEFAULT_THRESHOLD);
     }
 
+    /**
+     * @param fileThreshold The threshold at which the output stream switches from an in-memory buffer to a file-based
+     *        one.
+     */
     public FileCachedOutputStream(int fileThreshold) {
         this.fileThreshold = Checks.checkRange(fileThreshold, "fileThreshold", 0);
         this.memoryBuffer = new ByteArrayOutputStream(fileThreshold);
@@ -94,6 +103,11 @@ public class FileCachedOutputStream extends OutputStream {
         return new FileOutputStream(tempFile);
     }
 
+    /**
+     * Writes the contents of this stream to the supplied output stream.
+     *
+     * @throws IOException If an I/O exception occurs while writing the required data to the output stream.
+     */
     public synchronized void writeTo(OutputStream out) throws IOException {
         if (fileOutput != null) {
             FileInputStream fin = new FileInputStream(tempFile);

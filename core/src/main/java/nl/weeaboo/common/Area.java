@@ -2,6 +2,12 @@ package nl.weeaboo.common;
 
 import java.io.Serializable;
 
+/**
+ * Describes a rectangular area with integer coordinates. The area is allowed to be empty, or have negative dimensions.
+ *
+ * @see Rect
+ * @see Area2D
+ */
 public final class Area implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -20,6 +26,9 @@ public final class Area implements Serializable {
         this.h = h;
     }
 
+    /**
+     * Factory constructor for creating a new area. For specific values of x/y/w/h a cached instance may be returned.
+     */
     public static Area of(int x, int y, int w, int h) {
         if (x == 0 && y == 0 && w == 0 && h == 0) {
             return EMPTY;
@@ -46,10 +55,16 @@ public final class Area implements Serializable {
         return "Area(" + x + ", " + y + ", " + w + ", " + h + ")";
     }
 
+    /**
+     * Returns an equivalent {@link Area2D} instance.
+     */
     public Area2D toArea2D() {
         return Area2D.of(x, y, w, h);
     }
 
+    /**
+     * Returns a new area that's mirrored in the x-axis and/or y-axis.
+     */
     public Area flipped(boolean horizontal, boolean vertical) {
         int nx = x;
         int nw = w;

@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 /**
  * Base class for type-safe string-based identifiers. For each class of identifier, create a subclass of
- * {@llink AbstractId}.
+ * {@link AbstractId}.
  */
 public abstract class AbstractId implements Serializable {
 
@@ -12,10 +12,13 @@ public abstract class AbstractId implements Serializable {
 
     private final String id;
 
-    public AbstractId(String id) {
+    protected AbstractId(String id) {
         this.id = Checks.checkNotNull(id);
     }
 
+    /**
+     * Returns a string representation of this identifier. The string version doesn't include type information.
+     */
     public final String getId() {
         return id;
     }

@@ -3,7 +3,7 @@ package nl.weeaboo.common;
 import java.io.Serializable;
 
 /**
- * Holds a non-negative integral width/height pair.
+ * Holds a non-negative integral width/height pair representing a dimension.
  */
 public final class Dim implements Serializable {
 
@@ -23,6 +23,9 @@ public final class Dim implements Serializable {
         this.h = h;
     }
 
+    /**
+     * Factory constructor for creating a new dimension. For specific values of w/h a cached instance may be returned.
+     */
     public static Dim of(int w, int h) {
         if (w == 0 && h == 0) {
             return Dim.EMPTY;
@@ -49,6 +52,9 @@ public final class Dim implements Serializable {
         return "Dim(" + w + "x" + h + ")";
     }
 
+    /**
+     * Returns an equivalent {@link Dim2D} instance.
+     */
     public Dim2D toDim2D() {
         return Dim2D.of(w, h);
     }

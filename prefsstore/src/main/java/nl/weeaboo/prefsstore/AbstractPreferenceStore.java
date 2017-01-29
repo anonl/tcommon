@@ -16,7 +16,7 @@ public abstract class AbstractPreferenceStore implements IPreferenceStore {
     private final List<IPreferenceListener> listeners = new CopyOnWriteArrayList<IPreferenceListener>();
     private final Queue<FireEvent<?>> fireQueue = new ArrayDeque<FireEvent<?>>();
 
-    public AbstractPreferenceStore() {
+    protected AbstractPreferenceStore() {
     }
 
     protected void initConsts(Map<String, String> properties) {

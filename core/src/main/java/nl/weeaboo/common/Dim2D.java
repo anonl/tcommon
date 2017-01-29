@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.Arrays;
 
 /**
- * Holds a non-negative floating point width/height pair.
+ * Holds a non-negative floating point width/height pair representing a dimension.
  */
 public final class Dim2D implements Serializable {
 
@@ -22,6 +22,9 @@ public final class Dim2D implements Serializable {
         this.h = h;
     }
 
+    /**
+     * Factory constructor for creating a new dimension. For specific values of w/h a cached instance may be returned.
+     */
     public static Dim2D of(double w, double h) {
         if (w == 0 && h == 0) {
             return Dim2D.EMPTY;

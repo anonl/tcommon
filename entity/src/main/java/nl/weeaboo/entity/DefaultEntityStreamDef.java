@@ -8,6 +8,9 @@ public final class DefaultEntityStreamDef extends EntityStreamDef {
 
     private final PartType<?>[] requiredParts;
 
+    /**
+     * @param required The required parts that an entity must have to be considered part of this stream.
+     */
     public DefaultEntityStreamDef(PartType<?>... required) {
         requiredParts = required.clone();
     }

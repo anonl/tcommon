@@ -17,7 +17,15 @@ Changes:
  * Allow while-part of do/while on the same line as the '}'
  * Changed switch-case fallthrough relief pattern to the one Eclipse used ('$FALL-THROUGH$')
  * Don't require Javadoc for @Before/@After JUnit test methods
+[2017-01-29]
  * Removed enforced naming convention for generic type parameters.
+ * Set severity level to INFO, to more easily distinguish between style issues (INFO) and code issues (WARN).
+ * Allow max. 6 method/constructor parameters. I consider 1-4 to be fine, while 5-6 is a code smell. Methods
+   with 7+ parameters are so hard to use, that I don't think you should ever write them.
+ * Require Javadoc for all public methods. The Google configuration allows omitting Javadoc when the
+   method/constructor is 1 (or 2, depending on the version) lines long. That doesn't make sense to me. Even
+   if a method/constructor is trivial implementation-wise, user of your code still need to know what it does.
+ * Require Javadoc for throws declarations. Knowing when a method throws an exception is very important.
 
 Additional checks:
  * Disallow catching Throwable. Doing that may accidentally ignore fatal VM errors.
@@ -25,7 +33,7 @@ Additional checks:
 
 <module name = "Checker">
     <property name="charset" value="UTF-8"/>
-    <property name="severity" value="warning"/>
+    <property name="severity" value="info"/>
     <property name="fileExtensions" value="java, properties, xml"/>
     
     <!-- Checks for whitespace                               -->
@@ -179,9 +187,7 @@ Additional checks:
         <module name="JavadocMethod">
             <property name="scope" value="public"/>
             <property name="allowMissingParamTags" value="true"/>
-            <property name="allowMissingThrowsTags" value="true"/>
             <property name="allowMissingReturnTag" value="true"/>
-            <property name="minLineCount" value="1"/>
             <property name="allowedAnnotations" value="Override, Test, Before, After"/>
             <property name="allowThrowsTagsForSubclasses" value="true"/>
         </module>
@@ -201,6 +207,9 @@ Additional checks:
 <!-- Additional checks -->        
         <module name="IllegalCatch">
             <property name="illegalClassNames" value="java.lang.Throwable"/>
+        </module>
+        <module name="ParameterNumber">
+            <property name="max" value="6"/>
         </module>
     </module>
 </module>

@@ -18,6 +18,8 @@ public final class PropertiesUtil {
 
     /**
      * Loads a .properties file.
+     *
+     * @throws IOException If an I/O error occurs while reading the properties file.
      */
     public static Map<String, String> load(InputStream in) throws IOException {
         Properties props = new Properties();
@@ -35,6 +37,8 @@ public final class PropertiesUtil {
 
     /**
      * Saves a .properties file.
+     *
+     * @throws IOException If an I/O error occurs while writing the properties file.
      */
     public static void save(OutputStream out, Map<String, String> properties) throws IOException {
         Properties props = new Properties();

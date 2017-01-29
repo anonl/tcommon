@@ -14,6 +14,7 @@ public final class ReflectUtil {
      * Retrieves all public static fields with the requested type.
      *
      * @return A map of {@code Field name -> value}
+     * @throws IllegalAccessException If one of the fields is inaccessible. See {@link Field#get(Object)}.
      */
     public static <T> Map<String, T> getConstants(Class<?> constantsHolder, Class<T> type)
             throws IllegalAccessException {

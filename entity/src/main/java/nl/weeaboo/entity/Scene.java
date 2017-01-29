@@ -252,6 +252,8 @@ public final class Scene implements IWriteReplaceSerializable {
     }
 
     /**
+     * Removes a previously joined stream.
+     *
      * @see #joinStream(EntityStreamDef)
      */
     public boolean removeStream(EntityStreamDef esd) {

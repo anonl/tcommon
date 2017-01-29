@@ -4,7 +4,11 @@ import java.io.Serializable;
 import java.util.Arrays;
 
 /**
- * Like Rect2D, but accepts negative values.
+ * Describes a rectangular area with {@code double} coordinates. The area is allowed to be empty, or have negative
+ * dimensions.
+ *
+ * @see Area
+ * @see Rect2D
  */
 public final class Area2D implements Serializable {
 
@@ -29,6 +33,9 @@ public final class Area2D implements Serializable {
         this.h = h;
     }
 
+    /**
+     * Factory constructor for creating a new area. For specific values of x/y/w/h a cached instance may be returned.
+     */
     public static Area2D of(double x, double y, double w, double h) {
         return new Area2D(x, y, w, h);
     }
@@ -52,6 +59,9 @@ public final class Area2D implements Serializable {
         return "Area2D(" + x + "," + y + "," + w + "," + h + ")";
     }
 
+    /**
+     * Returns a new area that's mirrored in the x-axis and/or y-axis.
+     */
     public Area2D flipped(boolean horizontal, boolean vertical) {
         double nx = x;
         double ny = y;

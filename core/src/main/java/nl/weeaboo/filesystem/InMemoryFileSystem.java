@@ -103,11 +103,13 @@ public class InMemoryFileSystem extends AbstractWritableFileSystem {
 
     @Override
     public Iterable<FilePath> getFiles(FileCollectOptions opts) throws IOException {
+        FilePath prefix = opts.getPrefix();
+
         Set<FilePath> result = new HashSet<FilePath>();
         synchronized (files) {
             for (InMemoryFile file : files.values()) {
                 FilePath path = file.getPath();
-                if (path.startsWith(opts.prefix)) {
+                if (path.startsWith(prefix)) {
                     if (opts.collectFolders) {
                         FilePath parent = path;
                         while ((parent = parent.getParent()) != null) {

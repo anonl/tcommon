@@ -16,10 +16,16 @@ public final class FilePath implements Serializable, Comparable<FilePath> {
         this.path = path;
     }
 
+    /**
+     * Returns an empty path instance.
+     */
     public static FilePath empty() {
         return EMPTY;
     }
 
+    /**
+     * Converts the path string to an equivalent {@code FilePath} instance.
+     */
     public static FilePath of(String pathString) {
         return new FilePath(normalize(pathString));
     }
@@ -64,14 +70,26 @@ public final class FilePath implements Serializable, Comparable<FilePath> {
         return path;
     }
 
+    /**
+     * Constructs a new path using a subpath relative to the folder represented by this path.
+     */
     public FilePath resolve(FilePath relPath) {
         return FilePath.of(path + "/" + relPath);
     }
 
+    /**
+     * Constructs a new path using a subpath relative to the folder represented by this path.
+     *
+     * @see #resolve(FilePath)
+     */
     public FilePath resolve(String relPath) {
         return FilePath.of(path + "/" + relPath);
     }
 
+    /**
+     * If the supplied path is a subpath of the folder represented by this path, returns a new path relative to this
+     * folder. If unable to resolve as a relative path, the supplied path is returned unchanged.
+     */
     public FilePath relativize(FilePath fullPath) {
         String fullPathString = fullPath.path;
         if (fullPathString.startsWith(path)) {
@@ -82,10 +100,16 @@ public final class FilePath implements Serializable, Comparable<FilePath> {
         }
     }
 
+    /**
+     * Returns {@code true} if this path represents a folder.
+     */
     public boolean isFolder() {
         return path.length() == 0 || path.endsWith("/");
     }
 
+    /**
+     * Returns this paths parent folder, or {@code null} if this path has no parent.
+     */
     public FilePath getParent() {
         int index = getSplitIndex();
         if (index < 0) {
@@ -94,19 +118,33 @@ public final class FilePath implements Serializable, Comparable<FilePath> {
         return new FilePath(path.substring(0, index + 1));
     }
 
+    /**
+     * Returns the final (file name) part of this path.
+     */
     public String getName() {
         int index = getSplitIndex();
         return path.substring(index + 1);
     }
 
+    /**
+     * Returns the file extension of this path's file name.
+     *
+     * @return The file extension, or {@code ""} if this path doesn't have a file extension.
+     */
     public String getExt() {
         return Filenames.getExtension(getName());
     }
 
+    /**
+     * Returns a new path with a modified file extension.
+     */
     public FilePath withExt(String newExtension) {
         return FilePath.of(Filenames.replaceExt(path, newExtension));
     }
 
+    /**
+     * Returns {@code true} if this path has a parent folder.
+     */
     public boolean hasParent() {
         return getSplitIndex() >= 0;
     }
@@ -119,10 +157,16 @@ public final class FilePath implements Serializable, Comparable<FilePath> {
         }
     }
 
+    /**
+     * Checks if this path starts with the given prefix.
+     */
     public boolean startsWith(FilePath prefix) {
         return path.startsWith(prefix.path);
     }
 
+    /**
+     * Checks if this path ends with the given prefix.
+     */
     public boolean endsWith(FilePath prefix) {
         return path.endsWith(prefix.path);
     }

@@ -118,6 +118,11 @@ public final class Entity implements IWriteReplaceSerializable {
         }
     }
 
+    /**
+     * Returns {@code true} if this entity is destroyed.
+     *
+     * @see #destroy()
+     */
     public final boolean isDestroyed() {
         return scene == null;
     }
@@ -144,10 +149,16 @@ public final class Entity implements IWriteReplaceSerializable {
         parts = newParts;
     }
 
+    /**
+     * Returns the unique identifier for this entity.
+     */
     public int getId() {
         return id;
     }
 
+    /**
+     * Performs entity-specific signal handling.
+     */
     public void handleSignal(ISignal signal) {
         for (IPart part : parts) {
             if (signal.isHandled()) {
@@ -174,17 +185,25 @@ public final class Entity implements IWriteReplaceSerializable {
         return result;
     }
 
-    public <T> void addPart(PartType<T> type, T part) {
+    /**
+     * Adds a new part to the entity.
+     *
+     * @throws IllegalArgumentException If a part with the specified type is already attached to this entity.
+     */
+    public <T> void addPart(PartType<T> type, T part) throws IllegalArgumentException {
         addPart(type.getId(), (IPart)part); // Perform explicit cast for non-generic aware calling code
     }
 
-    protected void addPart(int partId, IPart part) {
+    protected void addPart(int partId, IPart part) throws IllegalArgumentException {
         if (partId < parts.length && parts[partId] != null) {
             throw new IllegalArgumentException("Part index " + partId + " is already in use");
         }
         setPart(partId, part);
     }
 
+    /**
+     * Removes all parts from the entity.
+     */
     public void removeAllParts() {
         for (int n = 0; n < parts.length; n++) {
             if (parts[n] != null) {
@@ -193,6 +212,9 @@ public final class Entity implements IWriteReplaceSerializable {
         }
     }
 
+    /**
+     * Removes the part with the specified type from this entity.
+     */
     public void removePart(PartType<?> type) {
         removePart(type.getId());
     }
@@ -201,6 +223,9 @@ public final class Entity implements IWriteReplaceSerializable {
         setPart(partId, null);
     }
 
+    /**
+     * Returns {@code true} if a part with the specified type is attached to this entity.
+     */
     public boolean hasPart(PartType<?> type) {
         return hasPart(type.getId());
     }
@@ -209,6 +234,10 @@ public final class Entity implements IWriteReplaceSerializable {
         return partId >= 0 && partId < parts.length && parts[partId] != null;
     }
 
+    /**
+     * Returns the part attached to this entity that has the specified type.
+     * @return The part, or {@code null} if no such part exists.
+     */
     public <T> T getPart(PartType<T> type) {
         return type.cast(getPart(type.getId()));
     }
@@ -220,6 +249,9 @@ public final class Entity implements IWriteReplaceSerializable {
         return parts[partId];
     }
 
+    /**
+     * Sets or overwrites the part with the specified type.
+     */
     public <T> void setPart(PartType<T> type, T part) {
         setPart(type.getId(), (IPart)part); // Perform explicit cast for non-generic aware calling code
     }
@@ -258,6 +290,9 @@ public final class Entity implements IWriteReplaceSerializable {
         }
     }
 
+    /**
+     * Returns the number of parts attached to this entity.
+     */
     public int getPartsCount() {
         return partsCount;
     }
@@ -266,6 +301,10 @@ public final class Entity implements IWriteReplaceSerializable {
         return scene;
     }
 
+    /**
+     * Returns a more detailed string representation of this entity and the parts attached to it.
+     * @see #toString()
+     */
     public String toDetailedString() {
         StringBuilder sb = new StringBuilder();
         sb.append("Entity{id=").append(id);

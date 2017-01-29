@@ -16,7 +16,7 @@ public final class ArchiveFileRecord implements Serializable {
 
     private final int dosDateTime;
 
-    public ArchiveFileRecord(FilePath path, long offset, long compressedLength, long uncompressedLength,
+    ArchiveFileRecord(FilePath path, long offset, long compressedLength, long uncompressedLength,
             byte compression, int dosDateTime) {
 
         this.path = path;
@@ -29,14 +29,26 @@ public final class ArchiveFileRecord implements Serializable {
         this.dosDateTime = dosDateTime;
     }
 
+    /**
+     * Returns the path for this file record within its file archive.
+     */
     public FilePath getPath() {
         return path;
     }
 
+    /**
+     * Returns {@code true} if this record represents a folder entry.
+     */
     public boolean isFolder() {
         return path.isFolder();
     }
 
+    /**
+     * Returns the last modified time for this file record.
+     *
+     * @return The modified time as UTC milliseconds from the epoch, or {@code 0} if this record doesn't have a valid
+     *         modified time associated with it.
+     */
     public long getModifiedTime() {
         int time = (dosDateTime) & 0xFFFF;
         int second = 2 * (time & 31);
@@ -57,7 +69,7 @@ public final class ArchiveFileRecord implements Serializable {
         return calendar.getTimeInMillis();
     }
 
-    /** Offset of the file record within the archive file. */
+    /** Byte offset of the file record within the archive file. */
     public long getHeaderOffset() {
         return headerOffset;
     }

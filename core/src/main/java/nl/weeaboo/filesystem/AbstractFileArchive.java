@@ -22,7 +22,7 @@ public abstract class AbstractFileArchive extends AbstractFileSystem implements 
     protected IRandomAccessFile rfile;
     protected ArchiveFileRecord[] records;
 
-    public AbstractFileArchive() {
+    protected AbstractFileArchive() {
     }
 
     @Override
@@ -87,6 +87,11 @@ public abstract class AbstractFileArchive extends AbstractFileSystem implements 
         return getFileImpl(path).getModifiedTime();
     }
 
+    /**
+     * Returns the file record for the archive entry with the specified path.
+     *
+     * @throws FileNotFoundException If no entry with the specified path could be found within the archive.
+     */
     public final ArchiveFileRecord getFile(FilePath path) throws FileNotFoundException {
         return getFileImpl(resolvePath(path, false));
     }
@@ -99,6 +104,11 @@ public abstract class AbstractFileArchive extends AbstractFileSystem implements 
         return records[index];
     }
 
+    /**
+     * Returns the byte offset of the file record within the archive file.
+     *
+     * @throws IOException If the file offset couldn't be determined.
+     */
     public long getFileOffset(FilePath path) throws IOException {
         return getFileOffset(getFileImpl(path).getHeaderOffset());
     }
@@ -112,7 +122,8 @@ public abstract class AbstractFileArchive extends AbstractFileSystem implements 
 
     @Override
     public Iterable<FilePath> getFiles(FileCollectOptions opts) throws IOException {
-        int index = Arrays.binarySearch(records, opts.prefix, pathComparator);
+        FilePath prefix = opts.getPrefix();
+        int index = Arrays.binarySearch(records, prefix, pathComparator);
         if (index < 0) {
             index = -(index + 1);
         }
@@ -120,7 +131,7 @@ public abstract class AbstractFileArchive extends AbstractFileSystem implements 
         List<FilePath> result = new ArrayList<FilePath>();
         while (index >= 0 && index < records.length) {
             ArchiveFileRecord record = records[index];
-            if (!record.getPath().startsWith(opts.prefix)) {
+            if (!record.getPath().startsWith(prefix)) {
                 break; //We're past the subrange that matches the prefix
             }
 
@@ -144,7 +155,7 @@ public abstract class AbstractFileArchive extends AbstractFileSystem implements 
     }
 
     /**
-     * @return The backing IRandomAccessFile object used by this ZipArchive
+     * Return the backing IRandomAccessFile object used by this ZipArchive.
      */
     public IRandomAccessFile getRandomAccessFile() {
         return rfile;

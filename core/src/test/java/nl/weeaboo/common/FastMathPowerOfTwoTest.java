@@ -16,12 +16,6 @@ public class FastMathPowerOfTwoTest {
 
         assertIsPoT(false, -2); // Negative values always return false
         assertIsPoT(false, Integer.MIN_VALUE);
-
-        // Two-arg version
-        Assert.assertEquals(false, FastMath.isPowerOfTwo(0, 0));
-        Assert.assertEquals(false, FastMath.isPowerOfTwo(2, 0));
-        Assert.assertEquals(false, FastMath.isPowerOfTwo(0, 4));
-        Assert.assertEquals(true, FastMath.isPowerOfTwo(2, 4)); // Only true if both are PoT
     }
 
     private static void assertIsPoT(boolean expected, int input) {
