@@ -9,7 +9,10 @@ public final class Rect2D implements Serializable {
 
     public static final Rect2D EMPTY = new Rect2D(0, 0, 0, 0);
 
-    public final double x, y, w, h;
+    public final double x;
+    public final double y;
+    public final double w;
+    public final double h;
 
     private Rect2D(double x, double y, double w, double h) {
         Checks.checkRange(x, "x");
@@ -42,11 +45,11 @@ public final class Rect2D implements Serializable {
         for (int n = 1; n < r.length; n++) {
             minX = Math.min(minX, r[n].x);
             minY = Math.min(minY, r[n].y);
-            maxX = Math.max(maxX, r[n].x+r[n].w);
-            maxY = Math.max(maxY, r[n].y+r[n].h);
+            maxX = Math.max(maxX, r[n].x + r[n].w);
+            maxY = Math.max(maxY, r[n].y + r[n].h);
         }
 
-        return Rect2D.of(minX, minY, maxX-minX, maxY-minY);
+        return Rect2D.of(minX, minY, maxX - minX, maxY - minY);
     }
 
     @Override
@@ -83,7 +86,7 @@ public final class Rect2D implements Serializable {
     }
 
     public boolean contains(double ax, double ay, double aw, double ah) {
-        return contains(ax, ay) && contains(ax+aw, ay+ah);
+        return contains(ax, ay) && contains(ax + aw, ay + ah);
     }
 
     public boolean intersects(double ax, double ay, double aw, double ah) {

@@ -34,7 +34,7 @@ public class SceneAddRemoveTest {
 
     private static void destroyScene(Scene s) {
         List<Entity> entities = s.getEntities();
-        int entitiesCount = entities.size();
+        final int entitiesCount = entities.size();
 
         Assert.assertEquals(false, s.isDestroyed());
         for (Entity e : entities) {

@@ -8,7 +8,10 @@ public final class Area implements Serializable {
 
     public static final Area EMPTY = new Area(0, 0, 0, 0);
 
-    public final int x, y, w, h;
+    public final int x;
+    public final int y;
+    public final int w;
+    public final int h;
 
     private Area(int x, int y, int w, int h) {
         this.x = x;

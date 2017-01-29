@@ -18,7 +18,7 @@ public class InMemoryLoggerTest {
         logger = new InMemoryLogger();
     }
 
-    /** Log at various levels, check that the generated events match the correct log levels */
+    /** Log at various levels, check that the generated events match the correct log levels. */
     @Test
     public void testLevels() {
         logger.trace("trace");
@@ -35,7 +35,7 @@ public class InMemoryLoggerTest {
         assertEntry(entries.get(4), LogLevel.ERROR, "error");
     }
 
-    /** Check that format strings are handled properly */
+    /** Check that format strings are handled properly. */
     @Test
     public void formatStrings() {
         RuntimeException ex = new RuntimeException("test");
@@ -48,6 +48,7 @@ public class InMemoryLoggerTest {
     private void assertEntry(LogEntry entry, LogLevel level, String message) {
         assertEntry(entry, level, message, null);
     }
+
     private void assertEntry(LogEntry entry, LogLevel level, String message, Throwable exception) {
         Assert.assertEquals(level, entry.getLevel());
         Assert.assertEquals(message, entry.getMessage());

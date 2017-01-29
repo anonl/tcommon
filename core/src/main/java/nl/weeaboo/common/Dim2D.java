@@ -12,7 +12,8 @@ public final class Dim2D implements Serializable {
 
     public static final Dim2D EMPTY = new Dim2D(0, 0);
 
-    public final double w, h;
+    public final double w;
+    public final double h;
 
     private Dim2D(double w, double h) {
         Dim.checkDimensions(w, h);

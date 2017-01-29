@@ -26,6 +26,7 @@ public class FileCachedOutputStream extends OutputStream {
     public FileCachedOutputStream() {
         this(DEFAULT_THRESHOLD);
     }
+
     public FileCachedOutputStream(int fileThreshold) {
         this.fileThreshold = Checks.checkRange(fileThreshold, "fileThreshold", 0);
         this.memoryBuffer = new ByteArrayOutputStream(fileThreshold);

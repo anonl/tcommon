@@ -20,7 +20,9 @@ public class Part implements IPart {
                 continue;
             }
 
-            if (t > 0) sb.append(", ");
+            if (t > 0) {
+                sb.append(", ");
+            }
 
             sb.append(field.getName()).append("=");
             try {
@@ -28,7 +30,7 @@ public class Part implements IPart {
                 Object val = field.get(this);
                 sb.append(val);
             } catch (Exception e) {
-                EntityLog.d("Exception while trying to access Part." + field.getName() + " using reflection", e);
+                EntityLog.debug("Exception while trying to access Part." + field.getName() + " using reflection", e);
                 sb.append("?");
             }
             t++;

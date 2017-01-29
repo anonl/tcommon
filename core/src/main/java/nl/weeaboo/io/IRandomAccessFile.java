@@ -7,26 +7,49 @@ import java.io.OutputStream;
 
 public interface IRandomAccessFile extends Closeable {
 
-    /** @see InputStream#skip(long) */
+    /**
+     * Attempts to skip {@code s} bytes of input.
+     * @return The number of bytes actually skipped.
+     * @see InputStream#skip(long)
+     */
     long skip(long s) throws IOException;
 
-    /** @see InputStream#read() */
+    /**
+     * Reads an unsigned byte from the file.
+     * @return The unsigned byte, or {@code -1} if no byte could be read due to reaching the end of the file.
+     * @see InputStream#read()
+     */
     int read() throws IOException;
 
-    /** @see InputStream#read(byte[], int, int) */
-    int read(byte[] b, int off, int len) throws IOException;
+    /**
+     * Reads {@code len} bytes into the output buffer {@code buf}, starting at buffer offset {@code off}.
+     *
+     * @see InputStream#read(byte[], int, int)
+     */
+    int read(byte[] buf, int off, int len) throws IOException;
 
-    /** @see OutputStream#write(int) */
+    /**
+     * Writes a single unsigned byte to the file.
+     *
+     * @see OutputStream#write(int)
+     */
     void write(int b) throws IOException;
 
-    /** @see OutputStream#write(byte[], int, int) */
-    void write(byte[] b, int off, int len) throws IOException;
+    /**
+     * Writes {@code len} bytes to the file, using the bytes stored in {@code buf} starting at offset {@code off}.
+     *
+     * @see OutputStream#write(byte[], int, int)
+     */
+    void write(byte[] buf, int off, int len) throws IOException;
 
     long pos() throws IOException;
+
     void seek(long pos) throws IOException;
+
     long length() throws IOException;
 
     InputStream getInputStream() throws IOException;
+
     InputStream getInputStream(long offset, long length) throws IOException;
 
 }

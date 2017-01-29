@@ -13,21 +13,39 @@ public final class StreamUtil {
     private StreamUtil() {
     }
 
-    public static int skipBOM(byte b[], int off, int len) {
-        if (len >= 2) {
-            if ((b[off] == (byte)0xFF && b[off+1] == (byte)0xFE)
-                || (b[off] == (byte)0xFE && b[off+1] == (byte)0xFF))
-            {
-                //Skip UTF-16 BOM
-                off += 2;
-            } else if (len >= 3 && b[off] == (byte)0xEF
-                    && b[off+1] == (byte)0xBB && b[off+2] == (byte)0xBF)
-            {
-                //Skip UTF-8 BOM
-                off += 3;
-            }
+    /**
+     * Convenience method for skipping the optional byte-order-marks in an UTF-8/UTF-16 encoded text file.
+     *
+     * @return The value of {@code off} incremented by the necessary offset to skip the byte-order-mark.
+     */
+    public static int skipBOM(byte[] bytes, int off, int len) {
+        if (isUtf16BOM(bytes, off, len)) {
+            return off + 2;
+        } else if (isUtf8BOM(bytes, off, len)) {
+            return off + 3;
+        } else {
+            return off;
         }
-        return off;
+    }
+
+    private static boolean isUtf16BOM(byte[] bytes, int off, int len) {
+        if (len < 2) {
+            // Not enough room to contain an UTF-16 BOM
+            return false;
+        }
+
+        // Check for both big endian (0xFEFF) as well as little endian (0xFFFE) versions
+        return (bytes[off] == (byte)0xFF && bytes[off + 1] == (byte)0xFE)
+                || (bytes[off] == (byte)0xFF && bytes[off + 1] == (byte)0xFE);
+    }
+
+    private static boolean isUtf8BOM(byte[] bytes, int off, int len) {
+        if (len < 3) {
+            // Not enough room to contain an UTF-8 BOM
+            return false;
+        }
+
+        return bytes[off] == (byte)0xEF && bytes[off + 1] == (byte)0xBB && bytes[off + 2] == (byte)0xBF;
     }
 
     public static byte[] readBytes(InputStream in) throws IOException {
@@ -65,8 +83,9 @@ public final class StreamUtil {
      * Fully reads the input stream and writes its contents to the output stream.
      */
     public static void writeBytes(InputStream in, OutputStream out) throws IOException {
+        byte[] buf = new byte[READ_BUFFER_SIZE];
+
         int r;
-        byte buf[] = new byte[READ_BUFFER_SIZE];
         while ((r = in.read(buf)) > 0) {
             out.write(buf, 0, r);
         }

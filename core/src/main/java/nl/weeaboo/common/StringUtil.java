@@ -1,4 +1,5 @@
 package nl.weeaboo.common;
+
 import java.nio.charset.Charset;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
@@ -14,23 +15,28 @@ public final class StringUtil {
     private StringUtil() {
     }
 
-    /** Calls {@link String#format(Locale, String, Object...)} with {@link Locale#ROOT} */
+    /**
+     * Calls {@link String#format(Locale, String, Object...)} with {@link Locale#ROOT}.
+     */
     public static String formatRoot(String format, Object... args) {
         return String.format(Locale.ROOT, format, args);
     }
 
-    public static String fromUTF8(byte b[]) {
-        return fromUTF8(b, 0, b.length);
+    public static String fromUTF8(byte[] bytes) {
+        return fromUTF8(bytes, 0, bytes.length);
     }
-    public static String fromUTF8(byte b[], int off, int len) {
-        return new String(b, off, len, UTF_8);
+
+    public static String fromUTF8(byte[] bytes, int off, int len) {
+        return new String(bytes, off, len, UTF_8);
     }
 
     public static byte[] toUTF8(String string) {
         return string.getBytes(UTF_8);
     }
 
-    /** @return {@code true} if the given string is empty or contains only whitespace characters */
+    /**
+     * @return {@code true} if the given string is empty or contains only whitespace characters.
+     */
     public static boolean isWhitespace(String text) {
         int n = 0;
         while (n < text.length()) {
@@ -79,7 +85,7 @@ public final class StringUtil {
                 return StringUtil.formatRoot("%.2fs", nanos * .000000001);
             }
         } else if (seconds < 3600) {
-            return StringUtil.formatRoot("%dm:%02ds", seconds/60, seconds%60);
+            return StringUtil.formatRoot("%dm:%02ds", seconds / 60, seconds % 60);
         } else {
             return StringUtil.formatRoot("%02dh:%02dm", seconds / 3600, Math.round((seconds % 3600) / 60.0));
         }

@@ -20,7 +20,7 @@ public abstract class AbstractFileArchive extends AbstractFileSystem implements 
 
     protected File file;
     protected IRandomAccessFile rfile;
-    protected ArchiveFileRecord records[];
+    protected ArchiveFileRecord[] records;
 
     public AbstractFileArchive() {
     }
@@ -114,7 +114,7 @@ public abstract class AbstractFileArchive extends AbstractFileSystem implements 
     public Iterable<FilePath> getFiles(FileCollectOptions opts) throws IOException {
         int index = Arrays.binarySearch(records, opts.prefix, pathComparator);
         if (index < 0) {
-            index = -(index+1);
+            index = -(index + 1);
         }
 
         List<FilePath> result = new ArrayList<FilePath>();
@@ -139,7 +139,7 @@ public abstract class AbstractFileArchive extends AbstractFileSystem implements 
     /**
      * @return The backing File object if one exists.
      */
-    public File getFile() {
+    public File getBackingFile() {
         return file;
     }
 

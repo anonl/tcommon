@@ -137,7 +137,7 @@ public final class Entity implements IWriteReplaceSerializable {
 
     private void reserveRoomForPart(int partId) {
         IPart[] oldParts = parts;
-        IPart[] newParts = new IPart[Math.max(partId+1, oldParts.length + MIN_PART_ARRAY_INC)];
+        IPart[] newParts = new IPart[Math.max(partId + 1, oldParts.length + MIN_PART_ARRAY_INC)];
         if (partsCount > 0) { // No need to copy if the array was empty
             System.arraycopy(oldParts, 0, newParts, 0, oldParts.length);
         }
@@ -177,6 +177,7 @@ public final class Entity implements IWriteReplaceSerializable {
     public <T> void addPart(PartType<T> type, T part) {
         addPart(type.getId(), (IPart)part); // Perform explicit cast for non-generic aware calling code
     }
+
     protected void addPart(int partId, IPart part) {
         if (partId < parts.length && parts[partId] != null) {
             throw new IllegalArgumentException("Part index " + partId + " is already in use");
@@ -195,6 +196,7 @@ public final class Entity implements IWriteReplaceSerializable {
     public void removePart(PartType<?> type) {
         removePart(type.getId());
     }
+
     protected void removePart(int partId) {
         setPart(partId, null);
     }
@@ -202,6 +204,7 @@ public final class Entity implements IWriteReplaceSerializable {
     public boolean hasPart(PartType<?> type) {
         return hasPart(type.getId());
     }
+
     protected boolean hasPart(int partId) {
         return partId >= 0 && partId < parts.length && parts[partId] != null;
     }
@@ -209,6 +212,7 @@ public final class Entity implements IWriteReplaceSerializable {
     public <T> T getPart(PartType<T> type) {
         return type.cast(getPart(type.getId()));
     }
+
     protected IPart getPart(int partId) {
         if (partId < 0 || partId >= parts.length) {
             return null;
@@ -219,6 +223,7 @@ public final class Entity implements IWriteReplaceSerializable {
     public <T> void setPart(PartType<T> type, T part) {
         setPart(type.getId(), (IPart)part); // Perform explicit cast for non-generic aware calling code
     }
+
     protected void setPart(int partId, IPart part) {
         if (part != null) {
             //Set part

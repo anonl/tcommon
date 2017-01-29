@@ -10,7 +10,9 @@ public class RectTest {
         assertRect(Rect.of(1, 2, 3, 4), 1, 2, 3, 4);
     }
 
-    /** Attempting to create an empty rect just returns the shared {@link Rect#EMPTY} instance */
+    /**
+     * Attempting to create an empty rect just returns the shared {@link Rect#EMPTY} instance.
+     */
     @Test
     public void createEmptyRect() {
         Assert.assertSame(Rect.EMPTY, Rect.of(0, 0, 0, 0));

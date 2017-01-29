@@ -9,12 +9,16 @@ public final class FastMath {
     public static float TWO_PI = PI + PI;
     public static float HALF_PI = PI * .5f;
 
-    /** Lookup table based drop-in replacement for {@link Math#sin(double)} */
+    /**
+     * Lookup table based drop-in replacement for {@link Math#sin(double)}.
+     */
     public static float sin(float s) {
         return fastSin(s * SinLut.fastAngleScale);
     }
 
-    /** Lookup table based drop-in replacement for {@link Math#cos(double)} */
+    /**
+     * Lookup table based drop-in replacement for {@link Math#cos(double)}.
+     */
     public static float cos(float s) {
         return fastCos(s * SinLut.fastAngleScale);
     }
@@ -22,6 +26,7 @@ public final class FastMath {
     public static float acos(float s) {
         return fastArcCos(s) / SinLut.fastAngleScale;
     }
+
     public static float asin(float s) {
         return fastArcSin(s) / SinLut.fastAngleScale;
     }
@@ -29,23 +34,26 @@ public final class FastMath {
     public static boolean isPowerOfTwo(int w, int h) {
         return isPowerOfTwo(w) && isPowerOfTwo(h);
     }
+
     public static boolean isPowerOfTwo(int sz) {
-        return sz > 0 && (sz & (sz-1)) == 0;
+        return sz > 0 && (sz & (sz - 1)) == 0;
     }
-    public static int toPowerOfTwo(int target) {
-        if (target <= 0) {
+
+    public static int toPowerOfTwo(int value) {
+        if (value <= 0) {
             throw new IllegalArgumentException("target must be positive");
         }
-        if (target > 0x40000000) {
-            throw new IllegalArgumentException("No greater power-of-two possible in 32 bits: " + target);
+        if (value > 0x40000000) {
+            throw new IllegalArgumentException("No greater power-of-two possible in 32 bits: " + value);
         }
 
-        int cur = (target < 16 ? 1 : 16); //Start with a valid power of two lower than target
-        while (cur < target) {
+        int cur = (value < 16 ? 1 : 16); //Start with a valid power of two lower than target
+        while (cur < value) {
             cur <<= 1; //Double cur until at least as large as target
         }
         return cur;
     }
+
     public static Dim toPowerOfTwo(int w, int h) {
         return Dim.of(toPowerOfTwo(w), toPowerOfTwo(h));
     }
@@ -54,30 +62,33 @@ public final class FastMath {
         if (!isPowerOfTwo(align)) {
             throw new IllegalArgumentException("Alignment must be a power of two");
         }
-        return (val+align-1) & ~(align-1);
+        final int mask = ~(align - 1);
+        return (val + align - 1) & mask;
     }
 
     //-------------------------------------------------------------------------
     //--- LUT implementations of trig functions -------------------------------
     //-------------------------------------------------------------------------
 
-    public static float fastSin(int angle) {
-        return SinLut.LUT[angle & SinLut.MASK];
-    }
-    public static float fastCos(int angle) {
-        return SinLut.LUT[(angle + SinLut.COS_OFFSET) & SinLut.MASK];
-    }
-
     public static float fastSin(float angle) {
         int a = (angle >= 0 ? (int)(angle) : (int)(angle - 1));
         float prev = fastSin(a);
         float next = fastSin(a + 1);
 
-        float result = prev + (next-prev) * Math.abs(angle - a);
+        float result = prev + (next - prev) * Math.abs(angle - a);
         return result;
     }
+
+    public static float fastSin(int angle) {
+        return SinLut.LUT[angle & SinLut.MASK];
+    }
+
     public static float fastCos(float angle) {
         return fastSin(angle + (SinLut.SIZE >> 2));
+    }
+
+    public static float fastCos(int angle) {
+        return SinLut.LUT[(angle + SinLut.COS_OFFSET) & SinLut.MASK];
     }
 
     public static float fastArcSin(float a) {
@@ -131,7 +142,7 @@ public final class FastMath {
         return angle;
     }
 
-    /** Inner class used to lazy-initialize the lookup table */
+    /** Inner class used to lazy-initialize the lookup table. */
     private static final class SinLut {
 
         static final int SIZE = 512;
@@ -152,7 +163,7 @@ public final class FastMath {
 
     }
 
-    /** Inner class used to lazy-initialize the lookup table */
+    /** Inner class used to lazy-initialize the lookup table. */
     private static final class ArcSinLut {
 
         private static int MAX_INDEX = 2048;

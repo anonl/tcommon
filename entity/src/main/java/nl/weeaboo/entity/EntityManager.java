@@ -82,7 +82,8 @@ final class EntityManager {
         Entity old = entities.put(e.getId(), e);
         if (e != old) {
             if (old != null) {
-                throw new IllegalStateException("New entity replaced a different entity with the same ID (" + e.getId() + "). This should not be possible.");
+                throw new IllegalStateException("New entity replaced a different entity with the same ID ("
+                        + e.getId() + "). This should not be possible.");
             }
             invalidateStreams();
         }

@@ -16,6 +16,7 @@ public class MultiFileSystem implements IFileSystem {
     public MultiFileSystem(IFileSystem... fileSystems) {
         this(Arrays.asList(fileSystems));
     }
+
     public MultiFileSystem(Collection<IFileSystem> fileSystems) {
         this.fileSystems = fileSystems.toArray(new IFileSystem[fileSystems.size()]);
     }

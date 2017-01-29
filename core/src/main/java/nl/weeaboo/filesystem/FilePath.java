@@ -67,6 +67,7 @@ public final class FilePath implements Serializable, Comparable<FilePath> {
     public FilePath resolve(FilePath relPath) {
         return FilePath.of(path + "/" + relPath);
     }
+
     public FilePath resolve(String relPath) {
         return FilePath.of(path + "/" + relPath);
     }

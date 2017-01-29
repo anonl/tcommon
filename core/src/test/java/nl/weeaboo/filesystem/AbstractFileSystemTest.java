@@ -99,8 +99,6 @@ public abstract class AbstractFileSystemTest<FS extends IFileSystem> {
     public void testGetFiles() throws IOException {
         Set<FilePath> files;
 
-        FilePath sub2 = SUBFOLDER_FILE.getParent();
-
         // Find file from root (recursive)
         files = getFiles(FileCollectOptions.files(FilePath.empty()));
         assertFileSet(Arrays.asList(VALID_NAME, SUBFOLDER_FILE), files);
@@ -110,6 +108,7 @@ public abstract class AbstractFileSystemTest<FS extends IFileSystem> {
         assertFileSet(Arrays.asList(VALID_NAME), files);
 
         // Find file, starting from subfolder (recursive)
+        FilePath sub2 = SUBFOLDER_FILE.getParent();
         files = getFiles(FileCollectOptions.files(sub2));
         assertFileSet(Arrays.asList(SUBFOLDER_FILE), files);
 

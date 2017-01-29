@@ -14,7 +14,11 @@ import nl.weeaboo.common.StringUtil;
 import nl.weeaboo.io.IRandomAccessFile;
 import nl.weeaboo.io.StreamUtil;
 
-/** Only supports ZIP files with UTF-8 encoded filenames */
+/**
+ * File archive implementation based in a .zip file.
+ * <p>
+ * Note: Assumes the ZIP file uses UTF-8 encoded filenames.
+ */
 public class ZipFileArchive extends AbstractFileArchive {
 
     private static final int READ_BUF = 4096;
@@ -51,6 +55,7 @@ public class ZipFileArchive extends AbstractFileArchive {
 
         in = new BufferedInputStream(rfile.getInputStream(offset, rfile.length() - offset), READ_BUF);
         try {
+            // TODO: This could be replaced by a LittleEndianInputStream for easier reading of unsigned values
             ByteBuffer buf = ByteBuffer.allocate(46);
             buf.order(ByteOrder.LITTLE_ENDIAN);
 
@@ -67,17 +72,17 @@ public class ZipFileArchive extends AbstractFileArchive {
                     throw new IOException("Unsupported compression method (" + compressionMethod + ")");
                 }
 
-                int dosDateTime = buf.getInt();
+                final int dosDateTime = buf.getInt();
                 buf.getInt();   // CRC
-                long compressedLength   = (buf.getInt() & 0xFFFFFFFFL);
-                long uncompressedLength = (buf.getInt() & 0xFFFFFFFFL);
-                int  filenameLength     = (buf.getShort() & 0xFFFF);
-                int  extraFieldLength   = (buf.getShort() & 0xFFFF);
-                int  commentLength      = (buf.getShort() & 0xFFFF);
+                final long compressedLength   = (buf.getInt() & 0xFFFFFFFFL);
+                final long uncompressedLength = (buf.getInt() & 0xFFFFFFFFL);
+                final int  filenameLength     = (buf.getShort() & 0xFFFF);
+                final int  extraFieldLength   = (buf.getShort() & 0xFFFF);
+                final int  commentLength      = (buf.getShort() & 0xFFFF);
                 buf.getShort(); // Disk number
                 buf.getShort(); // Internal file attributes
                 buf.getInt();   // External file attributes
-                long headerOffset       = (buf.getInt() & 0xFFFFFFFFL);
+                final long headerOffset       = (buf.getInt() & 0xFFFFFFFFL);
 
                 byte[] filenameBytes = new byte[filenameLength];
                 StreamUtil.readFully(in, filenameBytes, 0, filenameLength);

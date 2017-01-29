@@ -10,7 +10,9 @@ public class AreaTest {
         assertArea(Area.of(1, 2, 3, 4), 1, 2, 3, 4);
     }
 
-    /** Attempting to create an empty area just returns the shared {@link Area#EMPTY} instance */
+    /**
+     * Attempting to create an empty area just returns the shared {@link Area#EMPTY} instance.
+     */
     @Test
     public void createEmptyRect() {
         Assert.assertSame(Area.EMPTY, Area.of(0, 0, 0, 0));

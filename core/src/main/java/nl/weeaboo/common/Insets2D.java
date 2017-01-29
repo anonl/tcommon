@@ -8,7 +8,10 @@ public final class Insets2D implements Serializable {
 
     public static final Insets2D EMPTY = new Insets2D(0, 0, 0, 0);
 
-    public final double top, right, bottom, left;
+    public final double top;
+    public final double right;
+    public final double bottom;
+    public final double left;
 
     private Insets2D(double top, double right, double bottom, double left) {
         Checks.checkRange(top, "top", 0.0);
@@ -25,9 +28,11 @@ public final class Insets2D implements Serializable {
     public static Insets2D of(double pad) {
         return of(pad, pad);
     }
+
     public static Insets2D of(double vertical, double horizontal) {
         return of(vertical, horizontal, vertical, horizontal);
     }
+
     public static Insets2D of(double top, double right, double bottom, double left) {
         return new Insets2D(top, right, bottom, left);
     }
@@ -35,8 +40,8 @@ public final class Insets2D implements Serializable {
     @Override
     public int hashCode() {
         long l = Double.doubleToLongBits(top) ^ Double.doubleToLongBits(right)
-            ^ Double.doubleToLongBits(bottom) ^ Double.doubleToLongBits(left);
-        return (int)(l ^ (l>>32));
+                ^ Double.doubleToLongBits(bottom) ^ Double.doubleToLongBits(left);
+        return (int)(l ^ (l >> 32));
     }
 
     @Override
@@ -53,12 +58,16 @@ public final class Insets2D implements Serializable {
         return StringUtil.formatRoot("Insets2D(%f,%f,%f,%f)", top, right, bottom, left);
     }
 
-    /** The sum of the insets in the horizontal direction */
+    /**
+     * @return The sum of the insets in the horizontal direction.
+     */
     public double getHorizontal() {
         return left + right;
     }
 
-    /** The sum of the insets in the vertical direction */
+    /**
+     * @return The sum of the insets in the vertical direction.
+     */
     public double getVertical() {
         return top + bottom;
     }

@@ -8,7 +8,10 @@ public final class Rect implements Serializable {
 
     public static final Rect EMPTY = new Rect(0, 0, 0, 0);
 
-    public final int x, y, w, h;
+    public final int x;
+    public final int y;
+    public final int w;
+    public final int h;
 
     private Rect(int x, int y, int w, int h) {
         Dim.checkDimensions(w, h);
@@ -96,7 +99,7 @@ public final class Rect implements Serializable {
     }
 
     public boolean contains(double ax, double ay, double aw, double ah) {
-        return contains(ax, ay) && contains(ax+aw, ay+ah);
+        return contains(ax, ay) && contains(ax + aw, ay + ah);
     }
 
     public boolean intersects(double ax, double ay, double aw, double ah) {

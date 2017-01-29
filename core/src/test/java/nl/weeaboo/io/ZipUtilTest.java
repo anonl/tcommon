@@ -66,7 +66,7 @@ public class ZipUtilTest {
         Assert.assertTrue("ZIP file size: " + zipFile.length(), zipFile.length() < size / 10);
     }
 
-    /** Add File to ZIP archive */
+    /** Add File to ZIP archive. */
     @Test
     public void addFile() throws IOException {
         File file = tempFolder.newFile("file");

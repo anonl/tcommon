@@ -31,8 +31,11 @@ public final class World implements Externalizable {
     public World() {
         this(new PartRegistry());
     }
+
     public World(PartRegistry partRegistry) {
-        if (partRegistry == null) throw new IllegalArgumentException("partRegistry may not be null");
+        if (partRegistry == null) {
+            throw new IllegalArgumentException("partRegistry may not be null");
+        }
 
         this.partRegistry = partRegistry;
     }
@@ -135,6 +138,7 @@ public final class World implements Externalizable {
         getScenes(out);
         return out;
     }
+
     public void getScenes(Collection<Scene> out) {
         final int scenesCount = scenes.size();
         for (int n = 0; n < scenesCount; n++) {

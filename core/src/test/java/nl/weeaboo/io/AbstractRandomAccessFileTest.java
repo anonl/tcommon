@@ -24,7 +24,7 @@ public abstract class AbstractRandomAccessFileTest {
 
     protected abstract IRandomAccessFile openFile() throws IOException;
 
-    /** Test basic behavior */
+    /** Test basic behavior. */
     @Test
     public void writeSeekRead() throws IOException {
         for (int n = 0; n < 5; n++) {

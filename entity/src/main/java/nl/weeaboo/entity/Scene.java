@@ -31,10 +31,12 @@ public final class Scene implements IWriteReplaceSerializable {
     private final int id; // Unique scene identifier
     private boolean enabled = true;
 
-    private transient final EntityManager entityManager = new EntityManager(this);
-    private transient final PartManager partManager = new PartManager(this);
-    private transient final CopyOnWriteArrayList<IEntityListener> entityListeners = new CopyOnWriteArrayList<IEntityListener>();
-    private transient final CopyOnWriteArrayList<IPartListener> partListeners = new CopyOnWriteArrayList<IPartListener>();
+    private final transient EntityManager entityManager = new EntityManager(this);
+    private final transient PartManager partManager = new PartManager(this);
+    private final transient CopyOnWriteArrayList<IEntityListener> entityListeners =
+            new CopyOnWriteArrayList<IEntityListener>();
+    private final transient CopyOnWriteArrayList<IPartListener> partListeners =
+            new CopyOnWriteArrayList<IPartListener>();
 
     // -------------------------------------------------------------------------
 
@@ -111,6 +113,8 @@ public final class Scene implements IWriteReplaceSerializable {
     }
 
     /**
+     * @return {@code true} if this scene is enabled.
+     *
      * @see #setEnabled(boolean)
      */
     public boolean isEnabled() {
@@ -128,6 +132,7 @@ public final class Scene implements IWriteReplaceSerializable {
     public void addEntityListener(IEntityListener el) {
         entityListeners.add(el);
     }
+
     public void removeEntityListener(IEntityListener el) {
         entityListeners.remove(el);
     }
@@ -135,11 +140,14 @@ public final class Scene implements IWriteReplaceSerializable {
     public void addPartListener(IPartListener pl) {
         partListeners.add(pl);
     }
+
     public void removePartListener(IPartListener pl) {
         partListeners.remove(pl);
     }
 
     /**
+     * Sends a part-propert-changed event to all part listeners in the scene.
+     *
      * @see World#firePartPropertyChanged(IPart, String, Object)
      */
     void firePartPropertyChanged(IPart part, String propertyName, Object newValue) {
@@ -255,18 +263,23 @@ public final class Scene implements IWriteReplaceSerializable {
         getEntities(out);
         return out;
     }
+
     public void getEntities(Collection<Entity> out) {
         entityManager.getEntities(out);
     }
+
     public int getEntitiesCount() {
         return entityManager.getEntitiesCount();
     }
+
     public Entity getEntity(int id) {
         return entityManager.getEntity(id);
     }
+
     public boolean contains(Entity e) {
         return e != null && contains(e.getId());
     }
+
     public boolean contains(int id) {
         return getEntity(id) != null;
     }

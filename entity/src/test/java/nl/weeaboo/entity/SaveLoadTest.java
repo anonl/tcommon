@@ -111,13 +111,13 @@ public class SaveLoadTest {
         long t2 = System.nanoTime();
 
         System.out.printf("Large serialization total W=%s, R=%s, size=%s%n",
-                StringUtil.formatTime(t1-t0, TimeUnit.NANOSECONDS),
-                StringUtil.formatTime(t2-t1, TimeUnit.NANOSECONDS),
+                StringUtil.formatTime(t1 - t0, TimeUnit.NANOSECONDS),
+                StringUtil.formatTime(t2 - t1, TimeUnit.NANOSECONDS),
                 StringUtil.formatMemoryAmount(TEMP_FILE.length()));
         double perEntityMult = 1.0 / (sceneCount * entityCount);
         System.out.printf("Large serialization per entity W=%s, R=%s, size=%s%n",
-                StringUtil.formatTime(Math.round((t1-t0) * perEntityMult), TimeUnit.NANOSECONDS),
-                StringUtil.formatTime(Math.round((t2-t1) * perEntityMult), TimeUnit.NANOSECONDS),
+                StringUtil.formatTime(Math.round((t1 - t0) * perEntityMult), TimeUnit.NANOSECONDS),
+                StringUtil.formatTime(Math.round((t2 - t1) * perEntityMult), TimeUnit.NANOSECONDS),
                 StringUtil.formatMemoryAmount(Math.round(TEMP_FILE.length() * perEntityMult)));
 
         for (Scene scene : world.getScenes()) {

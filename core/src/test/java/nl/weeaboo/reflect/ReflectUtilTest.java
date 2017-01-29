@@ -19,7 +19,7 @@ public class ReflectUtilTest {
             Map<String, ?> map = ReflectUtil.getConstants(TestConstants.class, fieldType);
             for (String exp : expected) {
                 String name = exp.substring(0, exp.indexOf('='));
-                String value = exp.substring(exp.indexOf('=')+1);
+                String value = exp.substring(exp.indexOf('=') + 1);
                 Assert.assertEquals(value, String.valueOf(map.get(name)));
             }
         } catch (IllegalAccessException e) {

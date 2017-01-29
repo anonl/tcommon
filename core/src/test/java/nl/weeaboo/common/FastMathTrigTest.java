@@ -18,7 +18,9 @@ public class FastMathTrigTest {
         random = new Random(12345);
     }
 
-    /** Test LUT-based sin and cos functions */
+    /**
+     * Test LUT-based sin and cos functions.
+     */
     @Test
     public void sinCos() {
         // Test some interesting values

@@ -31,6 +31,7 @@ final class InMemoryFile {
     public InMemoryFile copy() throws IOException {
         return copy(path);
     }
+
     public InMemoryFile copy(FilePath path) throws IOException {
         InMemoryFile copy = new InMemoryFile(path);
         synchronized (copy) {

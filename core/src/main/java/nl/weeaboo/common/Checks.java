@@ -12,6 +12,7 @@ public final class Checks {
     public static <T> T checkNotNull(T val) {
         return checkNotNull(val, null);
     }
+
     public static <T> T checkNotNull(T val, String name) {
         if (val == null) {
             throw new IllegalArgumentException("Invalid value for " + nameString(name) + ": null");
@@ -34,6 +35,7 @@ public final class Checks {
     public static int checkRange(int val, String name, int min) {
         return checkRange(val, name, min, Integer.MAX_VALUE);
     }
+
     public static int checkRange(int val, String name, int min, int max) {
         if (val < min || val > max) {
             throw new IllegalArgumentException("Invalid value for " + nameString(name) + ": " + val);
@@ -44,9 +46,11 @@ public final class Checks {
     public static double checkRange(double val, String name) {
         return checkRange(val, name, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY);
     }
+
     public static double checkRange(double val, String name, double min) {
         return checkRange(val, name, min, Double.POSITIVE_INFINITY);
     }
+
     public static double checkRange(double val, String name, double min, double max) {
         if (Double.isNaN(val) || Double.isInfinite(val) || !(val >= min && val <= max)) {
             throw new IllegalArgumentException("Invalid value for " + nameString(name) + ": " + val);

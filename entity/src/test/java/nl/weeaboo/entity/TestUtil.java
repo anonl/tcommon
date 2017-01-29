@@ -32,6 +32,7 @@ public final class TestUtil {
     public static void serializeWorld(File file, boolean compress, World world) throws IOException {
         serialize(file, compress, world);
     }
+
     private static <T> void serialize(File file, boolean compress, T obj) throws IOException {
         OutputStream raw = new BufferedOutputStream(new FileOutputStream(file));
         raw.write(compress ? 1 : 0);
@@ -52,6 +53,7 @@ public final class TestUtil {
     public static World deserializeWorld(File file) throws IOException, ClassNotFoundException {
         return deserialize(file, World.class);
     }
+
     private static <T> T deserialize(File file, Class<T> clazz) throws IOException, ClassNotFoundException {
         InputStream raw = new BufferedInputStream(new FileInputStream(file));
         int compress = raw.read();

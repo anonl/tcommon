@@ -34,7 +34,7 @@ final class BasicPreference<T> extends Preference<T> {
                 return type.cast(Double.parseDouble(string));
             }
         } catch (NumberFormatException nfe) {
-
+            return getDefaultValue();
         }
 
         if (type == String.class) {

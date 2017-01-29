@@ -10,8 +10,6 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import nl.weeaboo.collections.IntMap;
-
 public class IntMapTest {
 
     private static final Value A = new Value();
@@ -25,7 +23,9 @@ public class IntMapTest {
         intMap = new IntMap<Value>();
     }
 
-    /** Add/remove a bunch of values randomly and check that the behavior matches {@link HashMap} */
+    /**
+     * Add/remove a bunch of values randomly and check that the behavior matches {@link HashMap}.
+     */
     @Test
     public void addRemoveRandom() {
         Random random = new Random(12345);
@@ -52,7 +52,9 @@ public class IntMapTest {
         }
     }
 
-    /** Test iterating over values */
+    /**
+     * Test iterating over values.
+     */
     @Test
     public void iterateValues() {
         intMap.put(3, B);
@@ -67,7 +69,9 @@ public class IntMapTest {
         Assert.assertArrayEquals(new Object[] { A, B, C }, values.toArray());
     }
 
-    /** Access slots (key/value) by index */
+    /**
+     * Access slots (key/value) by index.
+     */
     @Test
     public void accessByIndex() {
         intMap.put(3, B);

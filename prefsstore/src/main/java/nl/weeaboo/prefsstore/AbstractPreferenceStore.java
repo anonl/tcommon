@@ -94,7 +94,7 @@ public abstract class AbstractPreferenceStore implements IPreferenceStore {
         }
     }
 
-    private final static class Var {
+    private static final class Var {
 
         private boolean isConstant;
         private String raw;
@@ -145,7 +145,7 @@ public abstract class AbstractPreferenceStore implements IPreferenceStore {
             Checks.checkArgument(property.isValidValue(value),
                     "Invalid value for property: " + property.getKey() + " -> " + value);
 
-            T oldValue = getValue(property);
+            final T oldValue = getValue(property);
 
             raw = property.toString(value);
             lastGetterProp = null;

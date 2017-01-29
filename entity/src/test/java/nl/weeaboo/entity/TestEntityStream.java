@@ -12,7 +12,7 @@ public class TestEntityStream {
     private static Entity createEntity(TestPartRegistry pr, Scene s, int val) {
         Entity e = s.createEntity();
 
-        e.addPart(pr.typeA, new ModelPart(val, val+1, val+2));
+        e.addPart(pr.typeA, new ModelPart(val, val + 1, val + 2));
 
         return e;
     }

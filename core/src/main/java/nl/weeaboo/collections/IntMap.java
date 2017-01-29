@@ -15,19 +15,23 @@ public final class IntMap<V> implements Serializable {
 
     private static final Object REMOVED = new Object();
 
-    /** Sorted array of keys */
+    /** Sorted array of keys. */
     private int[] keys;
 
-    /** Associated values for each key index. Uses {@link #REMOVED} to indicate an invalid/removed slot. */
+    /**
+     * Associated values for each key index. Uses {@link #REMOVED} to indicate an invalid/removed slot.
+     */
     private Object[] values;
 
-    /** Only the first {@code length} slots contain values */
+    /**
+     * Only the first {@code length} slots contain values.
+     */
     private int length;
 
     /** The number of valid slots, ignoring removed slots. */
     private int size;
 
-    /** Internal modification counter used to detect concurrent modification errors */
+    /** Internal modification counter used to detect concurrent modification errors. */
     private int modCount;
 
     public IntMap() {
@@ -75,7 +79,7 @@ public final class IntMap<V> implements Serializable {
         int i = Arrays.binarySearch(keys, 0, length, key);
         if (i >= 0 && values[i] != REMOVED) {
             @SuppressWarnings("unchecked")
-            V oldval = (V)values[i];
+            final V oldval = (V)values[i];
             values[i] = REMOVED;
             size--;
             modCount++;

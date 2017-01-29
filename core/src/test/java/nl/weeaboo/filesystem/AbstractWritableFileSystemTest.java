@@ -59,7 +59,7 @@ public abstract class AbstractWritableFileSystemTest<FS extends IWritableFileSys
         fileSystem.copy(INVALID_NAME, VALID_NAME);
     }
 
-    /** Attempt to write to a folder path */
+    /** Attempt to write to a folder path. */
     @Test(expected = FileNotFoundException.class)
     public void writeToFolder() throws IOException {
         fileSystem.openOutputStream(SUBFOLDER_FILE.getParent(), false);

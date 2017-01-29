@@ -11,13 +11,10 @@ public final class Dim implements Serializable {
 
     public static final Dim EMPTY = new Dim(0, 0);
 
-    public final int w, h;
+    public final int w;
+    public final int h;
 
-    /**
-     * @deprecated Use {@link #of(int, int)} instead.
-     */
-    @Deprecated
-    public Dim(int w, int h) {
+    private Dim(int w, int h) {
         if (w < 0 || h < 0) {
             throw new IllegalArgumentException("Dimensions must be >= 0, w=" + w + ", h=" + h);
         }

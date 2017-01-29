@@ -57,22 +57,22 @@ public final class ArchiveFileRecord implements Serializable {
         return calendar.getTimeInMillis();
     }
 
-    /** Offset of the file record within the archive file */
+    /** Offset of the file record within the archive file. */
     public long getHeaderOffset() {
         return headerOffset;
     }
 
-    /** The compressed file size in bytes */
+    /** The compressed file size in bytes. */
     public long getCompressedLength() {
         return compressedLength;
     }
 
-    /** The uncompressed file size in bytes */
+    /** The uncompressed file size in bytes. */
     public long getUncompressedLength() {
         return uncompressedLength;
     }
 
-    /** Record-specific compression method */
+    /** Record-specific compression method. */
     public byte getCompression() {
         return compression;
     }

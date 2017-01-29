@@ -12,7 +12,10 @@ public final class Area2D implements Serializable {
 
     public static final Area2D EMPTY = new Area2D(0, 0, 0, 0);
 
-    public final double x, y, w, h;
+    public final double x;
+    public final double y;
+    public final double w;
+    public final double h;
 
     private Area2D(double x, double y, double w, double h) {
         Checks.checkRange(x, "x");
@@ -50,7 +53,10 @@ public final class Area2D implements Serializable {
     }
 
     public Area2D flipped(boolean horizontal, boolean vertical) {
-        double nx = x, ny = y, nw = w, nh = h;
+        double nx = x;
+        double ny = y;
+        double nw = w;
+        double nh = h;
         if (horizontal) {
             nx += w;
             nw = -nw;

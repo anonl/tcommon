@@ -8,6 +8,7 @@ import nl.weeaboo.io.IRandomAccessFile;
 public interface IFileArchive extends Iterable<ArchiveFileRecord> {
 
     void open(File f) throws IOException;
+
     void open(IRandomAccessFile f) throws IOException;
-    
+
 }
