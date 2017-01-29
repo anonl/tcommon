@@ -1,2 +1,3 @@
 
-include 'core', 'apt6', 'entity', 'logging'
+include 'core'
+include 'apt6', 'entity', 'logging', 'prefsstore', 'test'

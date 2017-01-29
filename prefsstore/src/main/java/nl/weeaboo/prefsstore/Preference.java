@@ -1,4 +1,4 @@
-package nl.weeaboo.settings;
+package nl.weeaboo.prefsstore;
 
 public abstract class Preference<T> {
 
@@ -52,11 +52,9 @@ public abstract class Preference<T> {
         return new EnumPreference<E>(key, clazz, defaultVal, true, name, desc);
     }
 
-    //Functions
     public abstract T fromString(String string);
     public abstract String toString(T value);
 
-    //Getters
     public String getKey() {
         return key;
     }
@@ -82,7 +80,5 @@ public abstract class Preference<T> {
     public boolean isValidValue(T value) {
         return true;
     }
-
-    //Setters
 
 }

@@ -1,4 +1,4 @@
-package nl.weeaboo.settings;
+package nl.weeaboo.prefsstore;
 
 import java.util.ArrayDeque;
 import java.util.HashMap;

@@ -1,10 +1,10 @@
-package nl.weeaboo.settings;
+package nl.weeaboo.prefsstore;
 
-class BasicPreference<T> extends Preference<T> {
+final class BasicPreference<T> extends Preference<T> {
 
     public BasicPreference(String key, Class<T> type, T defaultVal, boolean c, String name, String desc) {
         super(key, name, type, defaultVal, c, desc);
-        
+
         if (!isBasicType(type)) {
             throw new IllegalArgumentException("Can't create BasicProperty of non-basic type: " + type);
         }
@@ -15,7 +15,7 @@ class BasicPreference<T> extends Preference<T> {
         if (string == null) {
             return getDefaultValue();
         }
-        
+
         Class<T> type = getType();
         try {
             if (type == Boolean.class) {
@@ -34,16 +34,16 @@ class BasicPreference<T> extends Preference<T> {
                 return type.cast(Double.parseDouble(string));
             }
         } catch (NumberFormatException nfe) {
-            
+
         }
-        
+
         if (type == String.class) {
             return type.cast(string);
         }
-        
+
         return getDefaultValue();
     }
-    
+
     @Override
     public String toString(T value) {
         return value.toString();
@@ -53,5 +53,5 @@ class BasicPreference<T> extends Preference<T> {
         return c == Boolean.class || c == Byte.class || c == Short.class || c == Integer.class
             || c == Long.class || c == Float.class || c == Double.class || c == String.class;
     }
-    
+
 }

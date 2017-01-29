@@ -1,36 +1,37 @@
 
 plugins {
-    id "com.jfrog.bintray" version "1.6"
+    id 'com.jfrog.bintray' version '1.7.3'
 }
 
 allprojects {
-    apply plugin: "maven-publish"
+    apply plugin: 'maven-publish'
     group = 'nl.weeaboo.common'
-    version = '1.2.6'
+    version = '2.0.0'
 
     repositories {
-        mavenCentral()
-        maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
-        maven { url "https://oss.sonatype.org/content/repositories/releases/" }
+        jcenter()
     }    
 }
 
 subprojects {
-    apply plugin: "eclipse"
-    apply plugin: "idea"
-    apply plugin: "java"
-    apply plugin: "jacoco"
+    apply plugin: 'java'
+    apply plugin: 'jacoco'
+    apply plugin: 'eclipse'
+    apply plugin: 'idea'
 
     ext {
+        javaVersion = JavaVersion.VERSION_1_6
+
         junitVersion = '4.12'
         slf4jVersion = '1.7.21'
         guavaVersion = '19.0' // Guava only used for testing
     }
     
-    sourceCompatibility = 1.6
-    targetCompatibility = 1.6
-    compileJava.options.encoding = 'UTF-8'
-    compileTestJava.options.encoding = 'UTF-8'
+    sourceCompatibility = javaVersion
+    
+    tasks.withType(JavaCompile) {
+        options.encoding = 'UTF-8'
+    }
 
     dependencies {
         testCompile "junit:junit:$junitVersion"
@@ -39,7 +40,7 @@ subprojects {
     
     task sourceJar(type: Jar) {
         from sourceSets.main.allJava
-        classifier "sources"
+        classifier 'sources'
     }
     
     jacocoTestReport {
@@ -47,32 +48,25 @@ subprojects {
             xml.enabled true
         }
     }
+    
+    eclipse.project {
+        name = "tcommon-${project.name}"
+    }
 }
 
 project(':core') {
-    eclipse.project {
-        name = 'tcommon-core'
-    }    
 }
 
 project(':apt6') {
     dependencies {
         compile project(':core')
     }
-    
-    eclipse.project {
-        name = 'tcommon-apt6'
-    }    
 }
 
 project(':entity') {
     dependencies {
         compile project(':core')
     }
-
-    eclipse.project {
-        name = 'tcommon-entity'
-    }    
 }
 
 project(':logging') {
@@ -80,10 +74,19 @@ project(':logging') {
         compile project(':core')
         compile "org.slf4j:slf4j-api:$slf4jVersion"
     }
+}
 
-    eclipse.project {
-        name = 'tcommon-logging'
-    }    
+project(':prefsstore') {
+    dependencies {
+        compile project(':core')
+    }
+}
+
+project(':test') {
+    dependencies {
+        compile project(':core')
+        compile "junit:junit:$junitVersion"
+    }
 }
 
 publishing {
@@ -116,13 +119,20 @@ publishing {
             from proj.components.java            
             artifact(proj.sourceJar)
         }
+        prefsstore(MavenPublication) {
+            artifactId = 'tcommon-prefsstore'
+
+            def proj = project(":prefsstore")
+            from proj.components.java            
+            artifact(proj.sourceJar)
+        }
     }
 }
 
 bintray {   
     user = System.getenv('BINTRAY_USER')
     key = System.getenv('BINTRAY_KEY')
-    publications = ['core', 'apt6', 'entity', 'logging']
+    publications = ['core', 'apt6', 'entity', 'logging', 'prefsstore', 'test']
     pkg {
         repo = 'tcommon'
         name = 'tcommon'

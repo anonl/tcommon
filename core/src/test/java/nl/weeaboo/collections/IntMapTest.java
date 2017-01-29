@@ -10,6 +10,8 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import nl.weeaboo.collections.IntMap;
+
 public class IntMapTest {
 
     private static final Value A = new Value();

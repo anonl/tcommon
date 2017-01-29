@@ -26,7 +26,7 @@ public final class Area implements Serializable {
 
     @Override
     public int hashCode() {
-        return ((x<<16) ^ y) ^ ((w<<16) ^ h);
+        return ((x << 16) ^ y) ^ ((w << 16) ^ h);
     }
 
     @Override
@@ -48,7 +48,10 @@ public final class Area implements Serializable {
     }
 
     public Area flipped(boolean horizontal, boolean vertical) {
-        int nx = x, ny = y, nw = w, nh = h;
+        int nx = x;
+        int nw = w;
+        int nh = h;
+        int ny = y;
         if (horizontal) {
             nx += w;
             nw = -nw;
