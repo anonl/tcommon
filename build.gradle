@@ -92,37 +92,44 @@ project(':test') {
 publishing {
     publications {
         core(MavenPublication) {
-            artifactId = 'tcommon-core'
+            artifactId = 'core'
 
             def proj = project(":core")
             from proj.components.java            
             artifact(proj.sourceJar)
         }
         apt6(MavenPublication) {
-            artifactId = 'tcommon-apt6'
+            artifactId = 'apt6'
 
             def proj = project(":apt6")
             from proj.components.java            
             artifact(proj.sourceJar)
         }
         logging(MavenPublication) {
-            artifactId = 'tcommon-logging'
+            artifactId = 'logging'
 
             def proj = project(":logging")
             from proj.components.java            
             artifact(proj.sourceJar)
         }
         entity(MavenPublication) {
-            artifactId = 'tcommon-entity'
+            artifactId = 'entity'
 
             def proj = project(":entity")
             from proj.components.java            
             artifact(proj.sourceJar)
         }
         prefsstore(MavenPublication) {
-            artifactId = 'tcommon-prefsstore'
+            artifactId = 'prefsstore'
 
             def proj = project(":prefsstore")
+            from proj.components.java            
+            artifact(proj.sourceJar)
+        }
+        test(MavenPublication) {
+            artifactId = 'test'
+
+            def proj = project(":test")
             from proj.components.java            
             artifact(proj.sourceJar)
         }
