@@ -1,3 +1,18 @@
 
-include 'core'
-include 'apt6', 'entity', 'logging', 'prefsstore', 'test'
+include 'tcommon-core'
+project(':tcommon-core').projectDir=new File('core')
+
+include 'tcommon-apt6'
+project(':tcommon-apt6').projectDir=new File('apt6')
+
+include 'tcommon-entity'
+project(':tcommon-entity').projectDir=new File('entity')
+
+include 'tcommon-logging'
+project(':tcommon-logging').projectDir=new File('logging')
+
+include 'tcommon-prefsstore'
+project(':tcommon-prefsstore').projectDir=new File('prefsstore')
+
+include 'tcommon-test'
+project(':tcommon-test').projectDir=new File('test')

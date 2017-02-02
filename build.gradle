@@ -47,44 +47,40 @@ subprojects {
         reports {
             xml.enabled true
         }
-    }
-    
-    eclipse.project {
-        name = "tcommon-${project.name}"
-    }
+    }    
 }
 
-project(':core') {
+project(':tcommon-core') {
 }
 
-project(':apt6') {
+project(':tcommon-apt6') {
     dependencies {
-        compile project(':core')
+        compile project(':tcommon-core')
     }
 }
 
-project(':entity') {
+project(':tcommon-entity') {
     dependencies {
-        compile project(':core')
+        compile project(':tcommon-core')
     }
 }
 
-project(':logging') {
+project(':tcommon-logging') {
     dependencies {
-        compile project(':core')
+        compile project(':tcommon-core')
         compile "org.slf4j:slf4j-api:$slf4jVersion"
     }
 }
 
-project(':prefsstore') {
+project(':tcommon-prefsstore') {
     dependencies {
-        compile project(':core')
+        compile project(':tcommon-core')
     }
 }
 
-project(':test') {
+project(':tcommon-test') {
     dependencies {
-        compile project(':core')
+        compile project(':tcommon-core')
         compile "junit:junit:$junitVersion"
     }
 }
@@ -94,42 +90,42 @@ publishing {
         core(MavenPublication) {
             artifactId = 'tcommon-core'
 
-            def proj = project(":core")
+            def proj = project(":tcommon-core")
             from proj.components.java            
             artifact(proj.sourceJar)
         }
         apt6(MavenPublication) {
             artifactId = 'tcommon-apt6'
 
-            def proj = project(":apt6")
+            def proj = project(":tcommon-apt6")
             from proj.components.java            
             artifact(proj.sourceJar)
         }
         logging(MavenPublication) {
             artifactId = 'tcommon-logging'
 
-            def proj = project(":logging")
+            def proj = project(":tcommon-logging")
             from proj.components.java            
             artifact(proj.sourceJar)
         }
         entity(MavenPublication) {
             artifactId = 'tcommon-entity'
 
-            def proj = project(":entity")
+            def proj = project(":tcommon-entity")
             from proj.components.java            
             artifact(proj.sourceJar)
         }
         prefsstore(MavenPublication) {
             artifactId = 'tcommon-prefsstore'
 
-            def proj = project(":prefsstore")
+            def proj = project(":tcommon-prefsstore")
             from proj.components.java            
             artifact(proj.sourceJar)
         }
         test(MavenPublication) {
             artifactId = 'tcommon-test'
 
-            def proj = project(":test")
+            def proj = project(":tcommon-test")
             from proj.components.java            
             artifact(proj.sourceJar)
         }
