@@ -6,7 +6,7 @@ plugins {
 allprojects {
     apply plugin: 'maven-publish'
     group = 'nl.weeaboo.common'
-    version = '2.0.0'
+    version = '2.0.1'
 
     repositories {
         jcenter()
@@ -92,42 +92,42 @@ project(':test') {
 publishing {
     publications {
         core(MavenPublication) {
-            artifactId = 'core'
+            artifactId = 'tcommon-core'
 
             def proj = project(":core")
             from proj.components.java            
             artifact(proj.sourceJar)
         }
         apt6(MavenPublication) {
-            artifactId = 'apt6'
+            artifactId = 'tcommon-apt6'
 
             def proj = project(":apt6")
             from proj.components.java            
             artifact(proj.sourceJar)
         }
         logging(MavenPublication) {
-            artifactId = 'logging'
+            artifactId = 'tcommon-logging'
 
             def proj = project(":logging")
             from proj.components.java            
             artifact(proj.sourceJar)
         }
         entity(MavenPublication) {
-            artifactId = 'entity'
+            artifactId = 'tcommon-entity'
 
             def proj = project(":entity")
             from proj.components.java            
             artifact(proj.sourceJar)
         }
         prefsstore(MavenPublication) {
-            artifactId = 'prefsstore'
+            artifactId = 'tcommon-prefsstore'
 
             def proj = project(":prefsstore")
             from proj.components.java            
             artifact(proj.sourceJar)
         }
         test(MavenPublication) {
-            artifactId = 'test'
+            artifactId = 'tcommon-test'
 
             def proj = project(":test")
             from proj.components.java            
