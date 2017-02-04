@@ -1,4 +1,4 @@
-package nl.weeaboo.vn.test;
+package nl.weeaboo.test;
 
 import java.util.concurrent.Callable;
 

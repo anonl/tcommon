@@ -1,4 +1,4 @@
-package nl.weeaboo.vn.test;
+package nl.weeaboo.test;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
