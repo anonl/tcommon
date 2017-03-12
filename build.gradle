@@ -6,7 +6,7 @@ plugins {
 allprojects {
     apply plugin: 'maven-publish'
     group = 'nl.weeaboo.common'
-    version = '2.2.0'
+    version = '2.2.1'
 
     repositories {
         jcenter()
@@ -25,6 +25,17 @@ subprojects {
         junitVersion = '4.12'
         slf4jVersion = '1.7.21'
         guavaVersion = '19.0' // Guava only used for testing
+
+        pomLicenseConfig = {
+           licenses {
+                license {
+                    name 'MIT'
+                    url 'https://opensource.org/licenses/mit-license.php'
+                    distribution 'repo'
+                }
+            }
+        }
+        pomLicenseConfig.resolveStrategy = Closure.DELEGATE_ONLY // Otherwise 'license' elem is missing
     }
     
     sourceCompatibility = javaVersion
@@ -93,6 +104,10 @@ publishing {
             def proj = project(":tcommon-core")
             from proj.components.java            
             artifact(proj.sourceJar)
+            
+            pom.withXml {
+                asNode().children().last() + proj.ext.pomLicenseConfig
+            }              
         }
         apt6(MavenPublication) {
             artifactId = 'tcommon-apt6'
@@ -100,6 +115,10 @@ publishing {
             def proj = project(":tcommon-apt6")
             from proj.components.java            
             artifact(proj.sourceJar)
+
+            pom.withXml {
+                asNode().children().last() + proj.ext.pomLicenseConfig
+            }              
         }
         logging(MavenPublication) {
             artifactId = 'tcommon-logging'
@@ -107,6 +126,10 @@ publishing {
             def proj = project(":tcommon-logging")
             from proj.components.java            
             artifact(proj.sourceJar)
+
+            pom.withXml {
+                asNode().children().last() + proj.ext.pomLicenseConfig
+            }              
         }
         entity(MavenPublication) {
             artifactId = 'tcommon-entity'
@@ -114,6 +137,10 @@ publishing {
             def proj = project(":tcommon-entity")
             from proj.components.java            
             artifact(proj.sourceJar)
+
+            pom.withXml {
+                asNode().children().last() + proj.ext.pomLicenseConfig
+            }              
         }
         prefsstore(MavenPublication) {
             artifactId = 'tcommon-prefsstore'
@@ -121,6 +148,10 @@ publishing {
             def proj = project(":tcommon-prefsstore")
             from proj.components.java            
             artifact(proj.sourceJar)
+
+            pom.withXml {
+                asNode().children().last() + proj.ext.pomLicenseConfig
+            }              
         }
         test(MavenPublication) {
             artifactId = 'tcommon-test'
@@ -128,6 +159,10 @@ publishing {
             def proj = project(":tcommon-test")
             from proj.components.java            
             artifact(proj.sourceJar)
+
+            pom.withXml {
+                asNode().children().last() + proj.ext.pomLicenseConfig
+            }              
         }
     }
 }
