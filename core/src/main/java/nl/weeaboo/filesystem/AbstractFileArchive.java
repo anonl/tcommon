@@ -93,7 +93,7 @@ public abstract class AbstractFileArchive extends AbstractFileSystem implements 
      * @throws FileNotFoundException If no entry with the specified path could be found within the archive.
      */
     public final ArchiveFileRecord getFile(FilePath path) throws FileNotFoundException {
-        return getFileImpl(resolvePath(path, false));
+        return getFileImpl(resolvePath(path));
     }
 
     protected ArchiveFileRecord getFileImpl(FilePath path) throws FileNotFoundException {
@@ -131,13 +131,13 @@ public abstract class AbstractFileArchive extends AbstractFileSystem implements 
         List<FilePath> result = new ArrayList<FilePath>();
         while (index >= 0 && index < records.length) {
             ArchiveFileRecord record = records[index];
-            if (!record.getPath().startsWith(prefix)) {
+            FilePath path = record.getPath();
+            if (!path.startsWith(prefix)) {
                 break; //We're past the subrange that matches the prefix
             }
 
             boolean isFolder = record.isFolder();
             if ((isFolder && opts.collectFolders) || (!isFolder && opts.collectFiles)) {
-                FilePath path = record.getPath();
                 if (opts.isValid(path)) {
                     result.add(path);
                 }

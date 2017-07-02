@@ -82,13 +82,13 @@ public abstract class AbstractFileSystemTest<FS extends IFileSystem> {
         files = getFiles(nonRecursiveFolders(FilePath.empty()));
         assertFileSet(Arrays.asList(sub1), files);
 
-        // Find subfolders, starting from sub2 (recursive)
-        files = getFiles(FileCollectOptions.folders(sub2));
-        assertFileSet(Arrays.asList(sub2), files);
+        // Find subfolders, starting from sub1 (recursive)
+        files = getFiles(FileCollectOptions.folders(sub1));
+        assertFileSet(Arrays.asList(sub1, sub2), files);
 
-        // Find subfolders, starting from sub2 (non-recursive)
-        files = getFiles(nonRecursiveFolders(sub2));
-        assertFileSet(Arrays.asList(sub2), files);
+        // Find subfolders, starting from sub1 (non-recursive)
+        files = getFiles(nonRecursiveFolders(sub1));
+        assertFileSet(Arrays.asList(sub1, sub2), files);
 
         // We don't find subfolder if we start from a file within that subfolder
         files = getFiles(FileCollectOptions.folders(SUBFOLDER_FILE));

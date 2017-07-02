@@ -1,7 +1,10 @@
 package nl.weeaboo.filesystem;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
+
+import nl.weeaboo.io.StreamUtil;
 
 public abstract class AbstractWritableFileSystem extends AbstractFileSystem implements IWritableFileSystem {
 
@@ -22,7 +25,7 @@ public abstract class AbstractWritableFileSystem extends AbstractFileSystem impl
     @Override
     public final OutputStream openOutputStream(FilePath path, boolean append) throws IOException {
         checkWritable();
-        return newOutputStreamImpl(resolvePath(path, true), append);
+        return newOutputStreamImpl(resolvePath(path), append);
     }
 
     protected abstract OutputStream newOutputStreamImpl(FilePath path, boolean append) throws IOException;
@@ -30,7 +33,7 @@ public abstract class AbstractWritableFileSystem extends AbstractFileSystem impl
     @Override
     public final void delete(FilePath path) throws IOException {
         checkWritable();
-        deleteImpl(resolvePath(path, false));
+        deleteImpl(resolvePath(path));
     }
 
     protected abstract void deleteImpl(FilePath path) throws IOException;
@@ -38,7 +41,7 @@ public abstract class AbstractWritableFileSystem extends AbstractFileSystem impl
     @Override
     public final void rename(FilePath src, FilePath dst) throws IOException {
         checkWritable();
-        renameImpl(resolvePath(src, false), resolvePath(dst, true));
+        renameImpl(resolvePath(src), resolvePath(dst));
     }
 
     protected void renameImpl(FilePath src, FilePath dst) throws IOException {
@@ -49,9 +52,21 @@ public abstract class AbstractWritableFileSystem extends AbstractFileSystem impl
     @Override
     public final void copy(FilePath src, FilePath dst) throws IOException {
         checkWritable();
-        copyImpl(resolvePath(src, false), resolvePath(dst, true));
+        copyImpl(resolvePath(src), resolvePath(dst));
     }
 
-    protected abstract void copyImpl(FilePath src, FilePath dst) throws IOException;
+    protected void copyImpl(FilePath src, FilePath dst) throws IOException {
+        InputStream in = openInputStream(src);
+        try {
+            OutputStream out = openOutputStream(dst, false);
+            try {
+                StreamUtil.writeBytes(in, out);
+            } finally {
+                out.close();
+            }
+        } finally {
+            in.close();
+        }
+    }
 
 }
