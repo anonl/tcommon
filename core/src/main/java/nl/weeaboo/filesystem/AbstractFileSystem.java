@@ -1,5 +1,6 @@
 package nl.weeaboo.filesystem;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -9,6 +10,18 @@ public abstract class AbstractFileSystem implements IFileSystem {
     private AtomicBoolean closed = new AtomicBoolean();
 
     protected AbstractFileSystem() {
+    }
+
+    /**
+     * @param allowNonExistant If {@code true}, allow paths to non-existant files.
+     * @throws FileNotFoundException If {@code allowNonExistant} is false and the path doesn't point to a
+     *         valid file.
+     * @deprecated Replaced with {@link #resolvePath(FilePath)}. The {@code allowNonExistant} flag was never
+     *             really used.
+     */
+    @Deprecated
+    protected FilePath resolvePath(FilePath path, boolean allowNonExistant) throws FileNotFoundException {
+        return resolvePath(path);
     }
 
     /**
