@@ -1,6 +1,11 @@
 
 plugins {
+    // Plugin for uploading to bintray
+    // Note: Causes a classpath conflict for org.apache.tools.zip
     id 'com.jfrog.bintray' version '1.7.3'
+    
+    // Google error-prone
+    id 'net.ltgt.errorprone' version '0.0.10'
 }
 
 allprojects {
@@ -25,6 +30,8 @@ subprojects {
         junitVersion = '4.12'
         slf4jVersion = '1.7.21'
         guavaVersion = '19.0' // Guava only used for testing
+        javaxAnnotationVersion = '3.0.1'
+        errorProneVersion = '2.0.21'
 
         pomLicenseConfig = {
            licenses {
@@ -42,6 +49,7 @@ subprojects {
     
     tasks.withType(JavaCompile) {
         options.encoding = 'UTF-8'
+        options.compilerArgs += '-Werror'
     }
 
     dependencies {
@@ -58,10 +66,21 @@ subprojects {
         reports {
             xml.enabled true
         }
-    }    
+    }
+    
+    // Apply ErrorProne plugin
+    project.apply plugin: 'net.ltgt.errorprone'
+
+    project.configurations.errorprone {
+        resolutionStrategy.force "com.google.errorprone:error_prone_core:$errorProneVersion"
+    }
 }
 
 project(':tcommon-core') {
+    dependencies {
+	    compileOnly "com.google.code.findbugs:jsr305:$javaxAnnotationVersion" // javax.annotation.*
+	    compileOnly "com.google.errorprone:error_prone_annotations:$errorProneVersion"
+	}
 }
 
 project(':tcommon-apt6') {
