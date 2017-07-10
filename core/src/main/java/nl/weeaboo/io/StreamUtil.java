@@ -35,7 +35,7 @@ public final class StreamUtil {
         }
 
         // Check for both big endian (0xFEFF) as well as little endian (0xFFFE) versions
-        return (bytes[off] == (byte)0xFF && bytes[off + 1] == (byte)0xFE)
+        return (bytes[off] == (byte)0xFE && bytes[off + 1] == (byte)0xFF)
                 || (bytes[off] == (byte)0xFF && bytes[off + 1] == (byte)0xFE);
     }
 
