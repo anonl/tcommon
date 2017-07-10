@@ -3,6 +3,8 @@ package nl.weeaboo.filesystem;
 import java.io.Serializable;
 import java.util.Calendar;
 
+@javax.annotation.concurrent.Immutable
+@com.google.errorprone.annotations.Immutable
 public final class ArchiveFileRecord implements Serializable {
 
     private static final long serialVersionUID = 1L;

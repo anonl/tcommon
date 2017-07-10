@@ -5,6 +5,8 @@ import java.io.Serializable;
 /**
  * Holds a non-negative integral width/height pair representing a dimension.
  */
+@javax.annotation.concurrent.Immutable
+@com.google.errorprone.annotations.Immutable
 public final class Dim implements Serializable {
 
     private static final long serialVersionUID = 1L;

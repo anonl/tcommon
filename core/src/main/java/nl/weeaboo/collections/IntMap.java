@@ -6,6 +6,8 @@ import java.util.ConcurrentModificationException;
 import java.util.Iterator;
 import java.util.Map;
 
+import javax.annotation.Nullable;
+
 /**
  * Maps ints to Objects.
  */
@@ -195,7 +197,7 @@ public final class IntMap<V> implements Serializable {
     /**
      * Returns the value associated with the given key, or {@code null} if no such value exists.
      */
-    public V get(int key) {
+    public @Nullable V get(int key) {
         int i = Arrays.binarySearch(keys, 0, length, key);
         if (i < 0 || values[i] == REMOVED) {
             return null;

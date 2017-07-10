@@ -10,6 +10,8 @@ import java.util.Arrays;
  * @see Area
  * @see Rect2D
  */
+@javax.annotation.concurrent.Immutable
+@com.google.errorprone.annotations.Immutable
 public final class Area2D implements Serializable {
 
     private static final long serialVersionUID = 1L;

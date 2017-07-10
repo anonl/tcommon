@@ -4,6 +4,8 @@ import java.io.Serializable;
 
 import nl.weeaboo.io.Filenames;
 
+@javax.annotation.concurrent.Immutable
+@com.google.errorprone.annotations.Immutable
 public final class FilePath implements Serializable, Comparable<FilePath> {
 
     private static final long serialVersionUID = 1L;

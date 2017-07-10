@@ -3,7 +3,7 @@ plugins {
     // Plugin for uploading to bintray
     // Note: Causes a classpath conflict for org.apache.tools.zip
     id 'com.jfrog.bintray' version '1.7.3'
-    
+
     // Google error-prone
     id 'net.ltgt.errorprone' version '0.0.10'
 }
@@ -49,7 +49,6 @@ subprojects {
     
     tasks.withType(JavaCompile) {
         options.encoding = 'UTF-8'
-        options.compilerArgs += '-Werror'
     }
 
     dependencies {
@@ -68,12 +67,7 @@ subprojects {
         }
     }
     
-    // Apply ErrorProne plugin
-    project.apply plugin: 'net.ltgt.errorprone'
-
-    project.configurations.errorprone {
-        resolutionStrategy.force "com.google.errorprone:error_prone_core:$errorProneVersion"
-    }
+    apply from: rootProject.file('errorprone.gradle')
 }
 
 project(':tcommon-core') {
