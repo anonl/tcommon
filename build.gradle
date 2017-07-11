@@ -25,7 +25,7 @@ subprojects {
     apply plugin: 'idea'
 
     ext {
-        javaVersion = JavaVersion.VERSION_1_6
+        javaVersion = JavaVersion.VERSION_1_7
 
         junitVersion = '4.12'
         slf4jVersion = '1.7.21'
@@ -67,7 +67,10 @@ subprojects {
         }
     }
     
-    apply from: rootProject.file('errorprone.gradle')
+    // ErrorProne compiler isn't compatible with Java 6, so check that the current JVM uses at least Java 7
+    if (JavaVersion.current().isJava7Compatible()) {
+        apply from: rootProject.file('errorprone.gradle')
+    }
 }
 
 project(':tcommon-core') {
