@@ -1,11 +1,15 @@
 
+buildscript {
+    dependencies {
+        // Google error-prone
+        classpath "net.ltgt.gradle:gradle-errorprone-plugin:0.0.10"
+    }
+}
+
 plugins {
     // Plugin for uploading to bintray
     // Note: Causes a classpath conflict for org.apache.tools.zip
     id 'com.jfrog.bintray' version '1.7.3'
-
-    // Google error-prone
-    id 'net.ltgt.errorprone' version '0.0.10'
 }
 
 allprojects {
@@ -25,7 +29,7 @@ subprojects {
     apply plugin: 'idea'
 
     ext {
-        javaVersion = JavaVersion.VERSION_1_7
+        javaVersion = JavaVersion.VERSION_1_6
 
         junitVersion = '4.12'
         slf4jVersion = '1.7.21'
