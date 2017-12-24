@@ -1,5 +1,7 @@
 package nl.weeaboo.common;
 
+@javax.annotation.concurrent.Immutable
+// @com.google.errorprone.annotations.Immutable // Requires an immutable int collection type
 public final class VersionNumber implements Comparable<VersionNumber> {
 
     private final int[] versionParts;

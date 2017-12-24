@@ -3,6 +3,8 @@ package nl.weeaboo.common;
 import java.io.Serializable;
 import java.util.Arrays;
 
+@javax.annotation.concurrent.Immutable
+@com.google.errorprone.annotations.Immutable
 public final class Rect2D implements Serializable {
 
     private static final long serialVersionUID = 1L;

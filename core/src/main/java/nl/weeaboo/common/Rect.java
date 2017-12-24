@@ -2,6 +2,8 @@ package nl.weeaboo.common;
 
 import java.io.Serializable;
 
+@javax.annotation.concurrent.Immutable
+@com.google.errorprone.annotations.Immutable
 public final class Rect implements Serializable {
 
     private static final long serialVersionUID = 1L;

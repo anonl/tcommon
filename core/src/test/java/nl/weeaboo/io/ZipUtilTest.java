@@ -112,20 +112,30 @@ public class ZipUtilTest {
         ZipUtil.writeFileEntry(zout, "huge", in, size, compression);
     }
 
-    private InputStream newTestInput(final long size) {
-        return new InputStream() {
+    private InputStream newTestInput(long size) {
+        return new InputStreamMock(size);
+    }
 
-            long read;
+    @SuppressWarnings("InputStreamSlowMultibyteRead") // Not a performance problem in this case
+    private static final class InputStreamMock extends InputStream {
 
-            @Override
-            public int read() throws IOException {
-                if (read >= size) {
-                    return -1;
-                }
-                read++;
-                return 1;
+        private final long size;
+
+        private long read;
+
+        public InputStreamMock(long size) {
+            this.size = size;
+        }
+
+        @Override
+        public int read() throws IOException {
+            if (read >= size) {
+                return -1;
             }
-        };
+            read++;
+            return 1;
+        }
+
     }
 
 }

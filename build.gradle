@@ -1,5 +1,14 @@
 
+buildscript {
+    dependencies {
+        // Google error-prone
+        classpath "net.ltgt.gradle:gradle-errorprone-plugin:0.0.10"
+    }
+}
+
 plugins {
+    // Plugin for uploading to bintray
+    // Note: Causes a classpath conflict for org.apache.tools.zip
     id 'com.jfrog.bintray' version '1.7.3'
 }
 
@@ -58,10 +67,19 @@ subprojects {
         reports {
             xml.enabled true
         }
-    }    
+    }
+    
+    // ErrorProne compiler isn't compatible with Java 6, so check that the current JVM uses at least Java 7
+    if (JavaVersion.current().isJava7Compatible()) {
+        apply from: rootProject.file('errorprone.gradle')
+    }
 }
 
 project(':tcommon-core') {
+    dependencies {
+	    compileOnly "com.google.code.findbugs:jsr305:$javaxAnnotationVersion" // javax.annotation.*
+	    compileOnly "com.google.errorprone:error_prone_annotations:$errorProneVersion"
+	}
 }
 
 project(':tcommon-apt6') {

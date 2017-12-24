@@ -6,6 +6,8 @@ import java.util.Arrays;
 /**
  * Holds a non-negative floating point width/height pair representing a dimension.
  */
+@javax.annotation.concurrent.Immutable
+@com.google.errorprone.annotations.Immutable
 public final class Dim2D implements Serializable {
 
     private static final long serialVersionUID = 1L;

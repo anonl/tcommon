@@ -8,6 +8,8 @@ import java.io.Serializable;
  * @see Rect
  * @see Area2D
  */
+@javax.annotation.concurrent.Immutable
+@com.google.errorprone.annotations.Immutable
 public final class Area implements Serializable {
 
     private static final long serialVersionUID = 1L;
