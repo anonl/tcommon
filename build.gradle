@@ -1,16 +1,18 @@
-
 buildscript {
+    repositories {
+        jcenter()
+    }
     dependencies {
         // Google error-prone
         classpath "net.ltgt.gradle:gradle-errorprone-plugin:0.0.10"
+        
+        // Plugin for uploading to bintray
+        // Note: Causes a classpath conflict for org.apache.tools.zip
+        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7.3'
     }
 }
 
-plugins {
-    // Plugin for uploading to bintray
-    // Note: Causes a classpath conflict for org.apache.tools.zip
-    id 'com.jfrog.bintray' version '1.7.3'
-}
+apply plugin: 'com.jfrog.bintray'
 
 allprojects {
     apply plugin: 'maven-publish'
