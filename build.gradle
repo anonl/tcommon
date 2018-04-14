@@ -15,14 +15,17 @@ buildscript {
 apply plugin: 'com.jfrog.bintray'
 
 allprojects {
-    apply plugin: 'maven-publish'
     group = 'nl.weeaboo.common'
-    version = '2.3.1'
+    version = '2.4.0'
 
     repositories {
         jcenter()
-    }    
+    }
+
+    apply plugin: 'maven-publish'
 }
+
+apply from: 'dependencies.gradle'
 
 subprojects {
     apply plugin: 'java'
@@ -32,12 +35,6 @@ subprojects {
 
     ext {
         javaVersion = JavaVersion.VERSION_1_6
-
-        junitVersion = '4.12'
-        slf4jVersion = '1.7.21'
-        guavaVersion = '19.0' // Guava only used for testing
-        javaxAnnotationVersion = '3.0.1'
-        errorProneVersion = '2.0.21'
 
         pomLicenseConfig = {
            licenses {
@@ -58,8 +55,8 @@ subprojects {
     }
 
     dependencies {
-        testCompile "junit:junit:$junitVersion"
-        testCompile "com.google.guava:guava-testlib:$guavaVersion"
+        testCompile deps.junit
+        testCompile deps.guava_testlib
     }
     
     task sourceJar(type: Jar) {
@@ -81,9 +78,8 @@ subprojects {
 
 project(':tcommon-core') {
     dependencies {
-	    compileOnly "com.google.code.findbugs:jsr305:$javaxAnnotationVersion" // javax.annotation.*
-	    compileOnly "com.google.errorprone:error_prone_annotations:$errorProneVersion"
-	}
+        compileOnly deps.static_analysis_annotations
+    }
 }
 
 project(':tcommon-apt6') {
@@ -101,7 +97,7 @@ project(':tcommon-entity') {
 project(':tcommon-logging') {
     dependencies {
         compile project(':tcommon-core')
-        compile "org.slf4j:slf4j-api:$slf4jVersion"
+        compile deps.slf4j_api
     }
 }
 
@@ -114,7 +110,7 @@ project(':tcommon-prefsstore') {
 project(':tcommon-test') {
     dependencies {
         compile project(':tcommon-core')
-        compile "junit:junit:$junitVersion"
+        compile deps.junit
     }
 }
 
