@@ -13,10 +13,10 @@ public final class ExceptionTester {
      * @param expected Expected exception type. The exception must be a {@link RuntimeException} because the code under
      *        test is a {@link Runnable} and that can't throw checked exceptions.
      */
-    public void expect(Class<? extends RuntimeException> expected, final Runnable runnable) {
+    public void expect(Class<? extends RuntimeException> expected, final IExcptionRunnable runnable) {
         expect(expected, new Callable<Void>() {
             @Override
-            public Void call() {
+            public Void call() throws Exception {
                 runnable.run();
                 return null;
             }
@@ -36,6 +36,16 @@ public final class ExceptionTester {
                 throw new AssertionError(e);
             }
         }
+    }
+
+    public interface IExcptionRunnable {
+
+        /**
+         * Do the thing.
+         * @throws Exception If an exception occurs.
+         */
+        void run() throws Exception;
+
     }
 
 }
