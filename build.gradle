@@ -6,7 +6,7 @@ buildscript {
     dependencies {
         // Google error-prone
         classpath "net.ltgt.gradle:gradle-errorprone-plugin:0.0.10"
-        
+
         // Plugin for uploading to bintray
         // Note: Causes a classpath conflict for org.apache.tools.zip
         classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7.3'
@@ -17,7 +17,7 @@ apply plugin: 'com.jfrog.bintray'
 
 allprojects {
     group = 'nl.weeaboo.common'
-    version = '2.6.0'
+    version = '2.6.1'
 
     repositories {
         jcenter()
@@ -48,9 +48,9 @@ subprojects {
         }
         pomLicenseConfig.resolveStrategy = Closure.DELEGATE_ONLY // Otherwise 'license' elem is missing
     }
-    
+
     sourceCompatibility = javaVersion
-    
+
     tasks.withType(JavaCompile) {
         options.encoding = 'UTF-8'
     }
@@ -59,18 +59,18 @@ subprojects {
         testCompile deps.junit
         testCompile deps.guava_testlib
     }
-    
+
     task sourceJar(type: Jar) {
         from sourceSets.main.allJava
         classifier 'sources'
     }
-    
+
     jacocoTestReport {
         reports {
             xml.enabled true
         }
     }
-    
+
     // ErrorProne compiler isn't compatible with Java 6, so check that the current JVM uses at least Java 7
     if (JavaVersion.current().isJava7Compatible()) {
         apply from: rootProject.file('errorprone.gradle')
@@ -121,67 +121,67 @@ publishing {
             artifactId = 'tcommon-core'
 
             def proj = project(":tcommon-core")
-            from proj.components.java            
+            from proj.components.java
             artifact(proj.sourceJar)
-            
+
             pom.withXml {
                 asNode().children().last() + proj.ext.pomLicenseConfig
-            }              
+            }
         }
         apt6(MavenPublication) {
             artifactId = 'tcommon-apt6'
 
             def proj = project(":tcommon-apt6")
-            from proj.components.java            
+            from proj.components.java
             artifact(proj.sourceJar)
 
             pom.withXml {
                 asNode().children().last() + proj.ext.pomLicenseConfig
-            }              
+            }
         }
         logging(MavenPublication) {
             artifactId = 'tcommon-logging'
 
             def proj = project(":tcommon-logging")
-            from proj.components.java            
+            from proj.components.java
             artifact(proj.sourceJar)
 
             pom.withXml {
                 asNode().children().last() + proj.ext.pomLicenseConfig
-            }              
+            }
         }
         entity(MavenPublication) {
             artifactId = 'tcommon-entity'
 
             def proj = project(":tcommon-entity")
-            from proj.components.java            
+            from proj.components.java
             artifact(proj.sourceJar)
 
             pom.withXml {
                 asNode().children().last() + proj.ext.pomLicenseConfig
-            }              
+            }
         }
         prefsstore(MavenPublication) {
             artifactId = 'tcommon-prefsstore'
 
             def proj = project(":tcommon-prefsstore")
-            from proj.components.java            
+            from proj.components.java
             artifact(proj.sourceJar)
 
             pom.withXml {
                 asNode().children().last() + proj.ext.pomLicenseConfig
-            }              
+            }
         }
         test(MavenPublication) {
             artifactId = 'tcommon-test'
 
             def proj = project(":tcommon-test")
-            from proj.components.java            
+            from proj.components.java
             artifact(proj.sourceJar)
 
             pom.withXml {
                 asNode().children().last() + proj.ext.pomLicenseConfig
-            }              
+            }
         }
     }
 }

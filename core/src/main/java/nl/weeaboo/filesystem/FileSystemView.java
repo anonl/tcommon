@@ -74,8 +74,25 @@ public class FileSystemView implements IFileSystem {
     @Override
     public Iterable<FilePath> getFiles(FileCollectOptions opts) throws IOException {
         List<FilePath> result = new ArrayList<FilePath>();
-        for (FilePath path : fileSystem.getFiles(opts)) {
-            result.add(basePath.relativize(path));
+
+        FilePath oldPrefix = opts.getPrefix();
+        try {
+            opts.setPrefix(basePath.resolve(oldPrefix));
+
+            for (FilePath path : fileSystem.getFiles(opts)) {
+                FilePath relpath = basePath.relativize(path);
+                if (relpath.equals(FilePath.empty())) {
+                    /*
+                     * Don't include the 'root' folder in search results. This is needed to match the behavior
+                     * of the other filesystem implementations.
+                     */
+                    continue;
+                }
+
+                result.add(relpath);
+            }
+        } finally {
+            opts.setPrefix(oldPrefix);
         }
         return result;
     }
