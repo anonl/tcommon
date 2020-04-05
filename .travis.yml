@@ -5,7 +5,7 @@ jdk:
   - openjdk8
 
 script:
-  ./gradlew clean build jacocoTestReport --info
+  ./gradlew --info build jacocoTestReport
 
 after_success:
   - bash <(curl -s https://codecov.io/bash)
