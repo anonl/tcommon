@@ -6,6 +6,9 @@ import java.io.OutputStream;
 
 import nl.weeaboo.io.StreamUtil;
 
+/**
+ * Base implementation of a filesystem in which files can be changed.
+ */
 public abstract class AbstractWritableFileSystem extends AbstractFileSystem implements IWritableFileSystem {
 
     @Override

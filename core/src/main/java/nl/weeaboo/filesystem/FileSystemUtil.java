@@ -7,6 +7,9 @@ import java.io.OutputStream;
 import nl.weeaboo.common.StringUtil;
 import nl.weeaboo.io.StreamUtil;
 
+/**
+ * Functions for working with file systems.
+ */
 public final class FileSystemUtil {
 
     private FileSystemUtil() {

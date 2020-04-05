@@ -13,6 +13,9 @@ import javax.annotation.Nullable;
 
 import com.google.errorprone.annotations.concurrent.GuardedBy;
 
+/**
+ * File system implementation which stores all created files and folders in-memory.
+ */
 public class InMemoryFileSystem extends AbstractWritableFileSystem {
 
     private final Object lock = new Object();

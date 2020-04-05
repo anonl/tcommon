@@ -10,6 +10,9 @@ import java.io.Writer;
 
 import nl.weeaboo.common.StringUtil;
 
+/**
+ * Functions for working with files.
+ */
 public final class FileUtil {
 
     private FileUtil() {

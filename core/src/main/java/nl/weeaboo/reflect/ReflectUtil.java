@@ -5,6 +5,9 @@ import java.lang.reflect.Modifier;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Functions related to Java reflection.
+ */
 public final class ReflectUtil {
 
     private ReflectUtil() {

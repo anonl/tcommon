@@ -46,7 +46,7 @@ public final class Scene implements IWriteReplaceSerializable {
     }
 
     @Override
-    public Object writeReplace() throws ObjectStreamException {
+    public Object writeReplace() {
         return new SceneRef(world, id);
     }
 

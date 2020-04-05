@@ -1,5 +1,8 @@
 package nl.weeaboo.common;
 
+/**
+ * Runtime assertions.
+ */
 public final class Checks {
 
     private Checks() {

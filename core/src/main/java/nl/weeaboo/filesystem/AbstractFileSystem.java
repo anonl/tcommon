@@ -5,6 +5,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+/**
+ * Base implementation of a file system.
+ */
 public abstract class AbstractFileSystem implements IFileSystem {
 
     private AtomicBoolean closed = new AtomicBoolean();

@@ -1,5 +1,8 @@
 package nl.weeaboo.common;
 
+/**
+ * Faster/extra math functions.
+ */
 public final class FastMath {
 
     private FastMath() {

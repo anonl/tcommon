@@ -2,6 +2,9 @@ package nl.weeaboo.common;
 
 import java.io.Serializable;
 
+/**
+ * Rectangle with integer coordinates and non-negative width/height.
+ */
 @javax.annotation.concurrent.Immutable
 @com.google.errorprone.annotations.Immutable
 public final class Rect implements Serializable {

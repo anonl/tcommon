@@ -12,6 +12,9 @@ import java.util.List;
 
 import nl.weeaboo.common.Checks;
 
+/**
+ * File system implementation using regular files.
+ */
 public final class RegularFileSystem extends AbstractWritableFileSystem {
 
     private final File rootFolder;

@@ -3,6 +3,9 @@ package nl.weeaboo.common;
 import java.io.Serializable;
 import java.util.Arrays;
 
+/**
+ * Rectangle with floating point coordinates and non-negative width/height.
+ */
 @javax.annotation.concurrent.Immutable
 @com.google.errorprone.annotations.Immutable
 public final class Rect2D implements Serializable {

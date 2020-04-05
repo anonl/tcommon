@@ -2,6 +2,9 @@ package nl.weeaboo.common;
 
 import java.io.Serializable;
 
+/**
+ * Padding amounts for top/right/bottom/left.
+ */
 @javax.annotation.concurrent.Immutable
 @com.google.errorprone.annotations.Immutable
 public final class Insets2D implements Serializable {

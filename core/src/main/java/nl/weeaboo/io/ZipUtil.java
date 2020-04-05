@@ -8,8 +8,14 @@ import java.io.InputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
+/**
+ * Functions for working with zip-files.
+ */
 public final class ZipUtil {
 
+    /**
+     * Compression method.
+     */
     public enum Compression {
         NONE,
         DEFLATE;

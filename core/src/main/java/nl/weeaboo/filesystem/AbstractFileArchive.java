@@ -14,6 +14,9 @@ import java.util.List;
 import nl.weeaboo.io.IRandomAccessFile;
 import nl.weeaboo.io.RandomAccessUtil;
 
+/**
+ * Base implementation of a file system stored in a compressed archive (like .zip).
+ */
 public abstract class AbstractFileArchive extends AbstractFileSystem implements IFileArchive {
 
     private static final RecordPathComparator pathComparator = new RecordPathComparator();

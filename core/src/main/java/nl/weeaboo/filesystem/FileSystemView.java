@@ -7,6 +7,9 @@ import java.util.List;
 
 import nl.weeaboo.common.Checks;
 
+/**
+ * Exposes sub-folders of a filesystem.
+ */
 public class FileSystemView implements IFileSystem {
 
     private final IFileSystem fileSystem;

@@ -1,5 +1,8 @@
 package nl.weeaboo.common;
 
+/**
+ * Represents a version number in (numeric-only) x.y.z format.
+ */
 @javax.annotation.concurrent.Immutable
 // @com.google.errorprone.annotations.Immutable // Requires an immutable int collection type
 public final class VersionNumber implements Comparable<VersionNumber> {

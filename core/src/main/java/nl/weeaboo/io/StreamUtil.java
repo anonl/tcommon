@@ -6,6 +6,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+/**
+ * Functions for working with input/output streams.
+ */
 public final class StreamUtil {
 
     private static final int READ_BUFFER_SIZE = 4096;

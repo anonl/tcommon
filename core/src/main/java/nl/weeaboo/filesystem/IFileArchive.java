@@ -5,6 +5,9 @@ import java.io.IOException;
 
 import nl.weeaboo.io.IRandomAccessFile;
 
+/**
+ * Represents a compressed file (e.g. a .zip file) storing zero or more entries.
+ */
 public interface IFileArchive extends Iterable<ArchiveFileRecord> {
 
     /**

@@ -4,6 +4,9 @@ import java.nio.charset.Charset;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * Functions for working with Strings.
+ */
 public final class StringUtil {
 
     public static final Charset UTF_8 = Charset.forName("UTF-8");

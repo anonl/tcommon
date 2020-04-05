@@ -4,6 +4,9 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.OutputStream;
 
+/**
+ * File system which allows modifications.
+ */
 public interface IWritableFileSystem extends IFileSystem {
 
     /**

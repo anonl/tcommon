@@ -5,6 +5,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+/**
+ * Generic interface for seekable files/streams.
+ */
 public interface IRandomAccessFile extends Closeable {
 
     /**

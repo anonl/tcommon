@@ -3,7 +3,6 @@ package nl.weeaboo.entity;
 import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
-import java.io.ObjectStreamException;
 
 import nl.weeaboo.io.IReadResolveSerializable;
 import nl.weeaboo.io.IWriteReplaceSerializable;
@@ -62,7 +61,7 @@ public final class Entity implements IWriteReplaceSerializable {
     }
 
     @Override
-    public Object writeReplace() throws ObjectStreamException {
+    public Object writeReplace() {
         return new EntityRef(scene, id);
     }
 
@@ -328,7 +327,7 @@ public final class Entity implements IWriteReplaceSerializable {
         }
 
         @Override
-        public Object readResolve() throws ObjectStreamException {
+        public Object readResolve() {
             return scene.getEntity(id);
         }
 

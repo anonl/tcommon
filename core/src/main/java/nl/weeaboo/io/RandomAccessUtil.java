@@ -2,6 +2,9 @@ package nl.weeaboo.io;
 
 import java.io.RandomAccessFile;
 
+/**
+ * Functions for creating/using seekable (random-access) streams.
+ */
 public final class RandomAccessUtil {
 
     /**

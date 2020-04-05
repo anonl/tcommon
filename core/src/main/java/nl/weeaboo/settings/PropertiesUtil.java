@@ -11,6 +11,9 @@ import java.util.Properties;
 
 import nl.weeaboo.common.StringUtil;
 
+/**
+ * Functions for working with {@link Properties} files.
+ */
 public final class PropertiesUtil {
 
     private PropertiesUtil() {

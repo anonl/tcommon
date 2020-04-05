@@ -2,6 +2,9 @@ package nl.weeaboo.filesystem;
 
 import nl.weeaboo.common.Checks;
 
+/**
+ * File search settings.
+ */
 public final class FileCollectOptions {
 
     private FilePath baseFolder = FilePath.empty();

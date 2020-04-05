@@ -1,5 +1,8 @@
 package nl.weeaboo.io;
 
+/**
+ * Functions for working with file names.
+ */
 public final class Filenames {
 
     private Filenames() {

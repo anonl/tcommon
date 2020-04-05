@@ -3,6 +3,11 @@ package nl.weeaboo.filesystem;
 import java.io.Serializable;
 import java.util.Calendar;
 
+/**
+ * Represents an entry in an archive file system.
+ *
+ * @see AbstractFileArchive
+ */
 @javax.annotation.concurrent.Immutable
 @com.google.errorprone.annotations.Immutable
 public final class ArchiveFileRecord implements Serializable {

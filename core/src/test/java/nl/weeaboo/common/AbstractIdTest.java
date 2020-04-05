@@ -14,10 +14,10 @@ public class AbstractIdTest {
     @Test
     public void testEquals() {
         new EqualsTester()
-            .addEqualityGroup(A1, A1_COPY)
-            .addEqualityGroup(A2)
-            .addEqualityGroup(B1) // Same id string, but different type
-            .testEquals();
+                .addEqualityGroup(A1, A1_COPY)
+                .addEqualityGroup(A2)
+                .addEqualityGroup(B1) // Same id string, but different type
+                .testEquals();
     }
 
     private static class AlphaId extends AbstractId {

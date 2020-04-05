@@ -4,6 +4,9 @@ import java.io.Serializable;
 
 import nl.weeaboo.io.Filenames;
 
+/**
+ * Represents a file path.
+ */
 @javax.annotation.concurrent.Immutable
 @com.google.errorprone.annotations.Immutable
 public final class FilePath implements Serializable, Comparable<FilePath> {

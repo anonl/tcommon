@@ -8,6 +8,9 @@ import java.util.Collection;
 import java.util.Set;
 import java.util.TreeSet;
 
+/**
+ * Aggregation of multiple file systems.
+ */
 public class MultiFileSystem implements IFileSystem {
 
     private final IFileSystem[] fileSystems;

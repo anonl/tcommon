@@ -3,6 +3,11 @@ package nl.weeaboo.filesystem;
 import java.io.IOException;
 import java.io.InputStream;
 
+/**
+ * Represents a file system containing files and folders.
+ *
+ * @see IWritableFileSystem
+ */
 public interface IFileSystem {
 
     /**
