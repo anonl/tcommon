@@ -42,11 +42,9 @@ public final class FilePath implements Serializable, Comparable<FilePath> {
             pathString = pathString.replaceAll("[\\\\/]+", "/");
         }
 
-        // Strip leading './', '/'
+        // Strip leading './'
         if (pathString.startsWith("./")) {
             pathString = pathString.substring(2);
-        } else if (pathString.startsWith("/")) {
-            pathString = pathString.substring(1);
         }
 
         // Strip trailing '/.', '/'
@@ -88,7 +86,7 @@ public final class FilePath implements Serializable, Comparable<FilePath> {
      * Constructs a new path using a subpath relative to the folder represented by this path.
      */
     public FilePath resolve(FilePath relPath) {
-        return FilePath.of(path + "/" + relPath);
+        return resolve(relPath.toString());
     }
 
     /**
@@ -97,6 +95,9 @@ public final class FilePath implements Serializable, Comparable<FilePath> {
      * @see #resolve(FilePath)
      */
     public FilePath resolve(String relPath) {
+        if (path.isEmpty()) {
+            return FilePath.of(relPath);
+        }
         return FilePath.of(path + "/" + relPath);
     }
 
@@ -106,8 +107,8 @@ public final class FilePath implements Serializable, Comparable<FilePath> {
      */
     public FilePath relativize(FilePath fullPath) {
         String fullPathString = fullPath.path;
-        if (fullPathString.startsWith(path)) {
-            return FilePath.of(fullPathString.substring(path.length()));
+        if (fullPathString.startsWith(path + "/")) {
+            return FilePath.of(fullPathString.substring(path.length() + 1));
         } else {
             // Not a relative path
             return fullPath;
