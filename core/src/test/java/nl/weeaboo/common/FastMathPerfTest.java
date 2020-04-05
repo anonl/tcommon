@@ -10,8 +10,8 @@ public class FastMathPerfTest {
         long timeA = 0;
         long timeB = 0;
 
-        final int warmUpRuns = 10;
-        for (int run = 1; run < 100; run++) {
+        final int warmUpRuns = 100;
+        for (int run = 1; run < 1000; run++) {
             long t0 = System.nanoTime();
             fastCosPerf();
             long t1 = System.nanoTime();
