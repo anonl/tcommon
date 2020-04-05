@@ -63,7 +63,7 @@ final class RandomAccessFileWrapper implements IRandomAccessFile {
     }
 
     @Override
-    public synchronized InputStream getInputStream(long offset, long length) throws IOException {
+    public synchronized InputStream getInputStream(long offset, long length) {
         return new RandomAccessInputStream(this, offset, length);
     }
 

@@ -57,6 +57,11 @@ public class FileSystemView implements IFileSystem {
     }
 
     @Override
+    public boolean isFolder(FilePath path) {
+        return fileSystem.isFolder(resolvePath(path));
+    }
+
+    @Override
     public boolean getFileExists(FilePath path) {
         return fileSystem.getFileExists(resolvePath(path));
     }
@@ -72,12 +77,12 @@ public class FileSystemView implements IFileSystem {
     }
 
     @Override
-    public Iterable<FilePath> getFiles(FileCollectOptions opts) throws IOException {
+    public Iterable<FilePath> getFiles(FileCollectOptions opts) {
         List<FilePath> result = new ArrayList<FilePath>();
 
-        FilePath oldPrefix = opts.getPrefix();
+        FilePath oldBaseFolder = opts.getBaseFolder();
         try {
-            opts.setPrefix(basePath.resolve(oldPrefix));
+            opts.setBaseFolder(basePath.resolve(oldBaseFolder));
 
             for (FilePath path : fileSystem.getFiles(opts)) {
                 FilePath relpath = basePath.relativize(path);
@@ -92,7 +97,7 @@ public class FileSystemView implements IFileSystem {
                 result.add(relpath);
             }
         } finally {
-            opts.setPrefix(oldPrefix);
+            opts.setBaseFolder(oldBaseFolder);
         }
         return result;
     }

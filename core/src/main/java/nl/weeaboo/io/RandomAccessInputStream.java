@@ -24,7 +24,7 @@ final class RandomAccessInputStream extends InputStream {
     }
 
     @Override
-    public synchronized long skip(long s) throws IOException {
+    public synchronized long skip(long s) {
         long skipped = Math.min(s, length - read);
         read += skipped;
         return skipped;
@@ -80,7 +80,7 @@ final class RandomAccessInputStream extends InputStream {
     }
 
     @Override
-    public synchronized void reset() throws IOException {
+    public synchronized void reset() {
         read = mark;
     }
 

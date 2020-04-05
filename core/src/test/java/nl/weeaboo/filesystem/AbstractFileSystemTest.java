@@ -68,35 +68,43 @@ public abstract class AbstractFileSystemTest<FS extends IFileSystem> {
     }
 
     @Test
-    public void testGetFolders() throws IOException {
+    public void testIsFolder() {
+        assertIsFolder(false, SUBFOLDER_FILE);
+        assertIsFolder(true, SUBFOLDER_FILE.getParent());
+        assertIsFolder(true, SUBFOLDER_FILE.getParent().getParent());
+        assertIsFolder(true, FilePath.empty());
+    }
+
+    @Test
+    public void testGetFolders() {
         Set<FilePath> files;
 
         FilePath sub2 = SUBFOLDER_FILE.getParent();
         FilePath sub1 = sub2.getParent();
 
         // Find subfolders from root (recursive)
-        files = getFiles(FileCollectOptions.folders(FilePath.empty()));
+        files = getFiles(FileCollectOptions.subFolders(FilePath.empty()));
         assertFileSet(Arrays.asList(sub1, sub2), files);
 
         // Find subfolders from root (non-recursive)
         files = getFiles(nonRecursiveFolders(FilePath.empty()));
         assertFileSet(Arrays.asList(sub1), files);
 
-        // Find subfolders, starting from sub1 (recursive)
-        files = getFiles(FileCollectOptions.folders(sub1));
-        assertFileSet(Arrays.asList(sub1, sub2), files);
+        // Find subfolders of sub1 (recursive)
+        files = getFiles(FileCollectOptions.subFolders(sub1));
+        assertFileSet(Arrays.asList(sub2), files);
 
-        // Find subfolders, starting from sub1 (non-recursive)
+        // Find subfolders of sub1 (non-recursive)
         files = getFiles(nonRecursiveFolders(sub1));
-        assertFileSet(Arrays.asList(sub1, sub2), files);
+        assertFileSet(Arrays.asList(sub2), files);
 
         // We don't find subfolder if we start from a file within that subfolder
-        files = getFiles(FileCollectOptions.folders(SUBFOLDER_FILE));
+        files = getFiles(FileCollectOptions.subFolders(SUBFOLDER_FILE));
         assertFileSet(Arrays.<FilePath>asList(), files);
     }
 
     @Test
-    public void testGetFiles() throws IOException {
+    public void testGetFiles() {
         Set<FilePath> files;
 
         // Find file from root (recursive)
@@ -118,7 +126,7 @@ public abstract class AbstractFileSystemTest<FS extends IFileSystem> {
     }
 
     private static FileCollectOptions nonRecursiveFolders(FilePath basePath) {
-        FileCollectOptions opts = FileCollectOptions.folders(basePath);
+        FileCollectOptions opts = FileCollectOptions.subFolders(basePath);
         opts.recursive = false;
         return opts;
     }
@@ -129,7 +137,7 @@ public abstract class AbstractFileSystemTest<FS extends IFileSystem> {
         return opts;
     }
 
-    private Set<FilePath> getFiles(FileCollectOptions opts) throws IOException {
+    private Set<FilePath> getFiles(FileCollectOptions opts) {
         Set<FilePath> files = new HashSet<FilePath>();
         for (FilePath path : fileSystem.getFiles(opts)) {
             files.add(path);
@@ -139,6 +147,10 @@ public abstract class AbstractFileSystemTest<FS extends IFileSystem> {
 
     private void assertFileSet(Collection<FilePath> expected, Set<FilePath> actual) {
         Assert.assertEquals(new HashSet<FilePath>(expected), actual);
+    }
+
+    private void assertIsFolder(boolean expected, FilePath path) {
+        Assert.assertEquals(expected, fileSystem.isFolder(path));
     }
 
 }

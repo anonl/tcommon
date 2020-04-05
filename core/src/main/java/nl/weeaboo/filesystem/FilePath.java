@@ -36,12 +36,21 @@ public final class FilePath implements Serializable, Comparable<FilePath> {
         // Replace runs of multiple '/' characters
         // Replace '\\' with '/'
         if (pathString.contains("//") || pathString.indexOf('\\') >= 0) {
-            pathString = pathString.replaceAll("[\\/]+", "/");
+            pathString = pathString.replaceAll("[\\\\/]+", "/");
         }
 
-        // Strip leading '/'
-        if (pathString.startsWith("/")) {
+        // Strip leading './', '/'
+        if (pathString.startsWith("./")) {
+            pathString = pathString.substring(2);
+        } else if (pathString.startsWith("/")) {
             pathString = pathString.substring(1);
+        }
+
+        // Strip trailing '/.', '/'
+        if (pathString.endsWith("/.")) {
+            pathString = pathString.substring(0, pathString.length() - 2);
+        } else if (pathString.endsWith("/")) {
+            pathString = pathString.substring(0, pathString.length() - 1);
         }
 
         return pathString;
@@ -104,7 +113,13 @@ public final class FilePath implements Serializable, Comparable<FilePath> {
 
     /**
      * Returns {@code true} if this path represents a folder.
+     *
+     * @deprecated Whether a path is a folder or not depends on the file system. Requiring everyone to
+     *             explicitly specify folders paths as 'folder/' instead of 'folder' is annoying and
+     *             non-standard.
+     * @see IFileSystem#isFolder(FilePath)
      */
+    @Deprecated
     public boolean isFolder() {
         return path.length() == 0 || path.endsWith("/");
     }
@@ -117,7 +132,7 @@ public final class FilePath implements Serializable, Comparable<FilePath> {
         if (index < 0) {
             return null;
         }
-        return new FilePath(path.substring(0, index + 1));
+        return new FilePath(path.substring(0, index));
     }
 
     /**
@@ -152,7 +167,7 @@ public final class FilePath implements Serializable, Comparable<FilePath> {
     }
 
     private int getSplitIndex() {
-        if (isFolder()) {
+        if (endsWith("/")) {
             return path.lastIndexOf('/', path.length() - 2);
         } else {
             return path.lastIndexOf('/');
@@ -161,16 +176,38 @@ public final class FilePath implements Serializable, Comparable<FilePath> {
 
     /**
      * Checks if this path starts with the given prefix.
+     *
+     * @see #startsWith(String)
      */
     public boolean startsWith(FilePath prefix) {
-        return path.startsWith(prefix.path);
+        return startsWith(prefix.path);
     }
 
     /**
-     * Checks if this path ends with the given prefix.
+     * Checks if this path starts with the given prefix.
+     *
+     * @see #startsWith(FilePath)
      */
-    public boolean endsWith(FilePath prefix) {
-        return path.endsWith(prefix.path);
+    public boolean startsWith(String prefix) {
+        return path.startsWith(prefix);
+    }
+
+    /**
+     * Checks if this path ends with the given suffix.
+     *
+     * @see #endsWith(String)
+     */
+    public boolean endsWith(FilePath suffix) {
+        return endsWith(suffix.path);
+    }
+
+    /**
+     * Checks if this path ends with the given suffix.
+     *
+     * @see #endsWith(FilePath)
+     */
+    public boolean endsWith(String suffix) {
+        return path.endsWith(suffix);
     }
 
 }

@@ -69,6 +69,15 @@ public abstract class AbstractFileArchive extends AbstractFileSystem implements 
     }
 
     @Override
+    public boolean isFolder(FilePath path) {
+        try {
+            return FilePath.empty().equals(path) || getFileImpl(path).isFolder();
+        } catch (FileNotFoundException e) {
+            return false;
+        }
+    }
+
+    @Override
     protected boolean getFileExistsImpl(FilePath path) {
         try {
             return getFileImpl(path) != null;
@@ -121,8 +130,8 @@ public abstract class AbstractFileArchive extends AbstractFileSystem implements 
     }
 
     @Override
-    public Iterable<FilePath> getFiles(FileCollectOptions opts) throws IOException {
-        FilePath prefix = opts.getPrefix();
+    public Iterable<FilePath> getFiles(FileCollectOptions opts) {
+        FilePath prefix = opts.getBaseFolder().resolve(opts.getNamePrefix());
         int index = Arrays.binarySearch(records, prefix, pathComparator);
         if (index < 0) {
             index = -(index + 1);

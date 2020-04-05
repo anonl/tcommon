@@ -10,6 +10,7 @@ public final class ArchiveFileRecord implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private final FilePath path;
+    private final boolean isFolder;
 
     private final long headerOffset;
     private final long compressedLength;
@@ -18,10 +19,11 @@ public final class ArchiveFileRecord implements Serializable {
 
     private final int dosDateTime;
 
-    ArchiveFileRecord(FilePath path, long offset, long compressedLength, long uncompressedLength,
-            byte compression, int dosDateTime) {
+    ArchiveFileRecord(String path, long offset, long compressedLength, long uncompressedLength, byte compression,
+            int dosDateTime) {
 
-        this.path = path;
+        this.path = FilePath.of(path);
+        this.isFolder = path.endsWith("/");
 
         this.headerOffset = offset;
         this.compressedLength = compressedLength;
@@ -42,7 +44,7 @@ public final class ArchiveFileRecord implements Serializable {
      * Returns {@code true} if this record represents a folder entry.
      */
     public boolean isFolder() {
-        return path.isFolder();
+        return isFolder;
     }
 
     /**

@@ -4,7 +4,8 @@ import nl.weeaboo.common.Checks;
 
 public final class FileCollectOptions {
 
-    private FilePath prefix;
+    private FilePath baseFolder = FilePath.empty();
+    private String namePrefix = "";
 
     public boolean recursive;
     public boolean collectFiles;
@@ -14,7 +15,6 @@ public final class FileCollectOptions {
      * A recursive, file-only filter.
      */
     public FileCollectOptions() {
-        prefix = FilePath.empty();
         recursive = true;
         collectFiles = true;
     }
@@ -22,20 +22,28 @@ public final class FileCollectOptions {
     /**
      * A recursive, folder-only filter that only accepts paths starting with the given prefix.
      */
-    public static FileCollectOptions folders(FilePath basePath) {
+    public static FileCollectOptions subFolders(FilePath basePath) {
         FileCollectOptions opts = new FileCollectOptions();
-        opts.setPrefix(basePath);
+        opts.setBaseFolder(basePath);
         opts.collectFiles = false;
         opts.collectFolders = true;
         return opts;
     }
 
     /**
-     * A recursive, folder-only filter that only accepts paths starting with the given prefix.
+     * @see #files(FilePath, String)
      */
     public static FileCollectOptions files(FilePath basePath) {
+        return files(basePath, "");
+    }
+
+    /**
+     * A recursive, folder-only filter that only accepts paths starting with the given prefix.
+     */
+    public static FileCollectOptions files(FilePath basePath, String namePrefix) {
         FileCollectOptions opts = new FileCollectOptions();
-        opts.setPrefix(basePath);
+        opts.setBaseFolder(basePath);
+        opts.setNamePrefix(namePrefix);
         opts.collectFiles = true;
         opts.collectFolders = false;
         return opts;
@@ -45,36 +53,38 @@ public final class FileCollectOptions {
      * Checks if the supplied path passes the filter.
      */
     public boolean isValid(FilePath file) {
+        FilePath parent = file.getParent();
+        if (parent == null) {
+            parent = FilePath.empty();
+        }
+
+        if (file.equals(baseFolder)) {
+            return false; // Don't include the base folder
+        }
+
         if (recursive) {
             // This folder is equal to, or a descendant of the base search path
-            return file.startsWith(prefix);
+            return file.getName().startsWith(namePrefix) && parent.startsWith(baseFolder);
         } else {
-            // This file is equal to, or a direct child of the base search path
-            if (prefix.equals(file)) {
-                return true;
-            }
-
-            FilePath parent = file.getParent();
-            if (parent == null) {
-                return prefix.equals(FilePath.empty());
-            } else {
-                return prefix.equals(parent);
-            }
+            // This file is a direct child of the base search path
+            return file.getName().startsWith(namePrefix) && parent.equals(baseFolder);
         }
     }
 
-    /**
-     * Returns the required path prefix.
-     */
-    public FilePath getPrefix() {
-        return prefix;
+    public FilePath getBaseFolder() {
+        return baseFolder;
     }
 
-    /**
-     * Sets the required path prefix.
-     */
-    public void setPrefix(FilePath path) {
-        prefix = Checks.checkNotNull(path);
+    public void setBaseFolder(FilePath baseFolder) {
+        this.baseFolder = Checks.checkNotNull(baseFolder);
+    }
+
+    public String getNamePrefix() {
+        return namePrefix;
+    }
+
+    public void setNamePrefix(String namePrefix) {
+        this.namePrefix = Checks.checkNotNull(namePrefix);
     }
 
 }

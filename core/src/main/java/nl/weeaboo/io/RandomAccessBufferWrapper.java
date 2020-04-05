@@ -14,24 +14,24 @@ final class RandomAccessBufferWrapper implements IRandomAccessFile {
     }
 
     @Override
-    public void close() throws IOException {
+    public void close() {
         // Nothing to do
     }
 
     @Override
-    public synchronized long skip(long n) throws IOException {
+    public synchronized long skip(long n) {
         int toSkip = (int)Math.min(buf.remaining(), n);
         buf.position(buf.position() + toSkip);
         return toSkip;
     }
 
     @Override
-    public synchronized int read() throws IOException {
+    public synchronized int read() {
         return (buf.hasRemaining() ? buf.get() & 0xFF : -1);
     }
 
     @Override
-    public synchronized int read(byte[] b, int off, int len) throws IOException {
+    public synchronized int read(byte[] b, int off, int len) {
         if (!buf.hasRemaining()) {
             return -1;
         }
@@ -60,7 +60,7 @@ final class RandomAccessBufferWrapper implements IRandomAccessFile {
     }
 
     @Override
-    public synchronized long pos() throws IOException {
+    public synchronized long pos() {
         return buf.position();
     }
 
@@ -73,17 +73,17 @@ final class RandomAccessBufferWrapper implements IRandomAccessFile {
     }
 
     @Override
-    public synchronized long length() throws IOException {
+    public synchronized long length() {
         return buf.limit();
     }
 
     @Override
-    public synchronized InputStream getInputStream() throws IOException {
+    public synchronized InputStream getInputStream() {
         return getInputStream(0, length());
     }
 
     @Override
-    public synchronized InputStream getInputStream(long offset, long length) throws IOException {
+    public synchronized InputStream getInputStream(long offset, long length) {
         return new RandomAccessInputStream(this, offset, length);
     }
 

@@ -57,6 +57,16 @@ public class MultiFileSystem implements IFileSystem {
     }
 
     @Override
+    public boolean isFolder(FilePath path) {
+        for (IFileSystem fs : fileSystems) {
+            if (fs.isFolder(path)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
     public boolean getFileExists(FilePath path) {
         for (IFileSystem fs : fileSystems) {
             if (fs.getFileExists(path)) {
@@ -100,16 +110,12 @@ public class MultiFileSystem implements IFileSystem {
     }
 
     @Override
-    public Iterable<FilePath> getFiles(FileCollectOptions opts) throws IOException {
+    public Iterable<FilePath> getFiles(FileCollectOptions opts) {
         Set<FilePath> files = new TreeSet<FilePath>();
         for (IFileSystem fs : fileSystems) {
             if (fs.isOpen()) {
-                try {
-                    for (FilePath path : fs.getFiles(opts)) {
-                        files.add(path);
-                    }
-                } catch (FileNotFoundException fnfe) {
-                    // Ignore and try the next file system
+                for (FilePath path : fs.getFiles(opts)) {
+                    files.add(path);
                 }
             }
         }

@@ -128,7 +128,7 @@ public class ZipUtilTest {
         }
 
         @Override
-        public int read() throws IOException {
+        public int read() {
             if (read >= size) {
                 return -1;
             }

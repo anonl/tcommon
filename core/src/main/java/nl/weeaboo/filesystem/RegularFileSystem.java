@@ -64,6 +64,11 @@ public final class RegularFileSystem extends AbstractWritableFileSystem {
     }
 
     @Override
+    public boolean isFolder(FilePath path) {
+        return resolve(path).isDirectory();
+    }
+
+    @Override
     protected boolean getFileExistsImpl(FilePath path) {
         return resolve(path).exists();
     }
@@ -79,20 +84,19 @@ public final class RegularFileSystem extends AbstractWritableFileSystem {
     }
 
     @Override
-    public Iterable<FilePath> getFiles(FileCollectOptions opts) throws IOException {
+    public Iterable<FilePath> getFiles(FileCollectOptions opts) {
         List<FilePath> result = new ArrayList<FilePath>();
-        FilePath relativePath = opts.getPrefix();
 
-        File baseSearchFolder = resolve(relativePath);
+        FilePath baseSearchPath = opts.getBaseFolder();
+        File baseSearchFolder = resolve(baseSearchPath);
         if (baseSearchFolder.isDirectory()) {
-            if (!relativePath.equals(FilePath.empty()) && opts.collectFolders && opts.isValid(relativePath)) {
-                // Add the base search folder to the result as well (unless it's the root folder)
-                result.add(relativePath);
+            if (opts.collectFolders && opts.isValid(baseSearchPath)) {
+                result.add(baseSearchPath);
             }
-            getFolderContents(result, baseSearchFolder, relativePath, opts);
+            getFolderContents(result, baseSearchFolder, baseSearchPath, opts);
         } else {
-            if (opts.collectFiles && opts.isValid(relativePath)) {
-                result.add(relativePath);
+            if (opts.collectFiles && opts.isValid(baseSearchPath)) {
+                result.add(baseSearchPath);
             }
         }
 
@@ -103,8 +107,8 @@ public final class RegularFileSystem extends AbstractWritableFileSystem {
         File[] childFiles = folder.listFiles();
         if (childFiles != null) {
             for (File childFile : childFiles) {
+                FilePath childPath = folderPath.resolve(childFile.getName());
                 if (childFile.isDirectory()) {
-                    FilePath childPath = folderPath.resolve(childFile.getName() + "/");
                     if (opts.isValid(childPath)) {
                         if (opts.collectFolders) {
                             result.add(childPath);
@@ -114,7 +118,6 @@ public final class RegularFileSystem extends AbstractWritableFileSystem {
                         }
                     }
                 } else {
-                    FilePath childPath = folderPath.resolve(childFile.getName());
                     if (opts.collectFiles && opts.isValid(childPath)) {
                         result.add(childPath);
                     }
@@ -122,4 +125,5 @@ public final class RegularFileSystem extends AbstractWritableFileSystem {
             }
         }
     }
+
 }

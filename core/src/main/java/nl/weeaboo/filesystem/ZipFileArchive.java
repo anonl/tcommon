@@ -86,11 +86,11 @@ public class ZipFileArchive extends AbstractFileArchive {
 
                 byte[] filenameBytes = new byte[filenameLength];
                 StreamUtil.readFully(in, filenameBytes, 0, filenameLength);
-                FilePath filePath = FilePath.of(StringUtil.fromUTF8(filenameBytes));
+                String filenameString = StringUtil.fromUTF8(filenameBytes);
 
                 StreamUtil.forceSkip(in, extraFieldLength + commentLength);
 
-                records[n] = new ArchiveFileRecord(filePath, headerOffset,
+                records[n] = new ArchiveFileRecord(filenameString, headerOffset,
                         compressedLength, uncompressedLength, (byte)compressionMethod, dosDateTime);
             }
         } finally {

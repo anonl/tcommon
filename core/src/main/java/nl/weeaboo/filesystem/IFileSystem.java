@@ -29,6 +29,11 @@ public interface IFileSystem {
     boolean isReadOnly();
 
     /**
+     * Returns {@code true} if the given path represents a folder.
+     */
+    boolean isFolder(FilePath path);
+
+    /**
      * Checks if a file with the specified path exists.
      */
     boolean getFileExists(FilePath path);
@@ -50,9 +55,7 @@ public interface IFileSystem {
 
     /**
      * Searches for files in this filesystem based on the supplied file collect options.
-     *
-     * @throws IOException If an I/O exception occurred while searching for files.
      */
-    Iterable<FilePath> getFiles(FileCollectOptions opts) throws IOException;
+    Iterable<FilePath> getFiles(FileCollectOptions opts);
 
 }
