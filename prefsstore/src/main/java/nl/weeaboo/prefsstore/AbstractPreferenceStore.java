@@ -8,6 +8,8 @@ import java.util.Map.Entry;
 import java.util.Queue;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import javax.annotation.Nullable;
+
 import nl.weeaboo.common.Checks;
 
 public abstract class AbstractPreferenceStore implements IPreferenceStore {
@@ -31,11 +33,16 @@ public abstract class AbstractPreferenceStore implements IPreferenceStore {
         for (Entry<String, String> entry : properties.entrySet()) {
             String name = entry.getKey();
             Var current = map.get(name);
-            if (current != null && current.isConstant()) {
+            String newValue = entry.getValue();
+            if (current != null && current.isConstant() && equals(current.getRawValue(), newValue)) {
                 throw new IllegalArgumentException("Attempt to overwrite constant property: " + name);
             }
-            map.put(name, new Var(asConsts, entry.getValue()));
+            map.put(name, new Var(asConsts, newValue));
         }
+    }
+
+    private static boolean equals(@Nullable Object a, @Nullable Object b) {
+        return a == b || (a != null && a.equals(b));
     }
 
     @Override
