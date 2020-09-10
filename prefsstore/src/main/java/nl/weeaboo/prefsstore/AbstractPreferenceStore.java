@@ -8,8 +8,6 @@ import java.util.Map.Entry;
 import java.util.Queue;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import javax.annotation.Nullable;
-
 import nl.weeaboo.common.Checks;
 
 public abstract class AbstractPreferenceStore implements IPreferenceStore {
@@ -41,7 +39,7 @@ public abstract class AbstractPreferenceStore implements IPreferenceStore {
         }
     }
 
-    private static boolean equals(@Nullable Object a, @Nullable Object b) {
+    private static boolean equals(Object a, Object b) {
         return a == b || (a != null && a.equals(b));
     }
 
