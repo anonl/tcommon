@@ -32,7 +32,7 @@ public abstract class AbstractPreferenceStore implements IPreferenceStore {
             String name = entry.getKey();
             Var current = map.get(name);
             String newValue = entry.getValue();
-            if (current != null && current.isConstant() && equals(current.getRawValue(), newValue)) {
+            if (current != null && current.isConstant() && !equals(current.getRawValue(), newValue)) {
                 throw new IllegalArgumentException("Attempt to overwrite constant property: " + name);
             }
             map.put(name, new Var(asConsts, newValue));
