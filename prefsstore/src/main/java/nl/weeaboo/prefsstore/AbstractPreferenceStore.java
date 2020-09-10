@@ -32,14 +32,14 @@ public abstract class AbstractPreferenceStore implements IPreferenceStore {
             String name = entry.getKey();
             Var current = map.get(name);
             String newValue = entry.getValue();
-            if (current != null && current.isConstant() && !equals(current.getRawValue(), newValue)) {
+            if (current != null && current.isConstant() && !nullSafeEquals(current.getRawValue(), newValue)) {
                 throw new IllegalArgumentException("Attempt to overwrite constant property: " + name);
             }
             map.put(name, new Var(asConsts, newValue));
         }
     }
 
-    private static boolean equals(Object a, Object b) {
+    private static boolean nullSafeEquals(Object a, Object b) {
         return a == b || (a != null && a.equals(b));
     }
 
@@ -144,17 +144,18 @@ public abstract class AbstractPreferenceStore implements IPreferenceStore {
         }
 
         public <T> T setValue(Preference<T> property, T value) {
-            Checks.checkState(!isConstant && !property.isConstant(),
-                    "Attempting to change the value of a constant: " + property.getKey() + " -> " + value);
-
             Checks.checkArgument(property.isValidValue(value),
                     "Invalid value for property: " + property.getKey() + " -> " + value);
 
             final T oldValue = getValue(property);
+            if (!nullSafeEquals(oldValue, value)) {
+                Checks.checkState(!isConstant && !property.isConstant(),
+                        "Attempting to change the value of a constant: " + property.getKey() + " -> " + value);
 
-            raw = property.toString(value);
-            lastGetterProp = null;
-            lastGetterValue = null;
+                raw = property.toString(value);
+                lastGetterProp = null;
+                lastGetterValue = null;
+            }
 
             return oldValue;
         }
