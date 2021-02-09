@@ -1,29 +1,16 @@
 buildscript {
     repositories {
-        jcenter()
         maven { url 'https://plugins.gradle.org/m2/' }
     }
     dependencies {
         // Google error-prone
         classpath "net.ltgt.gradle:gradle-errorprone-plugin:0.0.16"
-
-        // Plugin for uploading to bintray
-        // Note: Causes a classpath conflict for org.apache.tools.zip
-        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7.3'
     }
 }
-
-apply plugin: 'com.jfrog.bintray'
 
 allprojects {
     group = 'nl.weeaboo.common'
     version = '3.0.3'
-
-    repositories {
-        jcenter()
-    }
-
-    apply plugin: 'maven-publish'
 }
 
 apply from: 'dependencies.gradle'
@@ -33,36 +20,22 @@ subprojects {
     apply plugin: 'jacoco'
     apply plugin: 'eclipse'
     apply plugin: 'idea'
+    apply plugin: 'signing'
 
-    ext {
-        javaVersion = JavaVersion.VERSION_1_6
-
-        pomLicenseConfig = {
-           licenses {
-                license {
-                    name 'MIT'
-                    url 'https://opensource.org/licenses/mit-license.php'
-                    distribution 'repo'
-                }
-            }
-        }
-        pomLicenseConfig.resolveStrategy = Closure.DELEGATE_ONLY // Otherwise 'license' elem is missing
-    }
-
-    sourceCompatibility = javaVersion
+    sourceCompatibility = JavaVersion.VERSION_1_6
+    targetCompatibility = JavaVersion.VERSION_1_6
 
     tasks.withType(JavaCompile) {
         options.encoding = 'UTF-8'
     }
 
+    repositories {
+        mavenCentral()
+    }
+
     dependencies {
         testCompile deps.junit
         testCompile deps.guava_testlib
-    }
-
-    task sourceJar(type: Jar) {
-        from sourceSets.main.allJava
-        classifier 'sources'
     }
 
     jacocoTestReport {
@@ -71,10 +44,8 @@ subprojects {
         }
     }
 
-    // ErrorProne compiler isn't compatible with Java 6, so check that the current JVM uses at least Java 7
-    if (JavaVersion.current().isJava7Compatible()) {
-        apply from: rootProject.file('errorprone.gradle')
-    }
+    apply from: rootProject.file('errorprone.gradle')
+    apply from: rootProject.file('publish.gradle')
 }
 
 project(':tcommon-core') {
@@ -112,91 +83,5 @@ project(':tcommon-test') {
     dependencies {
         compile project(':tcommon-core')
         compile deps.junit
-    }
-}
-
-publishing {
-    publications {
-        core(MavenPublication) {
-            artifactId = 'tcommon-core'
-
-            def proj = project(":tcommon-core")
-            from proj.components.java
-            artifact(proj.sourceJar)
-
-            pom.withXml {
-                asNode().children().last() + proj.ext.pomLicenseConfig
-            }
-        }
-        apt6(MavenPublication) {
-            artifactId = 'tcommon-apt6'
-
-            def proj = project(":tcommon-apt6")
-            from proj.components.java
-            artifact(proj.sourceJar)
-
-            pom.withXml {
-                asNode().children().last() + proj.ext.pomLicenseConfig
-            }
-        }
-        logging(MavenPublication) {
-            artifactId = 'tcommon-logging'
-
-            def proj = project(":tcommon-logging")
-            from proj.components.java
-            artifact(proj.sourceJar)
-
-            pom.withXml {
-                asNode().children().last() + proj.ext.pomLicenseConfig
-            }
-        }
-        entity(MavenPublication) {
-            artifactId = 'tcommon-entity'
-
-            def proj = project(":tcommon-entity")
-            from proj.components.java
-            artifact(proj.sourceJar)
-
-            pom.withXml {
-                asNode().children().last() + proj.ext.pomLicenseConfig
-            }
-        }
-        prefsstore(MavenPublication) {
-            artifactId = 'tcommon-prefsstore'
-
-            def proj = project(":tcommon-prefsstore")
-            from proj.components.java
-            artifact(proj.sourceJar)
-
-            pom.withXml {
-                asNode().children().last() + proj.ext.pomLicenseConfig
-            }
-        }
-        test(MavenPublication) {
-            artifactId = 'tcommon-test'
-
-            def proj = project(":tcommon-test")
-            from proj.components.java
-            artifact(proj.sourceJar)
-
-            pom.withXml {
-                asNode().children().last() + proj.ext.pomLicenseConfig
-            }
-        }
-    }
-}
-
-bintray {   
-    user = System.getenv('BINTRAY_USER')
-    key = System.getenv('BINTRAY_KEY')
-    publications = ['core', 'apt6', 'entity', 'logging', 'prefsstore', 'test']
-    pkg {
-        repo = 'tcommon'
-        name = 'tcommon'
-        licenses = ['MIT']
-        vcsUrl = 'https://github.com/anonl/tcommon.git'
-        version {
-            name = project.version
-        }
     }
 }
